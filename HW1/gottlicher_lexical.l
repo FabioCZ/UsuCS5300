@@ -70,6 +70,7 @@ char cleanUpChar(std::string s)
 void printComment(std::string s)
 {
     boost::erase_all(s,"$");
+    boost::erase_all(s,"\n");
     std::cout << "Found comment with content: " << s << " at line: " << fl.lineno() << std::endl;
 }
 
@@ -146,14 +147,15 @@ write { printKeyword("write"); }
     /* Identifier */
 {letter}({letter}|{digit}|_)* {printIdentifier(fl.YYText());}
     /* literals */
+    
 0x([0-9a-fA-F])+ {printIntLiteral("hexadecimal", (int)strtol(fl.YYText(),NULL,0));}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
 0({digit})+ {printIntLiteral("octal", (int)strtol(fl.YYText(),NULL,8));}
-[1-9]({digit})+ {printIntLiteral("decimal", (int)strtol(fl.YYText(),NULL,10));}
+0|([1-9]({digit})*) {printIntLiteral("decimal", (int)strtol(fl.YYText(),NULL,10));}
 \"[\x20-\x7e]+\" {printStringLiteral(cleanUpString(fl.YYText()));}
 '([\x21-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' {printCharLiteral(cleanUpChar(fl.YYText()));}
  
     /* Comments */
-\$.*\n  {printComment(fl.YYText());}
+(\$.*\n)  {printComment(fl.YYText());}
     /* other */
 [ \n\t\r]+ {/*whitespace, nothing to do here*/}
 . { printError(fl.YYText());}
