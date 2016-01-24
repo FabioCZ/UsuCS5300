@@ -1,0 +1,2 @@
+/home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles/CS5300HW1.dir
+/home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles/FlexParser.dir
