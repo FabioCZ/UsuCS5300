@@ -49,37 +49,42 @@ include CMakeFiles/CS5300HW1.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/CS5300HW1.dir/flags.make
 
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.o: CMakeFiles/CS5300HW1.dir/flags.make
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.o: lex.yy.cc
+gottlicher_lexical.cc: gottlicher_lexical.l
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/CS5300HW1.dir/lex.yy.cc.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/CS5300HW1.dir/lex.yy.cc.o -c /home/fabio/Desktop/UsuCS5300/HW1/lex.yy.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating gottlicher_lexical.cc"
+	flex -o gottlicher_lexical.cc gottlicher_lexical.l
 
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CS5300HW1.dir/lex.yy.cc.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fabio/Desktop/UsuCS5300/HW1/lex.yy.cc > CMakeFiles/CS5300HW1.dir/lex.yy.cc.i
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o: CMakeFiles/CS5300HW1.dir/flags.make
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o: gottlicher_lexical.cc
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o -c /home/fabio/Desktop/UsuCS5300/HW1/gottlicher_lexical.cc
 
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CS5300HW1.dir/lex.yy.cc.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fabio/Desktop/UsuCS5300/HW1/lex.yy.cc -o CMakeFiles/CS5300HW1.dir/lex.yy.cc.s
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fabio/Desktop/UsuCS5300/HW1/gottlicher_lexical.cc > CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.i
 
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.requires:
-.PHONY : CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.requires
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fabio/Desktop/UsuCS5300/HW1/gottlicher_lexical.cc -o CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.s
 
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.provides: CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.requires
-	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.provides.build
-.PHONY : CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.provides
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.requires:
+.PHONY : CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.requires
 
-CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.provides.build: CMakeFiles/CS5300HW1.dir/lex.yy.cc.o
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.provides: CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.requires
+	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.provides.build
+.PHONY : CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.provides
+
+CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.provides.build: CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o
 
 # Object files for target CS5300HW1
 CS5300HW1_OBJECTS = \
-"CMakeFiles/CS5300HW1.dir/lex.yy.cc.o"
+"CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o"
 
 # External object files for target CS5300HW1
 CS5300HW1_EXTERNAL_OBJECTS =
 
-CS5300HW1: CMakeFiles/CS5300HW1.dir/lex.yy.cc.o
+CS5300HW1: CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o
 CS5300HW1: CMakeFiles/CS5300HW1.dir/build.make
 CS5300HW1: CMakeFiles/CS5300HW1.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable CS5300HW1"
@@ -89,14 +94,14 @@ CS5300HW1: CMakeFiles/CS5300HW1.dir/link.txt
 CMakeFiles/CS5300HW1.dir/build: CS5300HW1
 .PHONY : CMakeFiles/CS5300HW1.dir/build
 
-CMakeFiles/CS5300HW1.dir/requires: CMakeFiles/CS5300HW1.dir/lex.yy.cc.o.requires
+CMakeFiles/CS5300HW1.dir/requires: CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o.requires
 .PHONY : CMakeFiles/CS5300HW1.dir/requires
 
 CMakeFiles/CS5300HW1.dir/clean:
 	$(CMAKE_COMMAND) -P CMakeFiles/CS5300HW1.dir/cmake_clean.cmake
 .PHONY : CMakeFiles/CS5300HW1.dir/clean
 
-CMakeFiles/CS5300HW1.dir/depend:
+CMakeFiles/CS5300HW1.dir/depend: gottlicher_lexical.cc
 	cd /home/fabio/Desktop/UsuCS5300/HW1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/fabio/Desktop/UsuCS5300/HW1 /home/fabio/Desktop/UsuCS5300/HW1 /home/fabio/Desktop/UsuCS5300/HW1 /home/fabio/Desktop/UsuCS5300/HW1 /home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles/CS5300HW1.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/CS5300HW1.dir/depend
 

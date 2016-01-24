@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/fabio/Desktop/UsuCS5300/HW1/lex.yy.cc" "/home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles/CS5300HW1.dir/lex.yy.cc.o"
+  "/home/fabio/Desktop/UsuCS5300/HW1/gottlicher_lexical.cc" "/home/fabio/Desktop/UsuCS5300/HW1/CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "Clang")
 

@@ -1,1 +1,1 @@
-/usr/bin/c++       CMakeFiles/CS5300HW1.dir/lex.yy.cc.o  -o CS5300HW1 -rdynamic 
+/usr/bin/c++       CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o  -o CS5300HW1 -rdynamic 

@@ -1,5 +1,6 @@
 FILE(REMOVE_RECURSE
-  "CMakeFiles/CS5300HW1.dir/lex.yy.cc.o"
+  "gottlicher_lexical.cc"
+  "CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o"
   "CS5300HW1.pdb"
   "CS5300HW1"
 )

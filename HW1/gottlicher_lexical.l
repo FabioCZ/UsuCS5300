@@ -14,17 +14,22 @@ yyFlexLexer fl;
 
 void printKeyword(std::string s)
 {
-    std::cout << "Found keyword : " << s.c_str() << " at line : " << fl.lineno() << std::endl;
+    std::cout << "Found keyword : " << s << " at line : " << fl.lineno() << std::endl;
 }
 
 void printOperator(std::string s)
 {
-    std::cout << "Found operator : " << s.c_str() << " at line : " << fl.lineno() << std::endl;    
+    std::cout << "Found operator : " << s << " at line : " << fl.lineno() << std::endl;    
+}
+
+void printIdentifier(std::string s)
+{
+    std::cout << "Found identifier: " << s << " at line : " << fl.lineno() << std::endl;
 }
 
 void printIntLiteral(std::string type, int value)
 {
-    std::cout << "Found integer literal in base: " << type.c_str() << " ,value(dec):   " << value << " at line : " << fl.lineno() << std::endl;
+    std::cout << "Found integer literal in base: " << type.c_str() << " ,value (dec):   " << value << " at line : " << fl.lineno() << std::endl;
 }
 
 void printStringLiteral(std::string s)
@@ -59,12 +64,22 @@ char cleanUpChar(std::string s)
 {
     boost::erase_all(s, "'");
     s = replaceReserved(s);
-    std::cout << "len:" << s.length() << std::endl;
     return s.c_str()[0];
+}
+
+void printComment(std::string s)
+{
+    boost::erase_all(s,"$");
+    std::cout << "Found comment with content: " << s << " at line: " << fl.lineno() << std::endl;
+}
+
+void printError(std::string s)
+{
+    std::cout << "Found unknow character (error): " << s << " at line: " << fl.lineno() << std::endl;
 }
 %}
 letter [a-zA-Z]
-
+digit [0-9]
 %option noyywrap
 %option yylineno
 %option c++
@@ -128,15 +143,20 @@ write { printKeyword("write"); }
 \:= { printOperator("colon-equals (:=)");}
 \% { printOperator("percent (%)");}
 
+    /* Identifier */
+{letter}({letter}|{digit}|_)* {printIdentifier(fl.YYText());}
     /* literals */
 0x([0-9a-fA-F])+ {printIntLiteral("hexadecimal", (int)strtol(fl.YYText(),NULL,0));}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
-0([0-9])+ {printIntLiteral("octal", (int)strtol(fl.YYText(),NULL,8));}
-[1-9]([0-9])+ {printIntLiteral("decimal", (int)strtol(fl.YYText(),NULL,10));}
+0({digit})+ {printIntLiteral("octal", (int)strtol(fl.YYText(),NULL,8));}
+[1-9]({digit})+ {printIntLiteral("decimal", (int)strtol(fl.YYText(),NULL,10));}
 \"[\x20-\x7e]+\" {printStringLiteral(cleanUpString(fl.YYText()));}
 '([\x21-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' {printCharLiteral(cleanUpChar(fl.YYText()));}
  
+    /* Comments */
+\$.*\n  {printComment(fl.YYText());}
     /* other */
-    /*. { printf("Error on line: %i , %s is not valid character in a character sequence",fl.lineno(), fl.YYText());}*/
+[ \n\t\r]+ {/*whitespace, nothing to do here*/}
+. { printError(fl.YYText());}
 
 %%
 

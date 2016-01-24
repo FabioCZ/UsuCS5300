@@ -111,42 +111,29 @@ CS5300HW1/fast:
 	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/build
 .PHONY : CS5300HW1/fast
 
-#=============================================================================
-# Target rules for targets named FlexParser
-
-# Build rule for target.
-FlexParser: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 FlexParser
-.PHONY : FlexParser
-
-# fast build rule for target.
-FlexParser/fast:
-	$(MAKE) -f CMakeFiles/FlexParser.dir/build.make CMakeFiles/FlexParser.dir/build
-.PHONY : FlexParser/fast
-
-lex.yy.o: lex.yy.cc.o
-.PHONY : lex.yy.o
+gottlicher_lexical.o: gottlicher_lexical.cc.o
+.PHONY : gottlicher_lexical.o
 
 # target to build an object file
-lex.yy.cc.o:
-	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/lex.yy.cc.o
-.PHONY : lex.yy.cc.o
+gottlicher_lexical.cc.o:
+	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.o
+.PHONY : gottlicher_lexical.cc.o
 
-lex.yy.i: lex.yy.cc.i
-.PHONY : lex.yy.i
+gottlicher_lexical.i: gottlicher_lexical.cc.i
+.PHONY : gottlicher_lexical.i
 
 # target to preprocess a source file
-lex.yy.cc.i:
-	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/lex.yy.cc.i
-.PHONY : lex.yy.cc.i
+gottlicher_lexical.cc.i:
+	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.i
+.PHONY : gottlicher_lexical.cc.i
 
-lex.yy.s: lex.yy.cc.s
-.PHONY : lex.yy.s
+gottlicher_lexical.s: gottlicher_lexical.cc.s
+.PHONY : gottlicher_lexical.s
 
 # target to generate assembly for a file
-lex.yy.cc.s:
-	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/lex.yy.cc.s
-.PHONY : lex.yy.cc.s
+gottlicher_lexical.cc.s:
+	$(MAKE) -f CMakeFiles/CS5300HW1.dir/build.make CMakeFiles/CS5300HW1.dir/gottlicher_lexical.cc.s
+.PHONY : gottlicher_lexical.cc.s
 
 # Help Target
 help:
@@ -155,12 +142,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... CS5300HW1"
-	@echo "... FlexParser"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... lex.yy.o"
-	@echo "... lex.yy.i"
-	@echo "... lex.yy.s"
+	@echo "... gottlicher_lexical.o"
+	@echo "... gottlicher_lexical.i"
+	@echo "... gottlicher_lexical.s"
 .PHONY : help
 
 
