@@ -1,0 +1,193 @@
+Terminals unused in grammar
+
+   ArrayTok
+   BeginTok
+   ChrTok
+   ConstTok
+   DoTok
+   DowntoTok
+   ElseTok
+   ElseifTok
+   EndTok
+   ForTok
+   ForwardTok
+   FunctionTok
+   IfTok
+   OfTok
+   OrdTok
+   PredTok
+   ProcedureTok
+   ReadTok
+   RecordTok
+   RefTok
+   RepeatTok
+   ReturnTok
+   StopTok
+   SuccTok
+   ThenTok
+   ToTok
+   TypeTok
+   UntilTok
+   VarTok
+   WhileTok
+   WriteTok
+   PlusTok
+   MinusTok
+   MultiplyTok
+   DivideTok
+   AndTok
+   OrTok
+   NotTok
+   EqualsTok
+   LessGreaterTok
+   LessThanTok
+   LessEqualTok
+   GreaterTok
+   GreaterEqualTok
+   CommaTok
+   ColonTok
+   SemicolonTok
+   OpenParenTok
+   CloseParenTok
+   OpenBrktTok
+   CloseBrktTok
+   ColonEqualTok
+   PercentTok
+   IdentifierTok
+   IntTok
+   StringTok
+   CharTok
+
+
+Grammar
+
+    0 $accept: Application $end
+
+    1 Application: ApplicationStart Code DotTok
+
+    2 ApplicationStart: %empty
+
+    3 Code: %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+ArrayTok (258)
+BeginTok (259)
+ChrTok (260)
+ConstTok (261)
+DoTok (262)
+DowntoTok (263)
+ElseTok (264)
+ElseifTok (265)
+EndTok (266)
+ForTok (267)
+ForwardTok (268)
+FunctionTok (269)
+IfTok (270)
+OfTok (271)
+OrdTok (272)
+PredTok (273)
+ProcedureTok (274)
+ReadTok (275)
+RecordTok (276)
+RefTok (277)
+RepeatTok (278)
+ReturnTok (279)
+StopTok (280)
+SuccTok (281)
+ThenTok (282)
+ToTok (283)
+TypeTok (284)
+UntilTok (285)
+VarTok (286)
+WhileTok (287)
+WriteTok (288)
+PlusTok (289)
+MinusTok (290)
+MultiplyTok (291)
+DivideTok (292)
+AndTok (293)
+OrTok (294)
+NotTok (295)
+EqualsTok (296)
+LessGreaterTok (297)
+LessThanTok (298)
+LessEqualTok (299)
+GreaterTok (300)
+GreaterEqualTok (301)
+DotTok (302) 1
+CommaTok (303)
+ColonTok (304)
+SemicolonTok (305)
+OpenParenTok (306)
+CloseParenTok (307)
+OpenBrktTok (308)
+CloseBrktTok (309)
+ColonEqualTok (310)
+PercentTok (311)
+IdentifierTok (312)
+IntTok (313)
+StringTok (314)
+CharTok (315)
+
+
+Nonterminals, with rules where they appear
+
+$accept (61)
+    on left: 0
+Application (62)
+    on left: 1, on right: 0
+ApplicationStart (63)
+    on left: 2, on right: 1
+Code (64)
+    on left: 3, on right: 1
+
+
+State 0
+
+    0 $accept: . Application $end
+
+    $default  reduce using rule 2 (ApplicationStart)
+
+    Application       go to state 1
+    ApplicationStart  go to state 2
+
+
+State 1
+
+    0 $accept: Application . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 Application: ApplicationStart . Code DotTok
+
+    $default  reduce using rule 3 (Code)
+
+    Code  go to state 4
+
+
+State 3
+
+    0 $accept: Application $end .
+
+    $default  accept
+
+
+State 4
+
+    1 Application: ApplicationStart Code . DotTok
+
+    DotTok  shift, and go to state 5
+
+
+State 5
+
+    1 Application: ApplicationStart Code DotTok .
+
+    $default  reduce using rule 1 (Application)
