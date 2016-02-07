@@ -1,0 +1,60 @@
+/* $Id: parser.yy 48 2009-09-05 08:07:10Z tb $ -*- mode: c++ -*- */
+/** \file parser.yy Contains the example Bison parser source */
+
+%{ /*** C/C++ Declarations ***/
+
+#include <stdio.h>
+#include <string>
+#include <vector>
+
+#include "expression.h"
+
+%}
+
+/*** yacc/bison Declarations ***/
+
+
+%debug
+%error-verbose
+/* start symbol is named "start" */
+%start start
+
+/* write out a header file containing the token defines */
+%defines
+
+%skeleton "lalr1.cc"
+
+%name-prefix="FC"
+%define "parser_class_name" "Parser"
+
+/* keep track of the current position within the input */
+%locations
+%initial-action
+{
+    // initialize the initial location object
+    @$.begin.filename = @$.end.filename = &driver.streamname;
+};
+
+/* The driver is passed by reference to the parser and to the scanner. This
+ * provides a simple but effective pure interface, not relying on global
+ * variables. */
+%parse-param { class Driver& driver }
+
+%{
+
+#include "driver.h"
+#include "scanner.h"
+#undef yylex
+#define yylex driver.lexer->lex
+
+%}
+
+%%
+
+%% /*** Additional Code ***/
+
+void FC::Parser::error(const Parser::location_type& l,
+			    const std::string& m)
+{
+    driver.error(l, m);
+}

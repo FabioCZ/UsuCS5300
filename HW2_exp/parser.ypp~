@@ -1,0 +1,119 @@
+/* $Id: parser.yy 48 2009-09-05 08:07:10Z tb $ -*- mode: c++ -*- */
+/** \file parser.yy Contains the example Bison parser source */
+
+%{ /*** C/C++ Declarations ***/
+
+#include <stdio.h>
+#include <string>
+#include <vector>
+
+%}
+
+/*** yacc/bison Declarations ***/
+
+
+%debug
+%error-verbose
+
+/* write out a header file containing the token defines */
+%defines
+
+%skeleton "lalr1.cc"
+
+%name-prefix="FC"
+%define "parser_class_name" "Parser"
+
+/* keep track of the current position within the input */
+%locations
+%initial-action
+{
+    // initialize the initial location object
+    @$.begin.filename = @$.end.filename = &driver.streamname;
+};
+
+/* The driver is passed by reference to the parser and to the scanner. This
+ * provides a simple but effective pure interface, not relying on global
+ * variables. */
+%parse-param { class Driver& driver }
+
+%{
+
+#include "driver.hpp"
+#include "scanner.hpp"
+#undef yylex
+#define yylex driver.lexer->lex
+
+%}
+%token ArrayTok
+%token BeginTok
+%token ChrTok
+%token ConstTok
+%token DoTok
+%token DowntoTok
+%token ElseTok
+%token ElseifTok
+%token EndTok
+%token ForTok
+%token ForwardTok
+%token FunctionTok
+%token IfTok
+%token OfTok
+%token OrdTok
+%token PredTok
+%token ProcedureTok
+%token ReadTok
+%token RecordTok
+%token RefTok
+%token RepeatTok
+%token ReturnTok
+%token StopTok
+%token SuccTok
+%token ThenTok
+%token ToTok
+%token TypeTok
+%token UntilTok
+%token VarTok
+%token WhileTok
+%token WriteTok
+
+
+%token PlusTok
+%token MinusTok
+%token MultiplyTok
+%token DivideTok
+%token AndTok
+%token OrTok
+%token NotTok
+%token EqualsTok
+%token LessGreaterTok
+%token LessThanTok
+%token LessEqualTok
+%token GreaterTok
+%token GreaterEqualTok
+%token DotTok
+%token CommaTok
+%token ColonTok
+%token SemicolonTok
+%token OpenParenTok
+%token CloseParenTok
+%token OpenBrktTok
+%token CloseBrktTok
+%token ColonEqualTok
+%token PercentTok
+
+%token IdentifierTok
+
+%token IntTok
+%token StringTok
+%token CharTok
+%%
+Application : ApplicationStart Code DotTok {};
+ApplicationStart : {};
+Code : {};
+%% /*** Additional Code ***/
+
+void FC::Parser::error(const Parser::location_type& l,
+			    const std::string& m)
+{
+    driver.error(l, m);
+}
