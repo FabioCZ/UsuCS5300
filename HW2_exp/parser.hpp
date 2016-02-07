@@ -104,7 +104,7 @@
 
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 
 
@@ -142,62 +142,64 @@ namespace FC {
       {
         ArrayTok = 258,
         BeginTok = 259,
-        EndTok = 260,
+        EndProgTok = 260,
         ChrTok = 261,
         ConstTok = 262,
         DoTok = 263,
         DowntoTok = 264,
         ElseTok = 265,
         ElseifTok = 266,
-        ForTok = 267,
-        ForwardTok = 268,
-        FunctionTok = 269,
-        IfTok = 270,
-        OfTok = 271,
-        OrdTok = 272,
-        PredTok = 273,
-        ProcedureTok = 274,
-        ReadTok = 275,
-        RecordTok = 276,
-        RefTok = 277,
-        RepeatTok = 278,
-        ReturnTok = 279,
-        StopTok = 280,
-        SuccTok = 281,
-        ThenTok = 282,
-        ToTok = 283,
-        TypeTok = 284,
-        UntilTok = 285,
-        VarTok = 286,
-        WhileTok = 287,
-        WriteTok = 288,
-        PlusTok = 289,
-        MinusTok = 290,
-        MultiplyTok = 291,
-        DivideTok = 292,
-        AndTok = 293,
-        OrTok = 294,
-        NotTok = 295,
-        EqualsTok = 296,
-        LessGreaterTok = 297,
-        LessThanTok = 298,
-        LessEqualTok = 299,
-        GreaterTok = 300,
-        GreaterEqualTok = 301,
-        DotTok = 302,
-        CommaTok = 303,
-        ColonTok = 304,
-        SemicolonTok = 305,
-        OpenParenTok = 306,
-        CloseParenTok = 307,
-        OpenBrktTok = 308,
-        CloseBrktTok = 309,
-        ColonEqualTok = 310,
-        PercentTok = 311,
-        IdentifierTok = 312,
-        IntTok = 313,
-        StringTok = 314,
-        CharTok = 315
+        EndTok = 267,
+        ForTok = 268,
+        ForwardTok = 269,
+        FunctionTok = 270,
+        IfTok = 271,
+        OfTok = 272,
+        OrdTok = 273,
+        PredTok = 274,
+        ProcedureTok = 275,
+        ReadTok = 276,
+        RecordTok = 277,
+        RefTok = 278,
+        RepeatTok = 279,
+        ReturnTok = 280,
+        StopTok = 281,
+        SuccTok = 282,
+        ThenTok = 283,
+        ToTok = 284,
+        TypeTok = 285,
+        UntilTok = 286,
+        VarTok = 287,
+        WhileTok = 288,
+        WriteTok = 289,
+        PlusTok = 290,
+        MinusTok = 291,
+        UnaryMinusTok = 292,
+        MultiplyTok = 293,
+        DivideTok = 294,
+        AndTok = 295,
+        OrTok = 296,
+        NotTok = 297,
+        EqualsTok = 298,
+        NotEqualTok = 299,
+        LessThanTok = 300,
+        LessEqualTok = 301,
+        GreaterTok = 302,
+        GreaterEqualTok = 303,
+        DotTok = 304,
+        CommaTok = 305,
+        ColonTok = 306,
+        SemicolonTok = 307,
+        OpenParenTok = 308,
+        CloseParenTok = 309,
+        OpenBrktTok = 310,
+        CloseBrktTok = 311,
+        ColonEqualTok = 312,
+        PercentTok = 313,
+        IdentifierTok = 314,
+        IntTok = 315,
+        StringTok = 316,
+        CharTok = 317
       };
     };
 
@@ -346,7 +348,7 @@ namespace FC {
     /// \param yyvalue   the value to check
     static bool yy_table_value_is_error_ (int yyvalue);
 
-    static const signed char yypact_ninf_;
+    static const short int yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token number \a t to a symbol number.
@@ -355,7 +357,7 @@ namespace FC {
     // Tables.
   // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
   // STATE-NUM.
-  static const signed char yypact_[];
+  static const short int yypact_[];
 
   // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
   // Performed when YYTABLE does not specify something else to do.  Zero
@@ -363,17 +365,17 @@ namespace FC {
   static const unsigned char yydefact_[];
 
   // YYPGOTO[NTERM-NUM].
-  static const signed char yypgoto_[];
+  static const short int yypgoto_[];
 
   // YYDEFGOTO[NTERM-NUM].
-  static const signed char yydefgoto_[];
+  static const short int yydefgoto_[];
 
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
   // number is the opposite.  If YYTABLE_NINF, syntax error.
-  static const unsigned char yytable_[];
+  static const short int yytable_[];
 
-  static const unsigned char yycheck_[];
+  static const short int yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -394,7 +396,7 @@ namespace FC {
     static const char* const yytname_[];
 #if YYDEBUG
   // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-  static const unsigned char yyrline_[];
+  static const unsigned short int yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r);
     /// Print the state stack on the debug stream.
@@ -488,13 +490,13 @@ namespace FC {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 1,     ///< Last index in yytable_.
-      yynnts_ = 4,  ///< Number of nonterminal symbols.
+      yylast_ = 499,     ///< Last index in yytable_.
+      yynnts_ = 49,  ///< Number of nonterminal symbols.
       yyempty_ = -2,
-      yyfinal_ = 3, ///< Termination state number.
+      yyfinal_ = 8, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 61  ///< Number of tokens.
+      yyntokens_ = 63  ///< Number of tokens.
     };
 
 
@@ -505,7 +507,7 @@ namespace FC {
 
 
 } // FC
-#line 509 "parser.hpp" // lalr1.cc:372
+#line 511 "parser.hpp" // lalr1.cc:372
 
 
 

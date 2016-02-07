@@ -15,7 +15,7 @@ typedef FC::Parser::token_type token_type;
 
 /* By default yylex returns int, we use token_type. Unfortunately yyterminate
  * by default returns 0, which is not of token_type. */
-#define yyterminate() return token::EndTok
+#define yyterminate() return token::EndProgTok
 /*
 void printKeyword(std::string s)
 {
@@ -98,37 +98,37 @@ digit [0-9]
 %% 
 
      /* keywords */
-array { return token::ArrayTok; }
-begin { return  token::BeginTok; }
-chr { return token::ChrTok; }
-const { return token::ConstTok; }
-do { return token::DoTok; }
-downto { return token::DowntoTok; }
-else { return token::ElseTok; }
-elseif { return token::ElseifTok; }
-end { return token::EndTok; }
-for { return token::ForTok; }
-forward { return token::ForwardTok; }
-function { return token::FunctionTok; }
-if { return token::IfTok; }
-of { return token::OfTok; }
-ord { return token::OrdTok; }
-pred { return token::PredTok; }
-procedure { return token::ProcedureTok; }
-read { return token::ReadTok; }
-record { return token::RecordTok; }
-ref { return token::RefTok; }
-repeat { return token::RepeatTok; }
-return { return token::ReturnTok; }
-stop { return token::StopTok; }
-succ { return token::SuccTok; }
-then { return token::ThenTok; }
-to { return token::ToTok; }
-type { return token::TypeTok; }
-until { return token::UntilTok; }
-var { return token::VarTok; }
-while { return token::WhileTok; }
-write { return token::WriteTok; }
+array|ARRAY { return token::ArrayTok; }
+begin|BEGIN { return  token::BeginTok; }
+chr|CHR { return token::ChrTok; }
+const|CONST { return token::ConstTok; }
+do|DO { return token::DoTok; }
+downto|DOWNTO { return token::DowntoTok; }
+else|ELSE { return token::ElseTok; }
+elseif|ELSEIF { return token::ElseifTok; }
+end|END { return token::EndTok; }
+for|FOR { return token::ForTok; }
+forward|FORWARD { return token::ForwardTok; }
+function|FUNCTION { return token::FunctionTok; }
+if|IF { return token::IfTok; }
+of|OF { return token::OfTok; }
+ord|ORD { return token::OrdTok; }
+pred|PRED { return token::PredTok; }
+procedure|PROCEDURE { return token::ProcedureTok; }
+read|READ { return token::ReadTok; }
+record|RECORD { return token::RecordTok; }
+ref|REF { return token::RefTok; }
+repeat|REPEAT { return token::RepeatTok; }
+return|RETURN { return token::ReturnTok; }
+stop|STOP { return token::StopTok; }
+succ|SUCC { return token::SuccTok; }
+then|THEN { return token::ThenTok; }
+to|TO { return token::ToTok; }
+type|TYPE { return token::TypeTok; }
+until|UNTIL { return token::UntilTok; }
+var|VAR { return token::VarTok; }
+while|WHILE { return token::WhileTok; }
+write|WRITE { return token::WriteTok; }
 
     /* operators */
 \+ { return token::PlusTok;}
@@ -139,7 +139,7 @@ write { return token::WriteTok; }
 \| { return token::OrTok;}
 \~ { return token::NotTok;}
 \= { return token::EqualsTok;} 
-\<> { return token::LessGreaterTok;}
+\<> { return token::NotEqualTok;}
 \< { return token::LessThanTok;}
 \<= { return token::LessEqualTok;}
 \> { return token::GreaterTok;}
@@ -159,11 +159,11 @@ write { return token::WriteTok; }
 {letter}({letter}|{digit}|_)* {/*TODO set value hereyytext;*/ return token::IdentifierTok;}
     /* literals */
     
-0x([0-9a-fA-F])+ {/*TODO set value here*/(int)strtol(yytext,NULL,0); return token::IntTok;}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
-0({digit})+ {/*TODO set value here*/(int)strtol(yytext,NULL,8); return token::IntTok;}
-0|([1-9]({digit})*) {/*TODO set value here*/ (int)strtol(yytext,NULL,10); return token::IntTok;}
-\"[\x20-\x7e]+\" {/*TODO set value here*/cleanUpString(yytext); return token::StringTok;}
-'([\x21-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' {/*TODO set value here*/cleanUpChar(yytext); return token::ChrTok;}
+0x([0-9a-fA-F])+ {/*TODO set value here(int)strtol(yytext,NULL,0);*/ return token::IntTok;}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
+0({digit})+ {/*TODO set value here(int)strtol(yytext,NULL,8);*/ return token::IntTok;}
+0|([1-9]({digit})*) {/*TODO set value here (int)strtol(yytext,NULL,10);*/ return token::IntTok;}
+\"[\x20-\x7e]+\" {/*TODO set value herecleanUpString(yytext);*/ return token::StringTok;}
+'([\x21-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' {/*TODO set value herecleanUpChar(yytext);*/ return token::ChrTok;}
  
     /* Comments */
 (\$.*\n)  {/*Comments, don't do anything printComment(yytext);*/ }

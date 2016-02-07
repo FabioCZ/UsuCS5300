@@ -43,7 +43,7 @@ bool Driver::parse_string(const std::string &input, const std::string& sname)
 void Driver::error(const class location& l,
 		   const std::string& m)
 {
-    std::cerr << l << ": " << m << std::endl;
+    std::cerr << "Parsing error: " <<  l << ": " << m << std::endl;
 }
 
 void Driver::error(const std::string& m)

@@ -1,3 +1,4 @@
+$test comment
 const
 	NUMS_LENGTH = 12;
 

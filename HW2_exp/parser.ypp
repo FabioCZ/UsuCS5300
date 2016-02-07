@@ -6,14 +6,14 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-
+#define YYDEBUG 1
 %}
 
 /*** yacc/bison Declarations ***/
 
 
-%debug
-%error-verbose
+/*%debug*/
+%error-verbose 
 
 /* write out a header file containing the token defines */
 %defines
@@ -46,7 +46,7 @@
 %}
 %token ArrayTok
 %token BeginTok
-%token EndTok
+%token EndProgTok
 %token ChrTok
 %token ConstTok
 %token DoTok
@@ -78,19 +78,20 @@
 %token WriteTok
 
 
-%token PlusTok
-%token MinusTok
-%token MultiplyTok
-%token DivideTok
-%token AndTok
-%token OrTok
-%token NotTok
-%token EqualsTok
-%token LessGreaterTok
-%token LessThanTok
-%token LessEqualTok
-%token GreaterTok
-%token GreaterEqualTok
+%left PlusTok
+%left MinusTok
+%right UnaryMinusTok
+%left MultiplyTok
+%left DivideTok
+%left AndTok
+%left OrTok
+%right NotTok
+%nonassoc EqualsTok
+%nonassoc NotEqualTok
+%nonassoc LessThanTok
+%nonassoc LessEqualTok
+%nonassoc GreaterTok
+%nonassoc GreaterEqualTok
 %token DotTok
 %token CommaTok
 %token ColonTok
@@ -100,24 +101,29 @@
 %token OpenBrktTok
 %token CloseBrktTok
 %token ColonEqualTok
-%token PercentTok
+%left PercentTok
 
 %token IdentifierTok
 
 %token IntTok
 %token StringTok
 %token CharTok
+
 %%
 /** PARSE TREE **/
 
 /* Program Structure */
-Application : ApplicationStart Code DotTok {};
-ApplicationStart : {};
-Code : {};
+Application : ConstDeclOptional TypeDeclOptional VarDeclOptional ProcedureFunctionOptional Block DotTok {};
+
+ProcedureFunctionOptional : ProcedureDecl {}
+	| FunctionDecl {}
+	| ProcedureFunctionOptional ProcedureFunctionOptional {}
+	| /* empty */; 
 
 /* Const Decl */
 ConstDeclOptional : ConstDecl {}
 	| /* empty */;
+
 ConstDecl : ConstTok ConstDecls {};
 
 ConstDecls : ConstDeclOne {}
@@ -130,7 +136,7 @@ ProcedureDecl : ProcedureTok IdentifierTok OpenParenTok FormalParametersOptional
 	| ProcedureTok IdentifierTok OpenParenTok FormalParametersOptional CloseParenTok SemicolonTok Body SemicolonTok {};
 
 FunctionDecl : FunctionTok IdentifierTok OpenParenTok FormalParametersOptional CloseParenTok ColonTok Type SemicolonTok ForwardTok SemicolonTok {}
-	| FunctionTok IdentifierTok OpenParenTok FormalParametersOptional CloseParenTok ColonTok Type SemicolonTok Body SemicolonTok {}
+	| FunctionTok IdentifierTok OpenParenTok FormalParametersOptional CloseParenTok ColonTok Type SemicolonTok Body SemicolonTok {};
 
 FormalParametersOptional : FormalParameter {}
 	| FormalParameter SemicolonTok FormalParameter {}
@@ -150,10 +156,10 @@ Block : BeginTok StatementSequence EndTok {};
 TypeDeclOptional : TypeDecls {}
 	| /* empty */;
 
-TypeDecls : TypeTok TypeDecl {}
+TypeDecls : TypeTok TypeDecl {};
 
 TypeDecl : IdentifierTok EqualsTok Type SemicolonTok {}
-	| TypeDecl TypeDecl;
+	| TypeDecl TypeDecl {};
 
 Type : SimpleType {}
 	| RecordType {}
@@ -161,12 +167,12 @@ Type : SimpleType {}
 
 SimpleType : IdentifierTok {};
 
-RecordType : RecordTok EndTok;
+RecordType : RecordTok Records EndTok {};
 
 Records : IdentList ColonTok Type SemicolonTok {}
 	| Records Records {};
 
-ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {}
+ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {};
 
 IdentList : IdentList CommaTok IdentifierTok {}
 	| IdentifierTok{};
@@ -202,12 +208,52 @@ Statement : Assignment {}
 
 Assignment : LVal ColonEqualTok Expression {};
 
-IfStatement : IfTok Expression
+IfStatement : IfTok Expression ThenTok StatementSequence ElseIfStatements ElseOptional EndTok {};
+
+ElseIfStatements : ElseIfStatements ElseIfStatements {}
+	| ElseifTok Expression ThenTok StatementSequence {}
+	| /* empty */;
+
+ElseOptional : ElseTok StatementSequence {}
+	| /* empty */;
+
+WhileStatement : WhileTok Expression DoTok StatementSequence EndTok {};
+
+RepeatStatement : RepeatTok StatementSequence UntilTok Expression {};
+
+ForStatement : ForTok IdentifierTok ColonEqualTok Expression ToDown Expression DoTok StatementSequence EndTok {};
+
+ToDown : ToTok {}
+	| DowntoTok {};
+
+StopStatement : StopTok {};
+
+ReturnStatement : ReturnTok SemicolonTok{}
+	| ReturnTok Expression SemicolonTok{};
+
+ReadStatement : ReadTok OpenParenTok LVal LValOptional CloseParenTok {};
+
+LValOptional : LValOptional CommaTok LVal {}
+	| CommaTok LVal {};
+
+WriteStatement : WriteTok OpenParenTok Expression ExpressionOptional CloseParenTok {};
+
+ProcedureCall : IdentifierTok OpenParenTok ExpressionsOptional CloseParenTok {};
+
+ExpressionsOptional : Expression ExpressionOptional {}
+	| /* empty */;
+
+ExpressionOptional : CommaTok Expression {}
+	| CommaTok Expression ExpressionOptional {}
+	| /* empty */;
+
+NullStatement : {};
+
 /* Expressions */
 Expression : Expression {}
 	| Expression AndTok Expression {}
 	| Expression EqualsTok Expression {}
-	| Expression LessGreaterTok Expression {}
+	| Expression NotEqualTok Expression {}
 	| Expression LessEqualTok Expression {}
 	| Expression GreaterEqualTok Expression {}
 	| Expression LessThanTok Expression {}
@@ -218,18 +264,21 @@ Expression : Expression {}
 	| Expression DivideTok Expression {}
 	| Expression MultiplyTok Expression {}
 	| NotTok Expression {}
-	| MinusTok Expression {}
+	| MinusTok Expression %prec UnaryMinusTok {}
 	| OpenParenTok Expression CloseParenTok {}
 	/*| ToDo*/
 	| ChrTok OpenParenTok Expression CloseParenTok {}
 	| OrdTok OpenParenTok Expression CloseParenTok {}
 	| PredTok OpenParenTok Expression CloseParenTok {}
 	| SuccTok OpenParenTok Expression CloseParenTok {}
-	| LVal {};
+	| LVal {}
+	| IntTok {}
+	| StringTok {}
+	| CharTok {};
 
 LVal : IdentifierTok {}
 	| LVal DotTok IdentifierTok {}
-	| LVal OpenBrktTok Expression CloseBrktTok {}
+	| LVal OpenBrktTok Expression CloseBrktTok {};
 
 
 %% /*** Additional Code ***/
