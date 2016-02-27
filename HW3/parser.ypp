@@ -1,48 +1,37 @@
-/* $Id: parser.yy 48 2009-09-05 08:07:10Z tb $ -*- mode: c++ -*- */
-/** \file parser.yy Contains the example Bison parser source */
-
-%{ /*** C/C++ Declarations ***/
-
-#include <stdio.h>
-#include <string>
-#include <vector>
-#define YYDEBUG 1
-%}
-
-/*** yacc/bison Declarations ***/
-
-%debug
-%error-verbose 
-%start Application
-/* write out a header file containing the token defines */
+%skeleton "lalr1.cc" /* -*- C++ -*- */
+%require "3.0.2"
 %defines
+%define parser_class_name {Parser}
 
-%skeleton "lalr1.cc"
+%define api.token.constructor
+%define api.value.type variant
+%define parse.assert
 
-%name-prefix="FC"
-%define "parser_class_name" "Parser"
+%code requires
+{
+# include <string>
+#include "CodeGen/CodeGenerator.hpp"
+class Driver;
+}
 
-/* keep track of the current position within the input */
+// The parsing context.
+%param { Driver& driver }
+
 %locations
 %initial-action
 {
-    // initialize the initial location object
-    @$.begin.filename = @$.end.filename = &driver.streamname;
+  // Initialize the initial location.
+  @$.begin.filename = @$.end.filename = &driver.file;
 };
 
-/* The driver is passed by reference to the parser and to the scanner. This
- * provides a simple but effective pure interface, not relying on global
- * variables. */
-%parse-param { class Driver& driver }
+%define parse.trace
+%define parse.error verbose
 
-%{
+%code
+{
+# include "driver.hpp"
+}
 
-#include "driver.hpp"
-#include "scanner.hpp"
-#undef yylex
-#define yylex driver.lexer->lex
-
-%}
 %token END 0 "end of file"
 %token ArrayTok
 %token BeginTok
@@ -103,26 +92,71 @@
 %token ColonEqualTok
 %left PercentTok
 
-%token IdentifierTok
+%token <char> CharTok
+%type <int> Arguments
+%type <int> ArrayType
+%type <int> Assignment
+%type <int> Block
+%type <int> Body
+%type <int> ConstExpression
+%type <int> ElseClause
+%type <int> ElseIfHead
+%type <int> ElseIfList
+%type <int> Expression
+%type <int> FSignature
+%type <int> FieldDecl
+%type <int> FieldDecls
+%type <int> ForHead
+%type <int> ForStatement
+%type <int> FormalParameter
+%type <int> FormalParameters
+%type <int> FunctionCall
+%token <int> IntTok
+%type <int> IdentList
+%type <int> OptVar
+%type <int> IfHead
+%type <int> IfStatement
+%type <std::string> LVal
+%type <int> OptArguments
+%type <int> OptFormalParameters
+%type <int> PSignature
+%type <int> ProcedureCall
+%type <int> ReadArgs
+%type <int> ReadStatement
+%type <int> RecordType
+%type <int> RepeatStatement
+%type <int> ReturnStatement
+%type <int> SimpleType
+%type <int> Statement
+%type <int> StatementList
+%type <int> StopStatement
+%type <int> ThenPart
+%type <int> ToHead
+%type <int> Type
+%type <int> WhileHead
+%type <int> WhileStatement
+%type <int> WriteArgs
+%type <int> WriteStatement
+%token <std::string> IdentifierTok
+%token <std::string> StringTok
 
-%token IntTok
-%token StringTok
-%token CharTok
 
 %%
+
 /** PARSE TREE **/
 
 /* Program Structure */
-Application : ProgramHead Block DotTok END {/*TODO add main here*/};
+Application : ProgramHead Block DotTok {FC::AddMain();};
 
 ProgramHead : OptConstDecls OptTypeDecls OptVarDecls PFDecls;
 
-OptConstDecls : ConstTok ConstDecls | ;
+OptConstDecls : ConstTok ConstDecls 
+    | ;
 
 ConstDecls : ConstDecls ConstDecl
     | ConstDecl ;
 
-ConstDecl : IdentifierTok EqualsTok Expression SemicolonTok {/*TODO add cosntant*/} ;
+ConstDecl : IdentifierTok EqualsTok ConstExpression SemicolonTok {std::cout << "CONST: " << $1 << ", " << $3 << std::endl; FC::AddConst($1,$3);} ;
 
 PFDecls : PFDecls ProcedureDecl
     | PFDecls FunctionDecl
@@ -176,7 +210,7 @@ RecordType : RecordTok FieldDecls EndTok {};
 FieldDecls : FieldDecls FieldDecl {}
     | {};
     
-FieldDecl : IdentifierTok ColonTok Type SemicolonTok {};
+FieldDecl : IdentList ColonTok Type SemicolonTok {};
 
 IdentList : IdentList CommaTok IdentifierTok {}
     | IdentifierTok {};
@@ -189,7 +223,7 @@ OptVarDecls : VarTok VarDecls
 VarDecls : VarDecls VarDecl
     | VarDecl;
     
-VarDecl : IdentifierTok ColonTok Type SemicolonTok {/*todo add var*/};
+VarDecl : IdentList ColonTok Type SemicolonTok {/*todo add var*/};
 
 Statement : Assignment {}
     | IfStatement {}
@@ -214,7 +248,7 @@ ThenPart : ThenTok StatementList {};
 ElseIfList : ElseIfList ElseIfHead ThenPart {}
     |{};
     
-ElseIfHead : ElseifTok StatementList {}
+ElseIfHead : ElseifTok Expression {}
     | {};
     
 ElseClause : ElseTok StatementList {}
@@ -236,11 +270,11 @@ ToHead : ToTok Expression {}
 StopStatement : StopTok {/* TODO stop*/};
 
 ReturnStatement : ReturnTok Expression {}
-    | ReadTok {};
+    | ReturnTok {};
     
 ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
 
-ReadArgs : ReadArgs OpenParenTok CommaTok LVal {/*todo readval */}
+ReadArgs : ReadArgs CommaTok LVal {/*todo readval */}
     | LVal {/*todo*/};
     
 WriteStatement : WriteTok OpenParenTok WriteArgs CloseParenTok {};
@@ -250,13 +284,17 @@ WriteArgs : WriteArgs CommaTok Expression {}
     
 ProcedureCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
 
-OptArguments : Arguments CommaTok Expression {}
-    | Expression {};
+OptArguments : Arguments  {}
+    | {};
     
 Arguments : Arguments CommaTok Expression {}
     | Expression {};
-    
-Expression : Expression AndTok Expression {}
+
+ConstExpression : Expression {$$ = $1;}
+    | StringTok {$$ = FC::AddString($1);};
+
+Expression : Expression OrTok Expression {}
+    | Expression AndTok Expression {}
     | Expression EqualsTok Expression {}
     | Expression NotEqualTok Expression {}
     | Expression LessEqualTok Expression {}
@@ -265,31 +303,32 @@ Expression : Expression AndTok Expression {}
     | Expression GreaterTok Expression {}
     | Expression PlusTok Expression {}
     | Expression MinusTok Expression {}
-    | Expression MultiplyTok Expression {}
     | Expression DivideTok Expression {}
     | Expression MultiplyTok Expression {}
+    | Expression PercentTok Expression {}
     | NotTok Expression {}
     | MinusTok Expression %prec UnaryMinusTok {}
-    | OpenParenTok Expression CloseParenTok {}
+    | OpenParenTok Expression CloseParenTok {$$ = $2;}
     | ChrTok OpenParenTok Expression CloseParenTok {}
     | OrdTok OpenParenTok Expression CloseParenTok {}
     | PredTok OpenParenTok Expression CloseParenTok {}
     | SuccTok OpenParenTok Expression CloseParenTok {}
-    | LVal {}
-    | IntTok {}
-    | StringTok {}
-    | CharTok {};
+    | LVal {$$ = FC::LoadLVal($1); }
+    | IntTok {$$ = FC::AddIntExpr($1);}
+    /*| StringTok {$$ = FC::AddString($1);}*/
+    | CharTok {}
+    | FunctionCall {$$=$1;};
     
 FunctionCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
 
-LVal : LVal DotTok IdentifierTok {}
-    | LVal OpenParenTok Expression CloseParenTok {}
-    | IdentifierTok {};
-    
-%% /*** Additional Code ***/
+LVal : LVal DotTok IdentifierTok {$$ = "NotImplemented";}
+    | LVal OpenBrktTok Expression CloseBrktTok {$$ = "NotImplemented";}
+    | IdentifierTok {$$ = $1;};
 
-void FC::Parser::error(const Parser::location_type& l,
-			    const std::string& m)
+%%
+void
+yy::Parser::error (const location_type& l,
+                          const std::string& m)
 {
-    driver.error(l, m);
+  driver.error (l, m);
 }

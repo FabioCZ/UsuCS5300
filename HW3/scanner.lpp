@@ -1,52 +1,25 @@
-/* $Id: scanner.ll 44 2008-10-23 09:03:19Z tb $ -*- mode: c++ -*- */
-/** \file scanner.ll Define the example Flex lexical scanner */
-
-%{ /*** C/C++ Declarations ***/
-
-#include <string>
+%{ /* -*- C++ -*- */
+# include <cerrno>
+# include <climits>
+# include <cstdlib>
+# include <string>
+# include "driver.hpp"
+# include "parser.hpp"
+#include <cstring>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <vector>
-#include "scanner.hpp"
 
-/* import the parser's token type into a local typedef */
-typedef FC::Parser::token token;
-typedef FC::Parser::token_type token_type;
+// Work around an incompatibility in flex (at least versions
+// 2.5.31 through 2.5.33): it generates code that does
+// not conform to C89.  See Debian bug 333231
+// <http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=333231>.
+# undef yywrap
+# define yywrap() 1
 
-/* By default yylex returns int, we use token_type. Unfortunately yyterminate
- * by default returns 0, which is not of token_type. */
-#define yyterminate() return token::END
-/*
-void printKeyword(std::string s)
-{
-    std::cout << "Found keyword : " << s << " at line : " << yylineno << std::endl;
-}
+// The location of the current token.
+static yy::location loc;
 
-void printOperator(std::string s)
-{
-    std::cout << "Found operator : " << s << " at line : " << yylineno << std::endl;    
-}
-
-void printIdentifier(std::string s)
-{
-    std::cout << "Found identifier: " << s << " at line : " << yylineno << std::endl;
-}
-
-void printIntLiteral(std::string type, int value)
-{
-    std::cout << "Found integer literal in base: " << type.c_str() << " ,value (dec):   " << value << " at line : " << yylineno << std::endl;
-}
-
-void printStringLiteral(std::string s)
-{
-    std::cout << "Found string literal: " << s << " at line: " << yylineno << std::endl;
-}
-
-void printCharLiteral(char c)
-{
-    std::cout << "Found character literal: " << c << " at line: " << yylineno << std::endl;
-}
-*/
 std::string replaceReserved(std::string s)
 {
     boost::replace_all(s,"\\n","\n");
@@ -71,151 +44,124 @@ char cleanUpChar(std::string s)
     s = replaceReserved(s);
     return s.c_str()[0];
 }
-/*
-void printComment(std::string s)
-{
-    boost::erase_all(s,"$");
-    boost::erase_all(s,"\n");
-    std::cout << "Found comment with content: " << s << " at line: " << yylineno << std::endl;
-}
-*/
-/*
-void printError(std::string s)
-{
-    std::cout << "Found unknow character (error): " << s << " at line: " << yylineno << std::endl;
-}
-*/
+
 %}
 
-/*** Flex Declarations and Options ***/
+%option noyywrap nounput batch debug noinput
 
-%option c++
-%option debug
-%option noyywrap
-%option yylineno
+
 letter [a-zA-Z]
 digit [0-9]
-%% 
+blank [ \t]
+%{
+  // Code run each time a pattern is matched.
+  # define YY_USER_ACTION  loc.columns (yyleng);
+%}
+ /****************************/
+%%
+ /****************************/
+
+%{
+  // Code run each time yylex is called.
+  loc.step ();
+%}
+
+{blank}+   loc.step ();
+[\n]+      loc.lines (yyleng); loc.step ();
 
      /* keywords */
-array|ARRAY { return token::ArrayTok; }
-begin|BEGIN { return  token::BeginTok; }
-chr|CHR { return token::ChrTok; }
-const|CONST { return token::ConstTok; }
-do|DO { return token::DoTok; }
-downto|DOWNTO { return token::DowntoTok; }
-else|ELSE { return token::ElseTok; }
-elseif|ELSEIF { return token::ElseifTok; }
-end|END { return token::EndTok; }
-for|FOR { return token::ForTok; }
-forward|FORWARD { return token::ForwardTok; }
-function|FUNCTION { return token::FunctionTok; }
-if|IF { return token::IfTok; }
-of|OF { return token::OfTok; }
-ord|ORD { return token::OrdTok; }
-pred|PRED { return token::PredTok; }
-procedure|PROCEDURE { return token::ProcedureTok; }
-read|READ { return token::ReadTok; }
-record|RECORD { return token::RecordTok; }
-ref|REF { return token::RefTok; }
-repeat|REPEAT { return token::RepeatTok; }
-return|RETURN { return token::ReturnTok; }
-stop|STOP { return token::StopTok; }
-succ|SUCC { return token::SuccTok; }
-then|THEN { return token::ThenTok; }
-to|TO { return token::ToTok; }
-type|TYPE { return token::TypeTok; }
-until|UNTIL { return token::UntilTok; }
-var|VAR { return token::VarTok; }
-while|WHILE { return token::WhileTok; }
-write|WRITE { return token::WriteTok; }
+array|ARRAY { return yy::Parser::make_ArrayTok(loc); }
+begin|BEGIN { return  yy::Parser::make_BeginTok(loc); }
+chr|CHR { return yy::Parser::make_ChrTok(loc); }
+const|CONST { return yy::Parser::make_ConstTok(loc); }
+do|DO { return yy::Parser::make_DoTok(loc); }
+downto|DOWNTO { return yy::Parser::make_DowntoTok(loc); }
+else|ELSE { return yy::Parser::make_ElseTok(loc); }
+elseif|ELSEIF { return yy::Parser::make_ElseifTok(loc); }
+end|END { return yy::Parser::make_EndTok(loc); }
+for|FOR { return yy::Parser::make_ForTok(loc); }
+forward|FORWARD { return yy::Parser::make_ForwardTok(loc); }
+function|FUNCTION { return yy::Parser::make_FunctionTok(loc); }
+if|IF { return yy::Parser::make_IfTok(loc); }
+of|OF { return yy::Parser::make_OfTok(loc); }
+ord|ORD { return yy::Parser::make_OrdTok(loc); }
+pred|PRED { return yy::Parser::make_PredTok(loc); }
+procedure|PROCEDURE { return yy::Parser::make_ProcedureTok(loc); }
+read|READ { return yy::Parser::make_ReadTok(loc); }
+record|RECORD { return yy::Parser::make_RecordTok(loc); }
+ref|REF { return yy::Parser::make_RefTok(loc); }
+repeat|REPEAT { return yy::Parser::make_RepeatTok(loc); }
+return|RETURN { return yy::Parser::make_ReturnTok(loc); }
+stop|STOP { return yy::Parser::make_StopTok(loc); }
+succ|SUCC { return yy::Parser::make_SuccTok(loc); }
+then|THEN { return yy::Parser::make_ThenTok(loc); }
+to|TO { return yy::Parser::make_ToTok(loc); }
+type|TYPE { return yy::Parser::make_TypeTok(loc); }
+until|UNTIL { return yy::Parser::make_UntilTok(loc); }
+var|VAR { return yy::Parser::make_VarTok(loc); }
+while|WHILE { return yy::Parser::make_WhileTok(loc); }
+write|WRITE { return yy::Parser::make_WriteTok(loc); }
 
     /* operators */
-\+ { return token::PlusTok;}
-\- { return token::MinusTok;}
-\* { return token::MultiplyTok;}
-\/ { return token::DivideTok;}
-\& { return token::AndTok;}
-\| { return token::OrTok;}
-\~ { return token::NotTok;}
-\= { return token::EqualsTok;} 
-\<> { return token::NotEqualTok;}
-\< { return token::LessThanTok;}
-\<= { return token::LessEqualTok;}
-\> { return token::GreaterTok;}
-\>= { return token::GreaterEqualTok;}
-\. { return token::DotTok;}
-\, { return token::CommaTok;}
-\: { return token::ColonTok;}
-\; { return token::SemicolonTok;}
-\( { return token::OpenParenTok;}
-\) { return token::CloseParenTok;}
-\[ { return token::OpenBrktTok;}
-\] { return token::CloseBrktTok;}
-\:= { return token::ColonEqualTok;}
-\% { return token::PercentTok;}
+\+ { return yy::Parser::make_PlusTok(loc);}
+\- { return yy::Parser::make_MinusTok(loc);}
+\* { return yy::Parser::make_MultiplyTok(loc);}
+\/ { return yy::Parser::make_DivideTok(loc);}
+\& { return yy::Parser::make_AndTok(loc);}
+\| { return yy::Parser::make_OrTok(loc);}
+\~ { return yy::Parser::make_NotTok(loc);}
+\= { return yy::Parser::make_EqualsTok(loc);} 
+\<> { return yy::Parser::make_NotEqualTok(loc);}
+\< { return yy::Parser::make_LessThanTok(loc);}
+\<= { return yy::Parser::make_LessEqualTok(loc);}
+\> { return yy::Parser::make_GreaterTok(loc);}
+\>= { return yy::Parser::make_GreaterEqualTok(loc);}
+\. { return yy::Parser::make_DotTok(loc);}
+\, { return yy::Parser::make_CommaTok(loc);}
+\: { return yy::Parser::make_ColonTok(loc);}
+\; { return yy::Parser::make_SemicolonTok(loc);}
+\( { return yy::Parser::make_OpenParenTok(loc);}
+\) { return yy::Parser::make_CloseParenTok(loc);}
+\[ { return yy::Parser::make_OpenBrktTok(loc);}
+\] { return yy::Parser::make_CloseBrktTok(loc);}
+\:= { return yy::Parser::make_ColonEqualTok(loc);}
+\% { return yy::Parser::make_PercentTok(loc);}
 
     /* Identifier */
-{letter}({letter}|{digit}|_)* {/*TODO set value hereyytext;*/ return token::IdentifierTok;}
+{letter}({letter}|{digit}|_)* { std::string str(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
     /* literals */
-    
-0x([0-9a-fA-F])+ {/*TODO set value here(int)strtol(yytext,NULL,0);*/ return token::IntTok;}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
-0({digit})+ {/*TODO set value here(int)strtol(yytext,NULL,8);*/ return token::IntTok;}
-0|([1-9]({digit})*) {/*TODO set value here (int)strtol(yytext,NULL,10);*/ return token::IntTok;}
-\"[\x20-\x7e]+\" {/*TODO set value herecleanUpString(yytext);*/ return token::StringTok;}
-'([\x20-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' {/*TODO set value herecleanUpChar(yytext);*/ return token::CharTok;}
+
+0x([0-9a-fA-F])+ { int val = (int)strtol(yytext,NULL,0); yy::Parser::make_IntTok(val,loc);}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
+0({digit})+ { int val = (int)strtol(yytext,NULL,8);yy::Parser::make_IntTok(val,loc);;}
+0|([1-9]({digit})*) { int val = (int)strtol(yytext,NULL,10); yy::Parser::make_IntTok(val,loc);;}
+\"[\x20-\x7e]+\" { std::string str = cleanUpString(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
+'([\x20-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' { char val = cleanUpChar(yytext); return yy::Parser::make_CharTok(val,loc);}
+
  
     /* Comments */
 (\$.*\n)  {/*Comments, don't do anything printComment(yytext);*/ }
     /* other */
 [ \n\t\r]+ {/*whitespace, nothing to do here*/}
-. { /*printError(yytext);*/}
+<<EOF>>    return yy::Parser::make_END(loc);
+
 
 %%
 
-/** Scanner implementation **/
-
-namespace FC {
-
-Scanner::Scanner(std::istream* in,
-		 std::ostream* out)
-    : yyFlexLexer(in, out)
+void Driver::scan_begin ()
 {
+  yy_flex_debug = trace_scanning;
+  if (file.empty () || file == "-")
+    yyin = stdin;
+  else if (!(yyin = fopen (file.c_str (), "r")))
+    {
+      error ("cannot open " + file + ": " + strerror(errno));
+      exit (EXIT_FAILURE);
+    }
 }
 
-Scanner::~Scanner()
+void
+Driver::scan_end ()
 {
+  fclose (yyin);
 }
-
-void Scanner::set_debug(bool b)
-{
-    yy_flex_debug = b;
-}
-
-}
-
-/* This implementation of ExampleFlexLexer::yylex() is required to fill the
- * vtable of the class ExampleFlexLexer. We define the scanner's main yylex
- * function via YY_DECL to reside in the Scanner class instead. */
-
-#ifdef yylex
-#undef yylex
-#endif
-
-int yyFlexLexer::yylex()
-{
-    std::cerr << "in ExampleFlexLexer::yylex() !" << std::endl;
-    return 0;
-}
-
-/* When the scanner receives an end-of-file indication from YY_INPUT, it then
- * checks the yywrap() function. If yywrap() returns false (zero), then it is
- * assumed that the function has gone ahead and set up `yyin' to point to
- * another input file, and scanning continues. If it returns true (non-zero),
- * then the scanner terminates, returning 0 to its caller. */
-
-// int yyFlexLexer::yywrap()
-// {
-//     return 1;
-// }
 

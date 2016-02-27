@@ -31,12 +31,12 @@
 // version 2.2 of Bison.
 
 /**
- ** \file position.hh
- ** Define the FC::position class.
+ ** \file /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/position.hh
+ ** Define the yy::position class.
  */
 
-#ifndef YY_FC_POSITION_HH_INCLUDED
-# define YY_FC_POSITION_HH_INCLUDED
+#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_POSITION_HH_INCLUDED
+# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_POSITION_HH_INCLUDED
 
 # include <algorithm> // std::max
 # include <iostream>
@@ -51,8 +51,8 @@
 # endif
 
 
-namespace FC {
-#line 56 "position.hh" // location.cc:291
+namespace yy {
+#line 56 "/home/fabio/Desktop/UsuCS5300/HW3/HW3New2/position.hh" // location.cc:291
   /// Abstract a position.
   class position
   {
@@ -175,6 +175,6 @@ namespace FC {
   }
 
 
-} // FC
-#line 180 "position.hh" // location.cc:291
-#endif // !YY_FC_POSITION_HH_INCLUDED
+} // yy
+#line 180 "/home/fabio/Desktop/UsuCS5300/HW3/HW3New2/position.hh" // location.cc:291
+#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_POSITION_HH_INCLUDED

@@ -31,18 +31,18 @@
 // version 2.2 of Bison.
 
 /**
- ** \file location.hh
- ** Define the FC::location class.
+ ** \file /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/location.hh
+ ** Define the yy::location class.
  */
 
-#ifndef YY_FC_LOCATION_HH_INCLUDED
-# define YY_FC_LOCATION_HH_INCLUDED
+#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_LOCATION_HH_INCLUDED
+# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_LOCATION_HH_INCLUDED
 
 # include "position.hh"
 
 
-namespace FC {
-#line 46 "location.hh" // location.cc:291
+namespace yy {
+#line 46 "/home/fabio/Desktop/UsuCS5300/HW3/HW3New2/location.hh" // location.cc:291
   /// Abstract a location.
   class location
   {
@@ -182,6 +182,6 @@ namespace FC {
   }
 
 
-} // FC
-#line 187 "location.hh" // location.cc:291
-#endif // !YY_FC_LOCATION_HH_INCLUDED
+} // yy
+#line 187 "/home/fabio/Desktop/UsuCS5300/HW3/HW3New2/location.hh" // location.cc:291
+#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_LOCATION_HH_INCLUDED
