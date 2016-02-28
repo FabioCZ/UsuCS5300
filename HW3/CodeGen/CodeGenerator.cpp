@@ -3,7 +3,8 @@
 #include "LVal.hpp"
 #include "Register.hpp"
 #include "Expr/Expr.hpp"
-
+#include <memory>
+#include <boost/algorithm/string.hpp>
 namespace FC
 {
     std::shared_ptr<Code> Code::_code = nullptr;
@@ -20,79 +21,178 @@ namespace FC
     void AddMain()
     {
         auto inst = Code::Inst();
+        std::cout << "Writing Main" << std::endl;
         inst->_outFile << "Test code";
+        WriteConstData();
     }
 
 
-    void AddConst(std::string id, int v)
+    void AddConst(std::string id,  std::shared_ptr<Expr> e)
     {
-        std::cout << "CONST";
+
+        auto inst = Code::Inst();
+        auto lvalRes = inst->LValues.find(id);
+        if(lvalRes != inst->LValues.end())
+        {
+            std::cout << "Constant " << id << "has already been defined" << std::endl;
+            exit(1);
+        }
+
+        LVal lv;
+        lv.Type = e->GetType();
+        lv.LValType = Data;
+        lv.DataLabel = id;
+
+        inst->LValues[id] = std::make_shared<LVal>(lv);
+
+        if(e->GetExprType() == Reg)
+        {
+            std::cout << "Constant parsing error";
+            exit(1);
+        }
+
+        inst->ConstData[id] = e;
+    }
+
+    const std::shared_ptr<Expr> AddIntExpr(int val)
+    {
+        auto inst = Code::Inst();
+        inst->Expressions.push_back(std::make_shared<Expr>(val,IntType()));
+        return inst->Expressions.back();
+    }
+
+    const std::shared_ptr<Expr> AddString(std::string val)
+    {
         auto inst = Code::Inst();
 
+        inst->Expressions.push_back(std::make_shared<Expr>(val));
+        return inst->Expressions.back();
     }
 
-    int AddIntExpr(int val)
+    const std::shared_ptr<Expr> LoadLVal(std::shared_ptr<LVal> lv)
+    {
+        auto id = lv->name;
+        auto inst = Code::Inst();
+        auto lvalRes = inst->LValues.find(id);
+        if(lvalRes == inst->LValues.end())
+        {
+            std::cout << "Internal Compiler error: Can't find lval '" << id << "'" <<  std::endl;
+            exit(1);
+        }
+        auto lval = lvalRes->second;
+
+        if(lval->LValType == Const)
+        {
+            FC::Expr e(lval->ConstValue, lval->Type);
+            inst->Expressions.push_back(std::make_shared<Expr>(e));
+        }
+        else if(lval->LValType == Stack)
+        {
+            FC::Expr e(FC::Register::Allocate(), lval->Type);
+            inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval->StackPointerOffset << "($sp)" << std::endl;
+            inst->Expressions.push_back(std::make_shared<Expr>(e));
+        }
+        else if(lval->LValType == Global)
+        {
+            FC::Expr e(FC::Register::Allocate(), lval->Type);
+            inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval->GlobalPointerOffset << "($gp)" << std::endl;
+            inst->Expressions.push_back(std::make_shared<Expr>(e));
+
+        }
+        else // data
+        {
+            FC::Expr e(FC::Register::Allocate(), lval->Type);
+            inst->_outFile << "\tla " << e.GetRegister()->name << ", " << lval->DataLabel << std::endl;
+            inst->Expressions.push_back(std::make_shared<Expr>(e));
+        }
+        return inst->Expressions.back();
+    }
+
+    void WriteConstData()
     {
         auto inst = Code::Inst();
-        Expr e(val, IntType());
-        int index = inst->Expressions.size();
-        inst->Expressions.push_back(e);
-        std::cout << "ADDED INT" << std::endl;
-        return index;
+        inst->_outFile << ".data:" << std::endl;
+        for(auto e : inst->ConstData)
+        {
+            inst->_outFile << "\t" << e.first << ": .dataType " << e.second->GetVal() << std::endl;
+        }
     }
 
-    int AddString(std::string val)
+    Type SimpleTypeLookup(std::string typeName)
+    {
+        boost::algorithm::to_lower(typeName);
+        if(typeName == std::string("integer"))
+        {
+            return IntType();
+        }
+        if(typeName == std::string("char"))
+        {
+            return CharType();
+        }
+        if(typeName == std::string("boolean"))
+        {
+            return BoolType();
+        }
+        std::cout << "Type: " << typeName << " is not a valid type" << std::endl;
+        exit(1);
+        return Type();
+    }
+
+    void AddIdent(std::string id)
+    {
+        //std::cout << "Ident " << id << " added to temp list" << std::endl;
+        auto inst = Code::Inst();
+        inst->TempIdentList.push_back(id);
+    }
+
+    void AddVariables(Type type)
     {
         auto inst = Code::Inst();
-        auto label = inst->GetNextStringDataLabel();
-        inst->StringData[label] = val;
-        Expr e(val);
+        if(inst->TempIdentList.size() == 0)
+        {
+            std::cout << "Internal error when initializing variables" << std::endl;
+            exit(1);
+        }
+        for(auto a : inst->TempIdentList)
+        {
+            //std::cout << "adding var " << a << std::endl;
+            LVal lv;
+            lv.name = a;
+            lv.GlobalPointerOffset = inst->AllocateGlobalPointer(type.size);
+            inst->LValues[a] = std::make_shared<LVal>(lv);
+        }
 
-        int index = inst->Expressions.size();
-        inst->Expressions.push_back(e);
-        return index;
+        inst->TempIdentList.clear();
     }
 
-    int LoadLVal(std::string id)
+
+    int Code::AllocateStackPointer(int size)
+    {
+        _currSPOffset -= size;
+        return _currSPOffset;
+    }
+
+    int Code::AllocateGlobalPointer(int size)
+    {
+        int pt = _currGPOffset;
+        _currGPOffset += size;
+        return pt;
+    }
+
+    void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e)
+    {
+
+    }
+
+    std::shared_ptr<LVal> GetLValForIdent(std::string id)
     {
         auto inst = Code::Inst();
         auto lvalRes = inst->LValues.find(id);
         if(lvalRes == inst->LValues.end())
         {
-            std::cout << "Can't find lval " << id << std::endl;
-            return -1;
+            std::cout << "Internal Compiler error: Can't find lval " << id << std::endl;
+            exit(1);
         }
-        auto lval = lvalRes->second;
-
-        int index;
-        if(lval.LValType == Const)
-        {
-            FC::Expr e(lval.ConstValue, lval.Type);
-            index = inst->Expressions.size();
-            inst->Expressions.push_back(e);
-        }
-        else if(lval.LValType == Stack)
-        {
-            FC::Expr e(FC::Register::Allocate(), lval.Type);
-            inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval.StackPointerOffset << "($sp)" << std::endl;
-            index = inst->Expressions.size();
-            inst->Expressions.push_back(e);
-        }
-        else if(lval.LValType == Global)
-        {
-            FC::Expr e(FC::Register::Allocate(), lval.Type);
-            inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval.GlobalPointerOffset << "($gp)" << std::endl;
-            index = inst->Expressions.size();
-            inst->Expressions.push_back(e);
-
-        }
-        else // data
-        {
-            FC::Expr e(FC::Register::Allocate(), lval.Type);
-            inst->_outFile << "\tla " << e.GetRegister()->name << ", " << lval.DataLabel << std::endl;
-            index = inst->Expressions.size();
-            inst->Expressions.push_back(e);
-        }
-        return index;
+        return lvalRes->second;
     }
 }

@@ -34,6 +34,8 @@ CMakeFiles/cpsl_common.dir/CodeGen/Register.cpp.o: CodeGen/Register.cpp
 CMakeFiles/cpsl_common.dir/CodeGen/Register.cpp.o: CodeGen/Register.hpp
 
 CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/CodeGenerator.hpp
+CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/Expr/Expr.hpp
+CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/Register.hpp
 CMakeFiles/cpsl_common.dir/parser.cpp.o: driver.hpp
 CMakeFiles/cpsl_common.dir/parser.cpp.o: location.hh
 CMakeFiles/cpsl_common.dir/parser.cpp.o: parser.cpp
@@ -42,10 +44,11 @@ CMakeFiles/cpsl_common.dir/parser.cpp.o: position.hh
 CMakeFiles/cpsl_common.dir/parser.cpp.o: stack.hh
 CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/Expr/Expr.hpp
 CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/LVal.hpp
-CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/Register.hpp
 CMakeFiles/cpsl_common.dir/parser.cpp.o: CodeGen/Type.hpp
 
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/CodeGenerator.hpp
+CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/Expr/Expr.hpp
+CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/Register.hpp
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: driver.hpp
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: location.hh
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: parser.hpp
@@ -54,6 +57,5 @@ CMakeFiles/cpsl_common.dir/scanner.cpp.o: scanner.cpp
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: stack.hh
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/Expr/Expr.hpp
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/LVal.hpp
-CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/Register.hpp
 CMakeFiles/cpsl_common.dir/scanner.cpp.o: CodeGen/Type.hpp
 

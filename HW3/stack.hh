@@ -31,18 +31,18 @@
 // version 2.2 of Bison.
 
 /**
- ** \file /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/stack.hh
+ ** \file /home/fabio/Desktop/UsuCS5300/HW3/stack.hh
  ** Define the yy::stack class.
  */
 
-#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_STACK_HH_INCLUDED
-# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_STACK_HH_INCLUDED
+#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_STACK_HH_INCLUDED
+# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_STACK_HH_INCLUDED
 
 # include <vector>
 
 
 namespace yy {
-#line 46 "/home/fabio/Desktop/UsuCS5300/HW3/HW3New2/stack.hh" // stack.hh:133
+#line 46 "/home/fabio/Desktop/UsuCS5300/HW3/stack.hh" // stack.hh:133
   template <class T, class S = std::vector<T> >
   class stack
   {
@@ -153,6 +153,6 @@ namespace yy {
 
 
 } // yy
-#line 157 "/home/fabio/Desktop/UsuCS5300/HW3/HW3New2/stack.hh" // stack.hh:133
+#line 157 "/home/fabio/Desktop/UsuCS5300/HW3/stack.hh" // stack.hh:133
 
-#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_HW3NEW2_STACK_HH_INCLUDED
+#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_STACK_HH_INCLUDED

@@ -30,27 +30,10 @@
 // This special exception was added by the Free Software Foundation in
 // version 2.2 of Bison.
 
-// Take the name prefix into account.
-#define yylex   FClex
 
 // First part of user declarations.
-#line 4 "parser.ypp" // lalr1.cc:399
- /*** C/C++ Declarations ***/
 
-#include <stdio.h>
-#include <string>
-#include <vector>
-#define YYDEBUG 1
-#line 38 "parser.ypp" // lalr1.cc:399
-
-
-#include "driver.hpp"
-#include "scanner.hpp"
-#undef yylex
-#define yylex driver.lexer->lex
-
-
-#line 54 "parser.cpp" // lalr1.cc:399
+#line 37 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:399
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -64,7 +47,13 @@
 
 // User implementation prologue.
 
-#line 68 "parser.cpp" // lalr1.cc:407
+#line 51 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:407
+// Unqualified %code blocks.
+#line 32 "parser.ypp" // lalr1.cc:408
+
+# include "driver.hpp"
+
+#line 57 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:408
 
 
 #ifndef YY_
@@ -149,8 +138,8 @@
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 
-namespace FC {
-#line 154 "parser.cpp" // lalr1.cc:474
+namespace yy {
+#line 143 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:474
 
   /* Return YYSTR after stripping away unnecessary quotes and
      backslashes, so that it's suitable for yyerror.  The heuristic is
@@ -191,7 +180,7 @@ namespace FC {
 
 
   /// Build a parser object.
-  Parser::Parser (class Driver& driver_yyarg)
+  Parser::Parser (Driver& driver_yyarg)
     :
 #if YYDEBUG
       yydebug_ (false),
@@ -208,94 +197,6 @@ namespace FC {
   | Symbol types.  |
   `---------------*/
 
-  inline
-  Parser::syntax_error::syntax_error (const location_type& l, const std::string& m)
-    : std::runtime_error (m)
-    , location (l)
-  {}
-
-  // basic_symbol.
-  template <typename Base>
-  inline
-  Parser::basic_symbol<Base>::basic_symbol ()
-    : value ()
-  {}
-
-  template <typename Base>
-  inline
-  Parser::basic_symbol<Base>::basic_symbol (const basic_symbol& other)
-    : Base (other)
-    , value ()
-    , location (other.location)
-  {
-    value = other.value;
-  }
-
-
-  template <typename Base>
-  inline
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const semantic_type& v, const location_type& l)
-    : Base (t)
-    , value (v)
-    , location (l)
-  {}
-
-
-  /// Constructor for valueless symbols.
-  template <typename Base>
-  inline
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const location_type& l)
-    : Base (t)
-    , value ()
-    , location (l)
-  {}
-
-  template <typename Base>
-  inline
-  Parser::basic_symbol<Base>::~basic_symbol ()
-  {
-  }
-
-  template <typename Base>
-  inline
-  void
-  Parser::basic_symbol<Base>::move (basic_symbol& s)
-  {
-    super_type::move(s);
-    value = s.value;
-    location = s.location;
-  }
-
-  // by_type.
-  inline
-  Parser::by_type::by_type ()
-     : type (empty)
-  {}
-
-  inline
-  Parser::by_type::by_type (const by_type& other)
-    : type (other.type)
-  {}
-
-  inline
-  Parser::by_type::by_type (token_type t)
-    : type (yytranslate_ (t))
-  {}
-
-  inline
-  void
-  Parser::by_type::move (by_type& that)
-  {
-    type = that.type;
-    that.type = empty;
-  }
-
-  inline
-  int
-  Parser::by_type::type_get () const
-  {
-    return type;
-  }
 
 
   // by_state.
@@ -338,7 +239,76 @@ namespace FC {
   Parser::stack_symbol_type::stack_symbol_type (state_type s, symbol_type& that)
     : super_type (s, that.location)
   {
-    value = that.value;
+      switch (that.type_get ())
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        value.move< FC::Type > (that.value);
+        break;
+
+      case 59: // CharTok
+        value.move< char > (that.value);
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        value.move< int > (that.value);
+        break;
+
+      case 117: // Expression
+        value.move< std::shared_ptr<FC::Expr>  > (that.value);
+        break;
+
+      case 119: // LVal
+        value.move< std::shared_ptr<FC::LVal>  > (that.value);
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        value.move< std::string > (that.value);
+        break;
+
+      default:
+        break;
+    }
+
     // that is emptied.
     that.type = empty;
   }
@@ -348,7 +318,76 @@ namespace FC {
   Parser::stack_symbol_type::operator= (const stack_symbol_type& that)
   {
     state = that.state;
-    value = that.value;
+      switch (that.type_get ())
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        value.copy< FC::Type > (that.value);
+        break;
+
+      case 59: // CharTok
+        value.copy< char > (that.value);
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        value.copy< int > (that.value);
+        break;
+
+      case 117: // Expression
+        value.copy< std::shared_ptr<FC::Expr>  > (that.value);
+        break;
+
+      case 119: // LVal
+        value.copy< std::shared_ptr<FC::LVal>  > (that.value);
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        value.copy< std::string > (that.value);
+        break;
+
+      default:
+        break;
+    }
+
     location = that.location;
     return *this;
   }
@@ -361,9 +400,6 @@ namespace FC {
   {
     if (yymsg)
       YY_SYMBOL_PRINT (yymsg, yysym);
-
-    // User destructor.
-    YYUSE (yysym.type_get ());
   }
 
 #if YYDEBUG
@@ -488,13 +524,13 @@ namespace FC {
 
 
     // User initialization code.
-    #line 28 "parser.ypp" // lalr1.cc:725
+    #line 23 "parser.ypp" // lalr1.cc:725
 {
-    // initialize the initial location object
-    yyla.location.begin.filename = yyla.location.end.filename = &driver.streamname;
+  // Initialize the initial location.
+  yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
 }
 
-#line 498 "parser.cpp" // lalr1.cc:725
+#line 534 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:725
 
     /* Initialize the stack.  The initial state will be set in
        yynewstate, since the latter expects the semantical and the
@@ -527,7 +563,8 @@ namespace FC {
         YYCDEBUG << "Reading a token: ";
         try
           {
-            yyla.type = yytranslate_ (yylex (&yyla.value, &yyla.location));
+            symbol_type yylookahead (yylex (driver));
+            yyla.move (yylookahead);
           }
         catch (const syntax_error& yyexc)
           {
@@ -582,16 +619,79 @@ namespace FC {
     {
       stack_symbol_type yylhs;
       yylhs.state = yy_lr_goto_state_(yystack_[yylen].state, yyr1_[yyn]);
-      /* If YYLEN is nonzero, implement the default value of the
-         action: '$$ = $1'.  Otherwise, use the top of the stack.
+      /* Variants are always initialized to an empty instance of the
+         correct type. The default '$$ = $1' action is NOT applied
+         when using variants.  */
+        switch (yyr1_[yyn])
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        yylhs.value.build< FC::Type > ();
+        break;
 
-         Otherwise, the following line sets YYLHS.VALUE to garbage.
-         This behavior is undocumented and Bison users should not rely
-         upon it.  */
-      if (yylen)
-        yylhs.value = yystack_[yylen - 1].value;
-      else
-        yylhs.value = yystack_[0].value;
+      case 59: // CharTok
+        yylhs.value.build< char > ();
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        yylhs.value.build< int > ();
+        break;
+
+      case 117: // Expression
+        yylhs.value.build< std::shared_ptr<FC::Expr>  > ();
+        break;
+
+      case 119: // LVal
+        yylhs.value.build< std::shared_ptr<FC::LVal>  > ();
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        yylhs.value.build< std::string > ();
+        break;
+
+      default:
+        break;
+    }
+
 
       // Compute the default @$.
       {
@@ -606,613 +706,631 @@ namespace FC {
           switch (yyn)
             {
   case 2:
-#line 116 "parser.ypp" // lalr1.cc:847
-    {/*TODO add main here*/}
-#line 612 "parser.cpp" // lalr1.cc:847
+#line 153 "parser.ypp" // lalr1.cc:847
+    {FC::AddMain();}
+#line 712 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 8:
-#line 125 "parser.ypp" // lalr1.cc:847
-    {/*TODO add cosntant*/}
-#line 618 "parser.cpp" // lalr1.cc:847
+#line 163 "parser.ypp" // lalr1.cc:847
+    {FC::AddConst(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<FC::Expr>  > ());}
+#line 718 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 12:
-#line 131 "parser.ypp" // lalr1.cc:847
+#line 169 "parser.ypp" // lalr1.cc:847
     {}
-#line 624 "parser.cpp" // lalr1.cc:847
+#line 724 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 13:
-#line 132 "parser.ypp" // lalr1.cc:847
+#line 170 "parser.ypp" // lalr1.cc:847
     {}
-#line 630 "parser.cpp" // lalr1.cc:847
+#line 730 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 14:
-#line 134 "parser.ypp" // lalr1.cc:847
+#line 172 "parser.ypp" // lalr1.cc:847
     {}
-#line 636 "parser.cpp" // lalr1.cc:847
+#line 736 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 15:
-#line 136 "parser.ypp" // lalr1.cc:847
+#line 174 "parser.ypp" // lalr1.cc:847
     {}
-#line 642 "parser.cpp" // lalr1.cc:847
+#line 742 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 16:
-#line 137 "parser.ypp" // lalr1.cc:847
+#line 175 "parser.ypp" // lalr1.cc:847
     {}
-#line 648 "parser.cpp" // lalr1.cc:847
+#line 748 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 17:
-#line 139 "parser.ypp" // lalr1.cc:847
+#line 177 "parser.ypp" // lalr1.cc:847
     {}
-#line 654 "parser.cpp" // lalr1.cc:847
+#line 754 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 18:
-#line 141 "parser.ypp" // lalr1.cc:847
+#line 179 "parser.ypp" // lalr1.cc:847
     {}
-#line 660 "parser.cpp" // lalr1.cc:847
+#line 760 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 19:
-#line 142 "parser.ypp" // lalr1.cc:847
+#line 180 "parser.ypp" // lalr1.cc:847
     {}
-#line 666 "parser.cpp" // lalr1.cc:847
+#line 766 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 20:
-#line 144 "parser.ypp" // lalr1.cc:847
+#line 182 "parser.ypp" // lalr1.cc:847
     {}
-#line 672 "parser.cpp" // lalr1.cc:847
+#line 772 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 21:
-#line 145 "parser.ypp" // lalr1.cc:847
+#line 183 "parser.ypp" // lalr1.cc:847
     {}
-#line 678 "parser.cpp" // lalr1.cc:847
+#line 778 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 22:
-#line 147 "parser.ypp" // lalr1.cc:847
+#line 185 "parser.ypp" // lalr1.cc:847
     {}
-#line 684 "parser.cpp" // lalr1.cc:847
+#line 784 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 23:
-#line 149 "parser.ypp" // lalr1.cc:847
+#line 187 "parser.ypp" // lalr1.cc:847
     {}
-#line 690 "parser.cpp" // lalr1.cc:847
+#line 790 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 24:
-#line 150 "parser.ypp" // lalr1.cc:847
+#line 188 "parser.ypp" // lalr1.cc:847
     {}
-#line 696 "parser.cpp" // lalr1.cc:847
+#line 796 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 25:
-#line 151 "parser.ypp" // lalr1.cc:847
+#line 189 "parser.ypp" // lalr1.cc:847
     {}
-#line 702 "parser.cpp" // lalr1.cc:847
+#line 802 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 26:
-#line 153 "parser.ypp" // lalr1.cc:847
+#line 191 "parser.ypp" // lalr1.cc:847
     {}
-#line 708 "parser.cpp" // lalr1.cc:847
+#line 808 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 27:
-#line 155 "parser.ypp" // lalr1.cc:847
+#line 193 "parser.ypp" // lalr1.cc:847
     {}
-#line 714 "parser.cpp" // lalr1.cc:847
+#line 814 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 28:
-#line 157 "parser.ypp" // lalr1.cc:847
+#line 195 "parser.ypp" // lalr1.cc:847
     {}
-#line 720 "parser.cpp" // lalr1.cc:847
+#line 820 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 29:
-#line 158 "parser.ypp" // lalr1.cc:847
+#line 196 "parser.ypp" // lalr1.cc:847
     {}
-#line 726 "parser.cpp" // lalr1.cc:847
+#line 826 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 34:
-#line 166 "parser.ypp" // lalr1.cc:847
+#line 204 "parser.ypp" // lalr1.cc:847
     {}
-#line 732 "parser.cpp" // lalr1.cc:847
+#line 832 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 35:
-#line 168 "parser.ypp" // lalr1.cc:847
-    {}
-#line 738 "parser.cpp" // lalr1.cc:847
+#line 206 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< FC::Type > () = yystack_[0].value.as< FC::Type > ();}
+#line 838 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 36:
-#line 169 "parser.ypp" // lalr1.cc:847
+#line 207 "parser.ypp" // lalr1.cc:847
     {}
-#line 744 "parser.cpp" // lalr1.cc:847
+#line 844 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 37:
-#line 170 "parser.ypp" // lalr1.cc:847
+#line 208 "parser.ypp" // lalr1.cc:847
     {}
-#line 750 "parser.cpp" // lalr1.cc:847
+#line 850 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 38:
-#line 172 "parser.ypp" // lalr1.cc:847
-    {/* todo type lookup */}
-#line 756 "parser.cpp" // lalr1.cc:847
+#line 210 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< FC::Type > () = FC::SimpleTypeLookup(yystack_[0].value.as< std::string > ());}
+#line 856 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 39:
-#line 174 "parser.ypp" // lalr1.cc:847
+#line 212 "parser.ypp" // lalr1.cc:847
     {}
-#line 762 "parser.cpp" // lalr1.cc:847
+#line 862 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 40:
-#line 176 "parser.ypp" // lalr1.cc:847
+#line 214 "parser.ypp" // lalr1.cc:847
     {}
-#line 768 "parser.cpp" // lalr1.cc:847
+#line 868 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 41:
-#line 177 "parser.ypp" // lalr1.cc:847
+#line 215 "parser.ypp" // lalr1.cc:847
     {}
-#line 774 "parser.cpp" // lalr1.cc:847
+#line 874 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 42:
-#line 179 "parser.ypp" // lalr1.cc:847
+#line 217 "parser.ypp" // lalr1.cc:847
     {}
-#line 780 "parser.cpp" // lalr1.cc:847
+#line 880 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 43:
-#line 181 "parser.ypp" // lalr1.cc:847
-    {}
-#line 786 "parser.cpp" // lalr1.cc:847
+#line 219 "parser.ypp" // lalr1.cc:847
+    {FC::AddIdent(yystack_[0].value.as< std::string > ());}
+#line 886 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 44:
-#line 182 "parser.ypp" // lalr1.cc:847
-    {}
-#line 792 "parser.cpp" // lalr1.cc:847
+#line 220 "parser.ypp" // lalr1.cc:847
+    {FC::AddIdent(yystack_[0].value.as< std::string > ());}
+#line 892 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 45:
-#line 184 "parser.ypp" // lalr1.cc:847
+#line 222 "parser.ypp" // lalr1.cc:847
     {}
-#line 798 "parser.cpp" // lalr1.cc:847
+#line 898 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 50:
-#line 192 "parser.ypp" // lalr1.cc:847
-    {/*todo add var*/}
-#line 804 "parser.cpp" // lalr1.cc:847
+#line 230 "parser.ypp" // lalr1.cc:847
+    {AddVariables(yystack_[1].value.as< FC::Type > ());}
+#line 904 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 51:
-#line 194 "parser.ypp" // lalr1.cc:847
+#line 232 "parser.ypp" // lalr1.cc:847
     {}
-#line 810 "parser.cpp" // lalr1.cc:847
+#line 910 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 52:
-#line 195 "parser.ypp" // lalr1.cc:847
+#line 233 "parser.ypp" // lalr1.cc:847
     {}
-#line 816 "parser.cpp" // lalr1.cc:847
+#line 916 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 53:
-#line 196 "parser.ypp" // lalr1.cc:847
+#line 234 "parser.ypp" // lalr1.cc:847
     {}
-#line 822 "parser.cpp" // lalr1.cc:847
+#line 922 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 54:
-#line 197 "parser.ypp" // lalr1.cc:847
+#line 235 "parser.ypp" // lalr1.cc:847
     {}
-#line 828 "parser.cpp" // lalr1.cc:847
+#line 928 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 55:
-#line 198 "parser.ypp" // lalr1.cc:847
+#line 236 "parser.ypp" // lalr1.cc:847
     {}
-#line 834 "parser.cpp" // lalr1.cc:847
+#line 934 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 56:
-#line 199 "parser.ypp" // lalr1.cc:847
+#line 237 "parser.ypp" // lalr1.cc:847
     {}
-#line 840 "parser.cpp" // lalr1.cc:847
+#line 940 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 57:
-#line 200 "parser.ypp" // lalr1.cc:847
+#line 238 "parser.ypp" // lalr1.cc:847
     {}
-#line 846 "parser.cpp" // lalr1.cc:847
+#line 946 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 58:
-#line 201 "parser.ypp" // lalr1.cc:847
+#line 239 "parser.ypp" // lalr1.cc:847
     {}
-#line 852 "parser.cpp" // lalr1.cc:847
+#line 952 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 59:
-#line 202 "parser.ypp" // lalr1.cc:847
+#line 240 "parser.ypp" // lalr1.cc:847
     {}
-#line 858 "parser.cpp" // lalr1.cc:847
+#line 958 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 60:
-#line 203 "parser.ypp" // lalr1.cc:847
+#line 241 "parser.ypp" // lalr1.cc:847
     {}
-#line 864 "parser.cpp" // lalr1.cc:847
+#line 964 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 61:
-#line 204 "parser.ypp" // lalr1.cc:847
+#line 242 "parser.ypp" // lalr1.cc:847
     {}
-#line 870 "parser.cpp" // lalr1.cc:847
+#line 970 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 62:
-#line 206 "parser.ypp" // lalr1.cc:847
-    {/* todo assignment*/}
-#line 876 "parser.cpp" // lalr1.cc:847
+#line 244 "parser.ypp" // lalr1.cc:847
+    {FC::Assignment(yystack_[2].value.as< std::shared_ptr<FC::LVal>  > (),yystack_[0].value.as< std::shared_ptr<FC::Expr>  > ());}
+#line 976 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 63:
-#line 208 "parser.ypp" // lalr1.cc:847
+#line 246 "parser.ypp" // lalr1.cc:847
     {}
-#line 882 "parser.cpp" // lalr1.cc:847
+#line 982 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 64:
-#line 210 "parser.ypp" // lalr1.cc:847
+#line 248 "parser.ypp" // lalr1.cc:847
     {}
-#line 888 "parser.cpp" // lalr1.cc:847
+#line 988 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 65:
-#line 212 "parser.ypp" // lalr1.cc:847
+#line 250 "parser.ypp" // lalr1.cc:847
     {}
-#line 894 "parser.cpp" // lalr1.cc:847
+#line 994 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 66:
-#line 214 "parser.ypp" // lalr1.cc:847
+#line 252 "parser.ypp" // lalr1.cc:847
     {}
-#line 900 "parser.cpp" // lalr1.cc:847
+#line 1000 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 67:
-#line 215 "parser.ypp" // lalr1.cc:847
+#line 253 "parser.ypp" // lalr1.cc:847
     {}
-#line 906 "parser.cpp" // lalr1.cc:847
+#line 1006 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 68:
-#line 217 "parser.ypp" // lalr1.cc:847
+#line 255 "parser.ypp" // lalr1.cc:847
     {}
-#line 912 "parser.cpp" // lalr1.cc:847
+#line 1012 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 69:
-#line 218 "parser.ypp" // lalr1.cc:847
+#line 256 "parser.ypp" // lalr1.cc:847
     {}
-#line 918 "parser.cpp" // lalr1.cc:847
+#line 1018 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 70:
-#line 220 "parser.ypp" // lalr1.cc:847
+#line 258 "parser.ypp" // lalr1.cc:847
     {}
-#line 924 "parser.cpp" // lalr1.cc:847
+#line 1024 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 71:
-#line 221 "parser.ypp" // lalr1.cc:847
+#line 259 "parser.ypp" // lalr1.cc:847
     {}
-#line 930 "parser.cpp" // lalr1.cc:847
+#line 1030 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 72:
-#line 223 "parser.ypp" // lalr1.cc:847
+#line 261 "parser.ypp" // lalr1.cc:847
     {}
-#line 936 "parser.cpp" // lalr1.cc:847
+#line 1036 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 73:
-#line 225 "parser.ypp" // lalr1.cc:847
+#line 263 "parser.ypp" // lalr1.cc:847
     {}
-#line 942 "parser.cpp" // lalr1.cc:847
+#line 1042 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 74:
-#line 227 "parser.ypp" // lalr1.cc:847
+#line 265 "parser.ypp" // lalr1.cc:847
     {}
-#line 948 "parser.cpp" // lalr1.cc:847
+#line 1048 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 75:
-#line 229 "parser.ypp" // lalr1.cc:847
+#line 267 "parser.ypp" // lalr1.cc:847
     {}
-#line 954 "parser.cpp" // lalr1.cc:847
+#line 1054 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 76:
-#line 231 "parser.ypp" // lalr1.cc:847
+#line 269 "parser.ypp" // lalr1.cc:847
     {}
-#line 960 "parser.cpp" // lalr1.cc:847
+#line 1060 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 77:
-#line 233 "parser.ypp" // lalr1.cc:847
+#line 271 "parser.ypp" // lalr1.cc:847
     {}
-#line 966 "parser.cpp" // lalr1.cc:847
+#line 1066 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 78:
-#line 234 "parser.ypp" // lalr1.cc:847
+#line 272 "parser.ypp" // lalr1.cc:847
     {}
-#line 972 "parser.cpp" // lalr1.cc:847
+#line 1072 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 79:
-#line 236 "parser.ypp" // lalr1.cc:847
+#line 274 "parser.ypp" // lalr1.cc:847
     {/* TODO stop*/}
-#line 978 "parser.cpp" // lalr1.cc:847
+#line 1078 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 80:
-#line 238 "parser.ypp" // lalr1.cc:847
+#line 276 "parser.ypp" // lalr1.cc:847
     {}
-#line 984 "parser.cpp" // lalr1.cc:847
+#line 1084 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 81:
-#line 239 "parser.ypp" // lalr1.cc:847
+#line 277 "parser.ypp" // lalr1.cc:847
     {}
-#line 990 "parser.cpp" // lalr1.cc:847
+#line 1090 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 82:
-#line 241 "parser.ypp" // lalr1.cc:847
+#line 279 "parser.ypp" // lalr1.cc:847
     {}
-#line 996 "parser.cpp" // lalr1.cc:847
+#line 1096 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 83:
-#line 243 "parser.ypp" // lalr1.cc:847
+#line 281 "parser.ypp" // lalr1.cc:847
     {/*todo readval */}
-#line 1002 "parser.cpp" // lalr1.cc:847
+#line 1102 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 84:
-#line 244 "parser.ypp" // lalr1.cc:847
+#line 282 "parser.ypp" // lalr1.cc:847
     {/*todo*/}
-#line 1008 "parser.cpp" // lalr1.cc:847
+#line 1108 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 85:
-#line 246 "parser.ypp" // lalr1.cc:847
+#line 284 "parser.ypp" // lalr1.cc:847
     {}
-#line 1014 "parser.cpp" // lalr1.cc:847
+#line 1114 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 86:
-#line 248 "parser.ypp" // lalr1.cc:847
+#line 286 "parser.ypp" // lalr1.cc:847
     {}
-#line 1020 "parser.cpp" // lalr1.cc:847
+#line 1120 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 87:
-#line 249 "parser.ypp" // lalr1.cc:847
+#line 287 "parser.ypp" // lalr1.cc:847
     {}
-#line 1026 "parser.cpp" // lalr1.cc:847
+#line 1126 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 88:
-#line 251 "parser.ypp" // lalr1.cc:847
+#line 289 "parser.ypp" // lalr1.cc:847
     {}
-#line 1032 "parser.cpp" // lalr1.cc:847
+#line 1132 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 89:
-#line 253 "parser.ypp" // lalr1.cc:847
+#line 291 "parser.ypp" // lalr1.cc:847
     {}
-#line 1038 "parser.cpp" // lalr1.cc:847
+#line 1138 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 90:
-#line 254 "parser.ypp" // lalr1.cc:847
+#line 292 "parser.ypp" // lalr1.cc:847
     {}
-#line 1044 "parser.cpp" // lalr1.cc:847
+#line 1144 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 91:
-#line 256 "parser.ypp" // lalr1.cc:847
+#line 294 "parser.ypp" // lalr1.cc:847
     {}
-#line 1050 "parser.cpp" // lalr1.cc:847
+#line 1150 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 92:
-#line 257 "parser.ypp" // lalr1.cc:847
+#line 295 "parser.ypp" // lalr1.cc:847
     {}
-#line 1056 "parser.cpp" // lalr1.cc:847
+#line 1156 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 93:
-#line 259 "parser.ypp" // lalr1.cc:847
+#line 300 "parser.ypp" // lalr1.cc:847
     {}
-#line 1062 "parser.cpp" // lalr1.cc:847
+#line 1162 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 94:
-#line 260 "parser.ypp" // lalr1.cc:847
+#line 301 "parser.ypp" // lalr1.cc:847
     {}
-#line 1068 "parser.cpp" // lalr1.cc:847
+#line 1168 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 95:
-#line 261 "parser.ypp" // lalr1.cc:847
+#line 302 "parser.ypp" // lalr1.cc:847
     {}
-#line 1074 "parser.cpp" // lalr1.cc:847
+#line 1174 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 96:
-#line 262 "parser.ypp" // lalr1.cc:847
+#line 303 "parser.ypp" // lalr1.cc:847
     {}
-#line 1080 "parser.cpp" // lalr1.cc:847
+#line 1180 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 97:
-#line 263 "parser.ypp" // lalr1.cc:847
+#line 304 "parser.ypp" // lalr1.cc:847
     {}
-#line 1086 "parser.cpp" // lalr1.cc:847
+#line 1186 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 98:
-#line 264 "parser.ypp" // lalr1.cc:847
+#line 305 "parser.ypp" // lalr1.cc:847
     {}
-#line 1092 "parser.cpp" // lalr1.cc:847
+#line 1192 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 99:
-#line 265 "parser.ypp" // lalr1.cc:847
+#line 306 "parser.ypp" // lalr1.cc:847
     {}
-#line 1098 "parser.cpp" // lalr1.cc:847
+#line 1198 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 100:
-#line 266 "parser.ypp" // lalr1.cc:847
+#line 307 "parser.ypp" // lalr1.cc:847
     {}
-#line 1104 "parser.cpp" // lalr1.cc:847
+#line 1204 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 101:
-#line 267 "parser.ypp" // lalr1.cc:847
+#line 308 "parser.ypp" // lalr1.cc:847
     {}
-#line 1110 "parser.cpp" // lalr1.cc:847
+#line 1210 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 102:
-#line 268 "parser.ypp" // lalr1.cc:847
+#line 309 "parser.ypp" // lalr1.cc:847
     {}
-#line 1116 "parser.cpp" // lalr1.cc:847
+#line 1216 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 103:
-#line 269 "parser.ypp" // lalr1.cc:847
+#line 310 "parser.ypp" // lalr1.cc:847
     {}
-#line 1122 "parser.cpp" // lalr1.cc:847
+#line 1222 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 104:
-#line 270 "parser.ypp" // lalr1.cc:847
+#line 311 "parser.ypp" // lalr1.cc:847
     {}
-#line 1128 "parser.cpp" // lalr1.cc:847
+#line 1228 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 105:
-#line 271 "parser.ypp" // lalr1.cc:847
+#line 312 "parser.ypp" // lalr1.cc:847
     {}
-#line 1134 "parser.cpp" // lalr1.cc:847
+#line 1234 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 106:
-#line 272 "parser.ypp" // lalr1.cc:847
+#line 313 "parser.ypp" // lalr1.cc:847
     {}
-#line 1140 "parser.cpp" // lalr1.cc:847
+#line 1240 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 107:
-#line 273 "parser.ypp" // lalr1.cc:847
+#line 314 "parser.ypp" // lalr1.cc:847
     {}
-#line 1146 "parser.cpp" // lalr1.cc:847
+#line 1246 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 108:
-#line 274 "parser.ypp" // lalr1.cc:847
-    {}
-#line 1152 "parser.cpp" // lalr1.cc:847
+#line 315 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = yystack_[1].value.as< std::shared_ptr<FC::Expr>  > ();}
+#line 1252 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 109:
-#line 275 "parser.ypp" // lalr1.cc:847
+#line 316 "parser.ypp" // lalr1.cc:847
     {}
-#line 1158 "parser.cpp" // lalr1.cc:847
+#line 1258 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 110:
-#line 276 "parser.ypp" // lalr1.cc:847
+#line 317 "parser.ypp" // lalr1.cc:847
     {}
-#line 1164 "parser.cpp" // lalr1.cc:847
+#line 1264 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 111:
-#line 277 "parser.ypp" // lalr1.cc:847
+#line 318 "parser.ypp" // lalr1.cc:847
     {}
-#line 1170 "parser.cpp" // lalr1.cc:847
+#line 1270 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 112:
-#line 278 "parser.ypp" // lalr1.cc:847
+#line 319 "parser.ypp" // lalr1.cc:847
     {}
-#line 1176 "parser.cpp" // lalr1.cc:847
+#line 1276 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 113:
-#line 279 "parser.ypp" // lalr1.cc:847
-    {}
-#line 1182 "parser.cpp" // lalr1.cc:847
+#line 320 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = FC::LoadLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ()); }
+#line 1282 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 114:
-#line 280 "parser.ypp" // lalr1.cc:847
-    {}
-#line 1188 "parser.cpp" // lalr1.cc:847
+#line 321 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = FC::AddIntExpr(yystack_[0].value.as< int > ());}
+#line 1288 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 115:
-#line 281 "parser.ypp" // lalr1.cc:847
-    {}
-#line 1194 "parser.cpp" // lalr1.cc:847
+#line 322 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = FC::AddString(yystack_[0].value.as< std::string > ());}
+#line 1294 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 116:
-#line 285 "parser.ypp" // lalr1.cc:847
+#line 323 "parser.ypp" // lalr1.cc:847
     {}
-#line 1200 "parser.cpp" // lalr1.cc:847
+#line 1300 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 117:
-#line 286 "parser.ypp" // lalr1.cc:847
+#line 324 "parser.ypp" // lalr1.cc:847
     {}
-#line 1206 "parser.cpp" // lalr1.cc:847
+#line 1306 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 118:
-#line 287 "parser.ypp" // lalr1.cc:847
+#line 326 "parser.ypp" // lalr1.cc:847
     {}
-#line 1212 "parser.cpp" // lalr1.cc:847
+#line 1312 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
+    break;
+
+  case 119:
+#line 328 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = nullptr;}
+#line 1318 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
+    break;
+
+  case 120:
+#line 329 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = nullptr;}
+#line 1324 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
+    break;
+
+  case 121:
+#line 330 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = FC::GetLValForIdent(yystack_[0].value.as< std::string > ());}
+#line 1330 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
 
-#line 1216 "parser.cpp" // lalr1.cc:847
+#line 1334 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
             default:
               break;
             }
@@ -1467,207 +1585,224 @@ namespace FC {
   }
 
 
-  const short int Parser::yypact_ninf_ = -130;
+  const short int Parser::yypact_ninf_ = -168;
 
-  const signed char Parser::yytable_ninf_ = -93;
+  const signed char Parser::yytable_ninf_ = -72;
 
   const short int
   Parser::yypact_[] =
   {
-      16,   -26,    39,    37,    15,     9,   -26,  -130,  -130,    -4,
-      -2,     0,    35,    87,  -130,    14,    87,    22,    -4,    87,
-    -130,    87,    34,    36,   -10,  -130,  -130,  -130,    67,  -130,
-     105,  -130,  -130,    -1,  -130,  -130,  -130,  -130,  -130,    -9,
-     101,    72,     0,  -130,    66,  -130,    77,   110,   114,   115,
-      87,    87,    87,  -130,  -130,  -130,  -130,   247,    41,    84,
-     308,    95,   -15,   308,   308,    87,    87,  -130,    -4,    -4,
-    -130,    -4,    87,    87,   149,    99,    87,    87,  -130,     4,
-    -130,   124,    66,  -130,    23,    87,    87,    87,    87,   319,
-      74,   145,    87,    87,    87,    87,    87,    87,    87,    87,
-      87,    87,    87,  -130,    87,    45,    41,    87,    42,   308,
-     122,   129,   276,  -130,   125,   127,     1,   308,   308,    -4,
-    -130,   162,   308,   132,  -130,  -130,   142,  -130,  -130,  -130,
-       4,  -130,   136,   137,  -130,   151,  -130,   152,   179,   196,
-     213,   230,  -130,    88,   319,   329,   338,    74,   344,    63,
-     348,   104,    56,   163,   308,   170,  -130,   308,    87,  -130,
-    -130,    87,    -4,    -4,    67,   200,  -130,     2,  -130,    87,
-      -8,  -130,   161,   168,   175,    17,    18,  -130,  -130,  -130,
-    -130,    95,   308,   292,   125,   125,  -130,  -130,  -130,   262,
-    -130,   178,  -130,  -130,   -13,   -13,   185,    15,   186,   193,
-     194,    41,    87,     4,  -130,  -130,   176,   195,  -130,   203,
-     201,  -130,    35,  -130,  -130,  -130,   126,   202,   212,    -5,
-    -130,    93,  -130,    37,   254,  -130,     4,  -130,   205,     4,
-    -130,     4,  -130,  -130,  -130,  -130
+      15,   -47,    46,    26,    18,    14,   -47,  -168,  -168,     7,
+       9,    10,    47,    87,  -168,    42,    87,    27,     7,    87,
+    -168,    87,    83,    89,    -8,  -168,  -168,  -168,   109,  -168,
+     131,  -168,  -168,     6,  -168,  -168,  -168,  -168,  -168,    52,
+    -168,   101,    10,  -168,    92,  -168,   105,   107,   108,   110,
+      87,    87,    87,  -168,  -168,   113,  -168,   134,  -168,   -28,
+     111,   336,   106,   -18,   336,   336,    87,    87,  -168,     7,
+       7,  -168,     7,    87,    87,   154,   115,    87,    87,     2,
+    -168,  -168,    71,    92,  -168,    30,    87,    87,    87,    87,
+      72,   393,   162,    87,    87,    87,    87,    87,    87,    87,
+      87,    87,    87,    87,    87,    87,  -168,    87,    87,  -168,
+      91,   -28,    87,   102,   336,   129,   135,   336,  -168,   132,
+      86,    -5,   336,   336,     7,  -168,   183,   336,   133,  -168,
+    -168,   137,  -168,  -168,  -168,   126,     2,  -168,   130,   143,
+    -168,   138,  -168,   141,   207,   228,   249,   270,  -168,   140,
+     352,    72,   368,   377,   386,   393,   402,   167,    80,    85,
+      19,   -29,  -168,   336,   106,  -168,   336,    87,  -168,  -168,
+      87,     7,    87,   109,   184,  -168,    -1,  -168,    87,    -2,
+    -168,  -168,   165,   142,   179,    29,    35,  -168,  -168,  -168,
+    -168,  -168,   -28,   336,   336,   132,   336,  -168,  -168,  -168,
+     291,  -168,  -168,    84,  -168,    -6,    -6,   181,    18,   182,
+     185,   186,    87,     2,  -168,  -168,   190,   188,  -168,    92,
+     195,  -168,    47,  -168,  -168,  -168,   312,   204,   206,    -7,
+     100,  -168,    26,   218,  -168,     2,  -168,     2,  -168,     2,
+    -168,  -168,  -168
   };
 
   const unsigned char
   Parser::yydefact_[] =
   {
        5,     0,     0,     0,    31,     0,     4,     7,     1,    61,
-       0,     0,    47,     0,     6,     0,     0,    81,    61,     0,
-      79,     0,     0,   118,     0,    29,    51,    52,     0,    53,
+       0,     0,    47,     0,     6,     0,     0,     0,    61,    81,
+      79,     0,     0,   121,     0,    29,    51,    52,     0,    53,
        0,    54,    55,     0,    56,    57,    58,    59,    60,     0,
-       0,     0,    30,    33,     0,    11,     0,     0,     0,     0,
-       0,     0,     0,   118,   113,   114,   115,     0,   112,     0,
-      64,     0,     0,    80,    73,     0,     0,    27,    61,    61,
-      67,    61,     0,     0,     0,     0,     0,     0,     2,     0,
-      32,     0,    46,    49,     3,     0,     0,     0,     0,   106,
-     105,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     8,     0,     0,    84,     0,     0,    87,
-       0,     0,    90,    28,    65,    69,     0,    78,    77,    61,
-     116,     0,    62,     0,    41,    38,     0,    35,    36,    37,
-       0,    48,     0,     0,     9,     0,    10,     0,     0,     0,
-       0,     0,   107,   100,   101,   102,   103,    93,    94,    95,
-      98,    96,    99,    97,    76,     0,    82,    74,     0,    85,
-      88,     0,    61,    61,     0,     0,    72,     0,   117,     0,
-       0,    34,     0,     0,     0,     5,     5,   108,   109,   110,
-     111,     0,    86,    89,    70,    68,    66,    63,    75,     0,
-      39,     0,    40,    50,    19,    19,     0,    31,     0,     0,
-       0,    83,     0,     0,    24,    23,     0,    18,    21,     0,
+       2,     0,    30,    33,     0,    11,     0,     0,     0,     0,
+       0,     0,     0,   116,   114,   121,   115,     0,   117,   113,
+       0,    64,     0,     0,    80,    73,     0,    90,    27,    61,
+      61,    67,    61,     0,     0,     0,     0,     0,     0,     0,
+      32,    44,     0,    46,    49,     3,     0,     0,     0,     0,
+     107,   106,     0,    90,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     8,     0,     0,   121,
+       0,    84,     0,     0,    87,     0,    89,    92,    28,    65,
+      69,     0,    78,    77,    61,   119,     0,    62,     0,    41,
+      38,     0,    35,    36,    37,     0,     0,    48,     0,     0,
+       9,     0,    10,     0,     0,     0,     0,     0,   108,     0,
+     101,   102,   104,   103,    94,    93,    95,    96,    99,    97,
+     100,    98,   105,    76,     0,    82,    74,     0,    85,    88,
+       0,    61,     0,     0,     0,    72,     0,   120,     0,     0,
+      34,    43,     0,     0,     0,     5,     5,   109,   110,   111,
+     112,   118,    83,    86,    91,    70,    68,    66,    63,    75,
+       0,    39,    40,     0,    50,    19,    19,     0,    31,     0,
+       0,     0,     0,     0,    24,    23,     0,    18,    21,     0,
        0,    12,    47,    13,    15,    16,     0,     0,     0,    25,
-      44,     0,    14,     0,     0,    42,     0,    20,     0,     0,
-      26,     0,    17,    43,    22,    45
+       0,    14,     0,     0,    42,     0,    20,     0,    26,     0,
+      17,    22,    45
   };
 
   const short int
   Parser::yypgoto_[] =
   {
-    -130,  -130,  -130,   272,  -130,   273,  -130,  -130,  -130,  -130,
-    -130,    85,  -130,    62,  -130,   112,    73,    -7,    92,  -130,
-     261,  -129,  -130,  -130,  -130,  -130,  -130,  -130,   106,  -130,
-     222,   249,  -130,  -130,  -130,   165,  -130,  -130,  -130,  -130,
-    -130,  -130,  -130,  -130,  -130,  -130,  -130,  -130,  -130,  -130,
-    -130,  -130,  -130,  -130,   -16,    -3
+    -168,  -168,  -168,   236,  -168,   252,  -168,  -168,  -168,  -168,
+    -168,    53,  -168,    31,  -168,    76,    38,   -16,    69,  -168,
+     237,  -135,  -168,  -168,  -168,  -168,  -167,  -168,    56,  -168,
+     197,   212,  -168,  -168,  -168,   118,  -168,  -168,  -168,  -168,
+    -168,  -168,  -168,  -168,  -168,  -168,  -168,  -168,  -168,  -168,
+    -168,  -168,   205,  -168,   -13,  -168,     0
   };
 
   const short int
   Parser::yydefgoto_[] =
   {
-      -1,     2,     3,   197,     6,     7,    84,   134,   135,   136,
-     137,   206,   207,   208,   209,   198,    10,    24,    12,    42,
-      43,   126,   127,   128,   170,   192,   221,   129,    45,    82,
-      83,    25,    26,    27,    28,    70,   115,   164,   165,    29,
-      30,    31,    32,    33,    74,    34,    35,    36,   105,    37,
-     108,    38,   110,   111,    57,    58
+      -1,     2,     3,   208,     6,     7,    85,   140,   141,   142,
+     143,   216,   217,   218,   219,   209,    10,    24,    12,    42,
+      43,   131,   132,   133,   179,   202,    82,   134,    45,    83,
+      84,    25,    26,    27,    28,    71,   120,   173,   174,    29,
+      30,    31,    32,    33,    75,    34,    35,    36,   110,    37,
+     113,    38,   115,   116,   117,    58,    59
   };
 
   const short int
   Parser::yytable_[] =
   {
-      60,   172,    67,    63,   190,    64,    39,   123,    72,    15,
-     204,    62,    16,   166,   188,    39,   107,    17,   204,   205,
-      18,    19,    20,     1,     1,     1,   124,   205,    73,    21,
-      22,   196,   199,     5,    89,    90,    91,    68,   132,     8,
-      75,     9,    68,   133,    76,    11,   -25,    40,    77,   109,
-     112,   191,    13,    68,    68,    23,   117,   118,   106,    41,
-     121,   122,   114,   125,   116,    39,    39,    44,    39,   138,
-     139,   140,   141,    59,   217,    61,   143,   144,   145,   146,
-     147,   148,   149,   150,   151,   152,   153,    65,   154,    66,
-      75,   157,   158,    46,    76,    69,   159,   232,   155,   156,
-     234,    78,   235,   -93,   102,    47,    48,   -93,    99,   100,
-     101,   102,   167,    71,    49,    79,    39,    97,    98,    99,
-     100,   101,   102,    50,    93,    81,    94,    95,    96,    51,
-      85,    97,    98,    99,   100,   101,   102,   162,   163,   -71,
-      52,   104,   182,   228,   229,   183,    53,    54,    55,    56,
-     -93,   101,   102,   189,    53,   184,   185,   119,   120,    39,
-      39,    92,    93,    86,    94,    95,    96,    87,    88,    97,
-      98,    99,   100,   101,   102,   130,   160,    68,   201,   161,
-      92,    93,   224,    94,    95,    96,   216,   169,    97,    98,
-      99,   100,   101,   102,   171,   173,   174,    92,    93,   142,
-      94,    95,    96,   175,   176,    97,    98,    99,   100,   101,
-     102,   -93,   187,   193,    92,    93,   168,    94,    95,    96,
-     181,   194,    97,    98,    99,   100,   101,   102,   195,   203,
-     218,    92,    93,   177,    94,    95,    96,   211,   213,    97,
-      98,    99,   100,   101,   102,   214,   215,   219,    92,    93,
-     178,    94,    95,    96,   225,   222,    97,    98,    99,   100,
-     101,   102,   220,   226,   233,    92,    93,   179,    94,    95,
-      96,   231,     4,    97,    98,    99,   100,   101,   102,    14,
-     210,   227,    92,    93,   180,    94,    95,    96,   200,   212,
-      97,    98,    99,   100,   101,   102,   230,    92,    93,   103,
-      94,    95,    96,    80,   131,    97,    98,    99,   100,   101,
-     102,    92,    93,   202,    94,    95,    96,   113,   223,    97,
-      98,    99,   100,   101,   102,     0,   -92,    92,    93,   186,
-      94,    95,    96,     0,     0,    97,    98,    99,   100,   101,
-     102,     0,   -91,    92,    93,     0,    94,    95,    96,     0,
-       0,    97,    98,    99,   100,   101,   102,    94,    95,    96,
-       0,     0,    97,    98,    99,   100,   101,   102,    95,    96,
-       0,     0,    97,    98,    99,   100,   101,   102,    96,     0,
-       0,    97,    98,    99,   100,   101,   102,   -93,    98,    99,
-     100,   101,   102,   -93,   100,   101,   102
+      57,   182,    63,    61,    68,   128,    64,   175,    65,    39,
+     201,   199,   203,   112,     5,    73,   214,   214,    39,   -72,
+      15,    76,     1,    16,   129,   215,   215,    77,    17,   107,
+       9,    18,    19,    20,    69,    74,     1,    90,    91,    92,
+      21,    22,     1,   207,    69,   138,     8,    69,    11,   210,
+     139,    69,   230,   114,   119,   -25,   121,    13,    40,    81,
+     122,   123,   111,   130,   126,   127,   -72,   105,    23,    39,
+      39,    41,    39,   144,   145,   146,   147,   107,   227,    44,
+      62,   150,   151,   152,   153,   154,   155,   156,   157,   158,
+     159,   160,   161,    46,   162,   163,   171,   172,   -71,   166,
+     240,    76,   241,    60,   242,    47,    48,    77,   176,    78,
+      96,    97,    98,    99,    49,   100,   101,   102,   103,   104,
+     105,   135,   136,    50,    39,   -72,   103,   104,   105,    51,
+     107,   -72,   104,   105,   135,   213,    66,    70,   107,    72,
+      52,   164,    67,   107,    79,   165,    53,    54,    55,    56,
+     135,   237,   167,    81,   193,   195,   168,   194,    86,   196,
+      87,    88,   124,    89,   192,   200,    93,   109,   108,    94,
+      95,    39,    96,    97,    98,    99,   125,   100,   101,   102,
+     103,   104,   105,   169,    69,   170,   106,   181,   178,   180,
+     185,   183,   107,   186,   191,   205,   198,    94,    95,   226,
+      96,    97,    98,    99,   184,   100,   101,   102,   103,   104,
+     105,   -72,   102,   103,   104,   105,   148,   204,    94,    95,
+     107,    96,    97,    98,    99,   107,   100,   101,   102,   103,
+     104,   105,   206,   221,   223,   239,     4,   224,   225,   177,
+     229,   107,    94,    95,   228,    96,    97,    98,    99,   231,
+     100,   101,   102,   103,   104,   105,   234,   235,    14,   220,
+     236,   187,   211,    94,    95,   107,    96,    97,    98,    99,
+     238,   100,   101,   102,   103,   104,   105,   222,   232,    80,
+     137,   118,   188,     0,    94,    95,   107,    96,    97,    98,
+      99,   197,   100,   101,   102,   103,   104,   105,   149,     0,
+       0,     0,     0,   189,     0,    94,    95,   107,    96,    97,
+      98,    99,     0,   100,   101,   102,   103,   104,   105,     0,
+       0,     0,     0,     0,   190,     0,    94,    95,   107,    96,
+      97,    98,    99,     0,   100,   101,   102,   103,   104,   105,
+       0,     0,   212,     0,     0,     0,     0,    94,    95,   107,
+      96,    97,    98,    99,     0,   100,   101,   102,   103,   104,
+     105,     0,     0,     0,     0,     0,     0,     0,   233,     0,
+     107,    94,    95,     0,    96,    97,    98,    99,     0,   100,
+     101,   102,   103,   104,   105,     0,     0,     0,    95,     0,
+      96,    97,    98,    99,   107,   100,   101,   102,   103,   104,
+     105,     0,     0,     0,     0,     0,     0,    97,    98,    99,
+     107,   100,   101,   102,   103,   104,   105,    98,    99,     0,
+     100,   101,   102,   103,   104,   105,   107,    99,     0,   100,
+     101,   102,   103,   104,   105,   107,   100,   101,   102,   103,
+     104,   105,     0,     0,   107,   -72,   101,   102,   103,   104,
+     105,   107,     0,     0,     0,     0,     0,     0,     0,     0,
+     107
   };
 
   const short int
   Parser::yycheck_[] =
   {
-      16,   130,    12,    19,    12,    21,     9,     3,     9,    13,
-      23,    18,    16,    12,    12,    18,    31,    21,    23,    32,
-      24,    25,    26,     7,     7,     7,    22,    32,    29,    33,
-      34,    14,    14,    59,    50,    51,    52,    52,    15,     0,
-      49,     4,    52,    20,    53,    30,    59,    49,    57,    65,
-      66,    59,    43,    52,    52,    59,    72,    73,    61,    59,
-      76,    77,    69,    59,    71,    68,    69,    32,    71,    85,
-      86,    87,    88,    59,   203,    53,    92,    93,    94,    95,
-      96,    97,    98,    99,   100,   101,   102,    53,   104,    53,
-      49,   107,    50,     6,    53,    28,    54,   226,    53,    54,
-     229,     0,   231,    47,    48,    18,    19,    44,    45,    46,
-      47,    48,   119,     8,    27,    43,   119,    43,    44,    45,
-      46,    47,    48,    36,    36,    59,    38,    39,    40,    42,
-      53,    43,    44,    45,    46,    47,    48,    10,    11,    12,
-      53,    57,   158,    50,    51,   161,    59,    60,    61,    62,
-      46,    47,    48,   169,    59,   162,   163,     8,    59,   162,
-     163,    35,    36,    53,    38,    39,    40,    53,    53,    43,
-      44,    45,    46,    47,    48,    51,    54,    52,   181,    50,
-      35,    36,    56,    38,    39,    40,   202,    55,    43,    44,
-      45,    46,    47,    48,    52,    59,    59,    35,    36,    54,
-      38,    39,    40,    52,    52,    43,    44,    45,    46,    47,
-      48,    48,    12,    52,    35,    36,    54,    38,    39,    40,
-      50,    53,    43,    44,    45,    46,    47,    48,    53,    51,
-      54,    35,    36,    54,    38,    39,    40,    52,    52,    43,
-      44,    45,    46,    47,    48,    52,    52,    52,    35,    36,
-      54,    38,    39,    40,    52,    54,    43,    44,    45,    46,
-      47,    48,    59,    51,    59,    35,    36,    54,    38,    39,
-      40,    17,     0,    43,    44,    45,    46,    47,    48,     6,
-     195,   219,    35,    36,    54,    38,    39,    40,   176,   197,
-      43,    44,    45,    46,    47,    48,   223,    35,    36,    52,
-      38,    39,    40,    42,    82,    43,    44,    45,    46,    47,
-      48,    35,    36,    51,    38,    39,    40,    68,   212,    43,
-      44,    45,    46,    47,    48,    -1,    50,    35,    36,   164,
-      38,    39,    40,    -1,    -1,    43,    44,    45,    46,    47,
-      48,    -1,    50,    35,    36,    -1,    38,    39,    40,    -1,
-      -1,    43,    44,    45,    46,    47,    48,    38,    39,    40,
-      -1,    -1,    43,    44,    45,    46,    47,    48,    39,    40,
-      -1,    -1,    43,    44,    45,    46,    47,    48,    40,    -1,
-      -1,    43,    44,    45,    46,    47,    48,    43,    44,    45,
-      46,    47,    48,    45,    46,    47,    48
+      13,   136,    18,    16,    12,     3,    19,    12,    21,     9,
+      12,    12,   179,    31,    61,     9,    23,    23,    18,    48,
+      13,    49,     7,    16,    22,    32,    32,    55,    21,    58,
+       4,    24,    25,    26,    52,    29,     7,    50,    51,    52,
+      33,    34,     7,    14,    52,    15,     0,    52,    30,    14,
+      20,    52,   219,    66,    70,    61,    72,    43,    49,    61,
+      73,    74,    62,    61,    77,    78,    47,    48,    61,    69,
+      70,    61,    72,    86,    87,    88,    89,    58,   213,    32,
+      53,    94,    95,    96,    97,    98,    99,   100,   101,   102,
+     103,   104,   105,     6,   107,   108,    10,    11,    12,   112,
+     235,    49,   237,    61,   239,    18,    19,    55,   124,    57,
+      38,    39,    40,    41,    27,    43,    44,    45,    46,    47,
+      48,    50,    51,    36,   124,    45,    46,    47,    48,    42,
+      58,    46,    47,    48,    50,    51,    53,    28,    58,     8,
+      53,    50,    53,    58,    43,    54,    59,    60,    61,    62,
+      50,    51,    50,    61,   167,   171,    54,   170,    53,   172,
+      53,    53,     8,    53,   164,   178,    53,    61,    57,    35,
+      36,   171,    38,    39,    40,    41,    61,    43,    44,    45,
+      46,    47,    48,    54,    52,    50,    52,    61,    55,    52,
+      52,    61,    58,    52,    54,    53,    12,    35,    36,   212,
+      38,    39,    40,    41,    61,    43,    44,    45,    46,    47,
+      48,    44,    45,    46,    47,    48,    54,    52,    35,    36,
+      58,    38,    39,    40,    41,    58,    43,    44,    45,    46,
+      47,    48,    53,    52,    52,    17,     0,    52,    52,    56,
+      52,    58,    35,    36,    54,    38,    39,    40,    41,    54,
+      43,    44,    45,    46,    47,    48,    52,    51,     6,   206,
+     229,    54,   186,    35,    36,    58,    38,    39,    40,    41,
+     232,    43,    44,    45,    46,    47,    48,   208,   222,    42,
+      83,    69,    54,    -1,    35,    36,    58,    38,    39,    40,
+      41,   173,    43,    44,    45,    46,    47,    48,    93,    -1,
+      -1,    -1,    -1,    54,    -1,    35,    36,    58,    38,    39,
+      40,    41,    -1,    43,    44,    45,    46,    47,    48,    -1,
+      -1,    -1,    -1,    -1,    54,    -1,    35,    36,    58,    38,
+      39,    40,    41,    -1,    43,    44,    45,    46,    47,    48,
+      -1,    -1,    51,    -1,    -1,    -1,    -1,    35,    36,    58,
+      38,    39,    40,    41,    -1,    43,    44,    45,    46,    47,
+      48,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    56,    -1,
+      58,    35,    36,    -1,    38,    39,    40,    41,    -1,    43,
+      44,    45,    46,    47,    48,    -1,    -1,    -1,    36,    -1,
+      38,    39,    40,    41,    58,    43,    44,    45,    46,    47,
+      48,    -1,    -1,    -1,    -1,    -1,    -1,    39,    40,    41,
+      58,    43,    44,    45,    46,    47,    48,    40,    41,    -1,
+      43,    44,    45,    46,    47,    48,    58,    41,    -1,    43,
+      44,    45,    46,    47,    48,    58,    43,    44,    45,    46,
+      47,    48,    -1,    -1,    58,    43,    44,    45,    46,    47,
+      48,    58,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      58
   };
 
   const unsigned char
   Parser::yystos_[] =
   {
-       0,     7,    64,    65,    66,    59,    67,    68,     0,     4,
+       0,     7,    64,    65,    66,    61,    67,    68,     0,     4,
       79,    30,    81,    43,    68,    13,    16,    21,    24,    25,
-      26,    33,    34,    59,    80,    94,    95,    96,    97,   102,
-     103,   104,   105,   106,   108,   109,   110,   112,   114,   118,
-      49,    59,    82,    83,    32,    91,     6,    18,    19,    27,
-      36,    42,    53,    59,    60,    61,    62,   117,   118,    59,
-     117,    53,    80,   117,   117,    53,    53,    12,    52,    28,
-      98,     8,     9,    29,   107,    49,    53,    57,     0,    43,
-      83,    59,    92,    93,    69,    53,    53,    53,    53,   117,
-     117,   117,    35,    36,    38,    39,    40,    43,    44,    45,
-      46,    47,    48,    52,    57,   111,   118,    31,   113,   117,
-     115,   116,   117,    94,    80,    99,    80,   117,   117,     8,
-      59,   117,   117,     3,    22,    59,    84,    85,    86,    90,
-      51,    93,    15,    20,    70,    71,    72,    73,   117,   117,
-     117,   117,    54,   117,   117,   117,   117,   117,   117,   117,
-     117,   117,   117,   117,   117,    53,    54,   117,    50,    54,
-      54,    50,    10,    11,   100,   101,    12,    80,    54,    55,
-      87,    52,    84,    59,    59,    52,    52,    54,    54,    54,
-      54,    50,   117,   117,    80,    80,    98,    12,    12,   117,
-      12,    59,    88,    52,    53,    53,    14,    66,    78,    14,
-      78,   118,    51,    51,    23,    32,    74,    75,    76,    77,
+      26,    33,    34,    61,    80,    94,    95,    96,    97,   102,
+     103,   104,   105,   106,   108,   109,   110,   112,   114,   119,
+      49,    61,    82,    83,    32,    91,     6,    18,    19,    27,
+      36,    42,    53,    59,    60,    61,    62,   117,   118,   119,
+      61,   117,    53,    80,   117,   117,    53,    53,    12,    52,
+      28,    98,     8,     9,    29,   107,    49,    55,    57,    43,
+      83,    61,    89,    92,    93,    69,    53,    53,    53,    53,
+     117,   117,   117,    53,    35,    36,    38,    39,    40,    41,
+      43,    44,    45,    46,    47,    48,    52,    58,    57,    61,
+     111,   119,    31,   113,   117,   115,   116,   117,    94,    80,
+      99,    80,   117,   117,     8,    61,   117,   117,     3,    22,
+      61,    84,    85,    86,    90,    50,    51,    93,    15,    20,
+      70,    71,    72,    73,   117,   117,   117,   117,    54,   115,
+     117,   117,   117,   117,   117,   117,   117,   117,   117,   117,
+     117,   117,   117,   117,    50,    54,   117,    50,    54,    54,
+      50,    10,    11,   100,   101,    12,    80,    56,    55,    87,
+      52,    61,    84,    61,    61,    52,    52,    54,    54,    54,
+      54,    54,   119,   117,   117,    80,   117,    98,    12,    12,
+     117,    12,    88,    89,    52,    53,    53,    14,    66,    78,
+      14,    78,    51,    51,    23,    32,    74,    75,    76,    77,
       74,    52,    81,    52,    52,    52,   117,    84,    54,    52,
-      59,    89,    54,    91,    56,    52,    51,    76,    50,    51,
-      79,    17,    84,    59,    84,    84
+      89,    54,    91,    56,    52,    51,    76,    51,    79,    17,
+      84,    84,    84
   };
 
   const unsigned char
@@ -1684,13 +1819,14 @@ namespace FC {
      109,   109,   110,   111,   111,   112,   113,   113,   114,   115,
      115,   116,   116,   117,   117,   117,   117,   117,   117,   117,
      117,   117,   117,   117,   117,   117,   117,   117,   117,   117,
-     117,   117,   117,   117,   117,   117,   118,   118,   118
+     117,   117,   117,   117,   117,   117,   117,   117,   118,   119,
+     119,   119
   };
 
   const unsigned char
   Parser::yyr2_[] =
   {
-       0,     2,     4,     4,     2,     0,     2,     1,     4,     2,
+       0,     2,     3,     4,     2,     0,     2,     1,     4,     2,
        2,     0,     4,     4,     5,     4,     4,     7,     1,     0,
        3,     1,     4,     1,     1,     0,     4,     3,     3,     1,
        2,     0,     2,     1,     4,     1,     1,     1,     1,     3,
@@ -1698,10 +1834,11 @@ namespace FC {
        4,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     0,     3,     5,     2,     2,     3,     0,     2,     0,
        2,     0,     4,     2,     4,     5,     4,     2,     2,     1,
-       2,     1,     4,     4,     1,     4,     3,     1,     4,     3,
-       1,     3,     1,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     2,     2,     3,     4,     4,
-       4,     4,     1,     1,     1,     1,     3,     4,     1
+       2,     1,     4,     3,     1,     4,     3,     1,     4,     1,
+       0,     3,     1,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     2,     2,     3,     4,
+       4,     4,     4,     1,     1,     1,     1,     1,     4,     3,
+       4,     1
   };
 
 
@@ -1721,10 +1858,10 @@ namespace FC {
   "AndTok", "OrTok", "NotTok", "EqualsTok", "NotEqualTok", "LessThanTok",
   "LessEqualTok", "GreaterTok", "GreaterEqualTok", "DotTok", "CommaTok",
   "ColonTok", "SemicolonTok", "OpenParenTok", "CloseParenTok",
-  "OpenBrktTok", "CloseBrktTok", "ColonEqualTok", "PercentTok",
-  "IdentifierTok", "IntTok", "StringTok", "CharTok", "$accept",
-  "Application", "ProgramHead", "OptConstDecls", "ConstDecls", "ConstDecl",
-  "PFDecls", "ProcedureDecl", "PSignature", "FunctionDecl", "FSignature",
+  "OpenBrktTok", "CloseBrktTok", "ColonEqualTok", "PercentTok", "CharTok",
+  "IntTok", "IdentifierTok", "StringTok", "$accept", "Application",
+  "ProgramHead", "OptConstDecls", "ConstDecls", "ConstDecl", "PFDecls",
+  "ProcedureDecl", "PSignature", "FunctionDecl", "FSignature",
   "OptFormalParameters", "FormalParameters", "FormalParameter", "OptVar",
   "Body", "Block", "StatementList", "OptTypeDecls", "TypeDecls",
   "TypeDecl", "Type", "SimpleType", "RecordType", "FieldDecls",
@@ -1734,25 +1871,26 @@ namespace FC {
   "WhileHead", "RepeatStatement", "ForStatement", "ForHead", "ToHead",
   "StopStatement", "ReturnStatement", "ReadStatement", "ReadArgs",
   "WriteStatement", "WriteArgs", "ProcedureCall", "OptArguments",
-  "Arguments", "Expression", "LVal", YY_NULLPTR
+  "Arguments", "Expression", "FunctionCall", "LVal", YY_NULLPTR
   };
 
 #if YYDEBUG
   const unsigned short int
   Parser::yyrline_[] =
   {
-       0,   116,   116,   118,   120,   120,   122,   123,   125,   127,
-     128,   129,   131,   132,   134,   136,   137,   139,   141,   142,
-     144,   145,   147,   149,   150,   151,   153,   155,   157,   158,
-     160,   161,   163,   164,   166,   168,   169,   170,   172,   174,
-     176,   177,   179,   181,   182,   184,   186,   187,   189,   190,
-     192,   194,   195,   196,   197,   198,   199,   200,   201,   202,
-     203,   204,   206,   208,   210,   212,   214,   215,   217,   218,
-     220,   221,   223,   225,   227,   229,   231,   233,   234,   236,
-     238,   239,   241,   243,   244,   246,   248,   249,   251,   253,
-     254,   256,   257,   259,   260,   261,   262,   263,   264,   265,
-     266,   267,   268,   269,   270,   271,   272,   273,   274,   275,
-     276,   277,   278,   279,   280,   281,   285,   286,   287
+       0,   153,   153,   155,   157,   158,   160,   161,   163,   165,
+     166,   167,   169,   170,   172,   174,   175,   177,   179,   180,
+     182,   183,   185,   187,   188,   189,   191,   193,   195,   196,
+     198,   199,   201,   202,   204,   206,   207,   208,   210,   212,
+     214,   215,   217,   219,   220,   222,   224,   225,   227,   228,
+     230,   232,   233,   234,   235,   236,   237,   238,   239,   240,
+     241,   242,   244,   246,   248,   250,   252,   253,   255,   256,
+     258,   259,   261,   263,   265,   267,   269,   271,   272,   274,
+     276,   277,   279,   281,   282,   284,   286,   287,   289,   291,
+     292,   294,   295,   300,   301,   302,   303,   304,   305,   306,
+     307,   308,   309,   310,   311,   312,   313,   314,   315,   316,
+     317,   318,   319,   320,   321,   322,   323,   324,   326,   328,
+     329,   330
   };
 
   // Print the state stack on the debug stream.
@@ -1784,67 +1922,15 @@ namespace FC {
   }
 #endif // YYDEBUG
 
-  // Symbol number corresponding to token number t.
-  inline
-  Parser::token_number_type
-  Parser::yytranslate_ (int t)
-  {
-    static
-    const token_number_type
-    translate_table[] =
-    {
-     0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
-      55,    56,    57,    58,    59,    60,    61,    62
-    };
-    const unsigned int user_token_number_max_ = 317;
-    const token_number_type undef_token_ = 2;
-
-    if (static_cast<int>(t) <= yyeof_)
-      return yyeof_;
-    else if (static_cast<unsigned int> (t) <= user_token_number_max_)
-      return translate_table[t];
-    else
-      return undef_token_;
-  }
 
 
-} // FC
-#line 1843 "parser.cpp" // lalr1.cc:1155
-#line 289 "parser.ypp" // lalr1.cc:1156
- /*** Additional Code ***/
+} // yy
+#line 1929 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:1155
+#line 332 "parser.ypp" // lalr1.cc:1156
 
-void FC::Parser::error(const Parser::location_type& l,
-			    const std::string& m)
+void
+yy::Parser::error (const location_type& l,
+                          const std::string& m)
 {
-    driver.error(l, m);
+  driver.error (l, m);
 }

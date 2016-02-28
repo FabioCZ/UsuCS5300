@@ -25,6 +25,7 @@ namespace FC
         int GlobalPointerOffset;
         std::string DataLabel;
         int ConstValue;
+        std::string name;
     };
 
 }

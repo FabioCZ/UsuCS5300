@@ -31,22 +31,36 @@
 // version 2.2 of Bison.
 
 /**
- ** \file parser.hpp
- ** Define the FC::parser class.
+ ** \file /home/fabio/Desktop/UsuCS5300/HW3/parser.hpp
+ ** Define the yy::parser class.
  */
 
 // C++ LALR(1) parser skeleton written by Akim Demaille.
 
-#ifndef YY_FC_PARSER_HPP_INCLUDED
-# define YY_FC_PARSER_HPP_INCLUDED
+#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_PARSER_HPP_INCLUDED
+# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_PARSER_HPP_INCLUDED
+// //                    "%code requires" blocks.
+#line 11 "parser.ypp" // lalr1.cc:372
 
+# include <string>
+#include "CodeGen/CodeGenerator.hpp"
+#include "CodeGen/Expr/Expr.hpp"
+class Driver;
 
+#line 51 "/home/fabio/Desktop/UsuCS5300/HW3/parser.hpp" // lalr1.cc:372
+
+# include <cassert>
 # include <vector>
 # include <iostream>
 # include <stdexcept>
 # include <string>
 # include "stack.hh"
 # include "location.hh"
+#include <typeinfo>
+#ifndef YYASSERT
+# include <cassert>
+# define YYASSERT assert
+#endif
 
 
 #ifndef YY_ATTRIBUTE
@@ -108,11 +122,164 @@
 #endif
 
 
-namespace FC {
-#line 113 "parser.hpp" // lalr1.cc:372
+namespace yy {
+#line 127 "/home/fabio/Desktop/UsuCS5300/HW3/parser.hpp" // lalr1.cc:372
 
 
 
+  /// A char[S] buffer to store and retrieve objects.
+  ///
+  /// Sort of a variant, but does not keep track of the nature
+  /// of the stored data, since that knowledge is available
+  /// via the current state.
+  template <size_t S>
+  struct variant
+  {
+    /// Type of *this.
+    typedef variant<S> self_type;
+
+    /// Empty construction.
+    variant ()
+      : yytname_ (YY_NULLPTR)
+    {}
+
+    /// Construct and fill.
+    template <typename T>
+    variant (const T& t)
+      : yytname_ (typeid (T).name ())
+    {
+      YYASSERT (sizeof (T) <= S);
+      new (yyas_<T> ()) T (t);
+    }
+
+    /// Destruction, allowed only if empty.
+    ~variant ()
+    {
+      YYASSERT (!yytname_);
+    }
+
+    /// Instantiate an empty \a T in here.
+    template <typename T>
+    T&
+    build ()
+    {
+      YYASSERT (!yytname_);
+      YYASSERT (sizeof (T) <= S);
+      yytname_ = typeid (T).name ();
+      return *new (yyas_<T> ()) T;
+    }
+
+    /// Instantiate a \a T in here from \a t.
+    template <typename T>
+    T&
+    build (const T& t)
+    {
+      YYASSERT (!yytname_);
+      YYASSERT (sizeof (T) <= S);
+      yytname_ = typeid (T).name ();
+      return *new (yyas_<T> ()) T (t);
+    }
+
+    /// Accessor to a built \a T.
+    template <typename T>
+    T&
+    as ()
+    {
+      YYASSERT (yytname_ == typeid (T).name ());
+      YYASSERT (sizeof (T) <= S);
+      return *yyas_<T> ();
+    }
+
+    /// Const accessor to a built \a T (for %printer).
+    template <typename T>
+    const T&
+    as () const
+    {
+      YYASSERT (yytname_ == typeid (T).name ());
+      YYASSERT (sizeof (T) <= S);
+      return *yyas_<T> ();
+    }
+
+    /// Swap the content with \a other, of same type.
+    ///
+    /// Both variants must be built beforehand, because swapping the actual
+    /// data requires reading it (with as()), and this is not possible on
+    /// unconstructed variants: it would require some dynamic testing, which
+    /// should not be the variant's responsability.
+    /// Swapping between built and (possibly) non-built is done with
+    /// variant::move ().
+    template <typename T>
+    void
+    swap (self_type& other)
+    {
+      YYASSERT (yytname_);
+      YYASSERT (yytname_ == other.yytname_);
+      std::swap (as<T> (), other.as<T> ());
+    }
+
+    /// Move the content of \a other to this.
+    ///
+    /// Destroys \a other.
+    template <typename T>
+    void
+    move (self_type& other)
+    {
+      build<T> ();
+      swap<T> (other);
+      other.destroy<T> ();
+    }
+
+    /// Copy the content of \a other to this.
+    template <typename T>
+    void
+    copy (const self_type& other)
+    {
+      build<T> (other.as<T> ());
+    }
+
+    /// Destroy the stored \a T.
+    template <typename T>
+    void
+    destroy ()
+    {
+      as<T> ().~T ();
+      yytname_ = YY_NULLPTR;
+    }
+
+  private:
+    /// Prohibit blind copies.
+    self_type& operator=(const self_type&);
+    variant (const self_type&);
+
+    /// Accessor to raw memory as \a T.
+    template <typename T>
+    T*
+    yyas_ ()
+    {
+      void *yyp = yybuffer_.yyraw;
+      return static_cast<T*> (yyp);
+     }
+
+    /// Const accessor to raw memory as \a T.
+    template <typename T>
+    const T*
+    yyas_ () const
+    {
+      const void *yyp = yybuffer_.yyraw;
+      return static_cast<const T*> (yyp);
+     }
+
+    union
+    {
+      /// Strongest alignment constraints.
+      long double yyalign_me;
+      /// A buffer large enough to store any of the semantic values.
+      char yyraw[S];
+    } yybuffer_;
+
+    /// Whether the content is built: if defined, the name of the stored type.
+    const char *yytname_;
+  };
 
 
   /// A Bison parser.
@@ -120,8 +287,70 @@ namespace FC {
   {
   public:
 #ifndef YYSTYPE
+    /// An auxiliary type to compute the largest semantic type.
+    union union_type
+    {
+      // Type
+      // SimpleType
+      char dummy1[sizeof(FC::Type)];
+
+      // CharTok
+      char dummy2[sizeof(char)];
+
+      // IntTok
+      // PSignature
+      // FSignature
+      // OptFormalParameters
+      // FormalParameters
+      // FormalParameter
+      // OptVar
+      // Body
+      // Block
+      // StatementList
+      // RecordType
+      // FieldDecls
+      // FieldDecl
+      // IdentList
+      // ArrayType
+      // Statement
+      // Assignment
+      // IfStatement
+      // IfHead
+      // ThenPart
+      // ElseIfList
+      // ElseIfHead
+      // ElseClause
+      // WhileStatement
+      // WhileHead
+      // RepeatStatement
+      // ForStatement
+      // ForHead
+      // ToHead
+      // StopStatement
+      // ReturnStatement
+      // ReadStatement
+      // ReadArgs
+      // WriteStatement
+      // WriteArgs
+      // ProcedureCall
+      // OptArguments
+      // Arguments
+      // FunctionCall
+      char dummy3[sizeof(int)];
+
+      // Expression
+      char dummy4[sizeof(std::shared_ptr<FC::Expr> )];
+
+      // LVal
+      char dummy5[sizeof(std::shared_ptr<FC::LVal> )];
+
+      // IdentifierTok
+      // StringTok
+      char dummy6[sizeof(std::string)];
+};
+
     /// Symbol semantic values.
-    typedef int semantic_type;
+    typedef variant<sizeof(union_type)> semantic_type;
 #else
     typedef YYSTYPE semantic_type;
 #endif
@@ -197,10 +426,10 @@ namespace FC {
         CloseBrktTok = 311,
         ColonEqualTok = 312,
         PercentTok = 313,
-        IdentifierTok = 314,
+        CharTok = 314,
         IntTok = 315,
-        StringTok = 316,
-        CharTok = 317
+        IdentifierTok = 316,
+        StringTok = 317
       };
     };
 
@@ -231,9 +460,22 @@ namespace FC {
       /// Copy constructor.
       basic_symbol (const basic_symbol& other);
 
-      /// Constructor for valueless symbols.
-      basic_symbol (typename Base::kind_type t,
-                    const location_type& l);
+      /// Constructor for valueless symbols, and symbols from each type.
+
+  basic_symbol (typename Base::kind_type t, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const FC::Type v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const char v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const int v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr>  v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::LVal>  v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l);
+
 
       /// Constructor for symbols with semantic value.
       basic_symbol (typename Base::kind_type t,
@@ -291,9 +533,254 @@ namespace FC {
     /// "External" symbols: returned by the scanner.
     typedef basic_symbol<by_type> symbol_type;
 
+    // Symbol constructors declarations.
+    static inline
+    symbol_type
+    make_END (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ArrayTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_BeginTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_EndProgTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ChrTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ConstTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DoTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DowntoTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ElseTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ElseifTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_EndTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ForTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ForwardTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_FunctionTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_IfTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_OfTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_OrdTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_PredTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ProcedureTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ReadTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_RecordTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_RefTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_RepeatTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ReturnTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_StopTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SuccTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ThenTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ToTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_TypeTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_UntilTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_VarTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_WhileTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_WriteTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_PlusTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_MinusTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_UnaryMinusTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_MultiplyTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DivideTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_AndTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_OrTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_NotTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_EqualsTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_NotEqualTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_LessThanTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_LessEqualTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_GreaterTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_GreaterEqualTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_DotTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_CommaTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ColonTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_SemicolonTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_OpenParenTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_CloseParenTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_OpenBrktTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_CloseBrktTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_ColonEqualTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_PercentTok (const location_type& l);
+
+    static inline
+    symbol_type
+    make_CharTok (const char& v, const location_type& l);
+
+    static inline
+    symbol_type
+    make_IntTok (const int& v, const location_type& l);
+
+    static inline
+    symbol_type
+    make_IdentifierTok (const std::string& v, const location_type& l);
+
+    static inline
+    symbol_type
+    make_StringTok (const std::string& v, const location_type& l);
+
 
     /// Build a parser object.
-    Parser (class Driver& driver_yyarg);
+    Parser (Driver& driver_yyarg);
     virtual ~Parser ();
 
     /// Parse.
@@ -353,7 +840,7 @@ namespace FC {
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token number \a t to a symbol number.
-    static token_number_type yytranslate_ (int t);
+    static token_number_type yytranslate_ (token_type t);
 
     // Tables.
   // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -491,8 +978,8 @@ namespace FC {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 396,     ///< Last index in yytable_.
-      yynnts_ = 56,  ///< Number of nonterminal symbols.
+      yylast_ = 460,     ///< Last index in yytable_.
+      yynnts_ = 57,  ///< Number of nonterminal symbols.
       yyempty_ = -2,
       yyfinal_ = 8, ///< Termination state number.
       yyterror_ = 1,
@@ -502,15 +989,875 @@ namespace FC {
 
 
     // User arguments.
-    class Driver& driver;
+    Driver& driver;
   };
 
+  // Symbol number corresponding to token number t.
+  inline
+  Parser::token_number_type
+  Parser::yytranslate_ (token_type t)
+  {
+    static
+    const token_number_type
+    translate_table[] =
+    {
+     0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
+      45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
+      55,    56,    57,    58,    59,    60,    61,    62
+    };
+    const unsigned int user_token_number_max_ = 317;
+    const token_number_type undef_token_ = 2;
+
+    if (static_cast<int>(t) <= yyeof_)
+      return yyeof_;
+    else if (static_cast<unsigned int> (t) <= user_token_number_max_)
+      return translate_table[t];
+    else
+      return undef_token_;
+  }
+
+  inline
+  Parser::syntax_error::syntax_error (const location_type& l, const std::string& m)
+    : std::runtime_error (m)
+    , location (l)
+  {}
+
+  // basic_symbol.
+  template <typename Base>
+  inline
+  Parser::basic_symbol<Base>::basic_symbol ()
+    : value ()
+  {}
+
+  template <typename Base>
+  inline
+  Parser::basic_symbol<Base>::basic_symbol (const basic_symbol& other)
+    : Base (other)
+    , value ()
+    , location (other.location)
+  {
+      switch (other.type_get ())
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        value.copy< FC::Type > (other.value);
+        break;
+
+      case 59: // CharTok
+        value.copy< char > (other.value);
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        value.copy< int > (other.value);
+        break;
+
+      case 117: // Expression
+        value.copy< std::shared_ptr<FC::Expr>  > (other.value);
+        break;
+
+      case 119: // LVal
+        value.copy< std::shared_ptr<FC::LVal>  > (other.value);
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        value.copy< std::string > (other.value);
+        break;
+
+      default:
+        break;
+    }
+
+  }
 
 
-} // FC
-#line 512 "parser.hpp" // lalr1.cc:372
+  template <typename Base>
+  inline
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const semantic_type& v, const location_type& l)
+    : Base (t)
+    , value ()
+    , location (l)
+  {
+    (void) v;
+      switch (this->type_get ())
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        value.copy< FC::Type > (v);
+        break;
+
+      case 59: // CharTok
+        value.copy< char > (v);
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        value.copy< int > (v);
+        break;
+
+      case 117: // Expression
+        value.copy< std::shared_ptr<FC::Expr>  > (v);
+        break;
+
+      case 119: // LVal
+        value.copy< std::shared_ptr<FC::LVal>  > (v);
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        value.copy< std::string > (v);
+        break;
+
+      default:
+        break;
+    }
+}
+
+
+  // Implementation of basic_symbol constructor for each type.
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const location_type& l)
+    : Base (t)
+    , value ()
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const FC::Type v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const char v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const int v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr>  v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::LVal>  v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+
+  template <typename Base>
+  inline
+  Parser::basic_symbol<Base>::~basic_symbol ()
+  {
+    // User destructor.
+    symbol_number_type yytype = this->type_get ();
+    switch (yytype)
+    {
+   default:
+      break;
+    }
+
+    // Type destructor.
+    switch (yytype)
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        value.template destroy< FC::Type > ();
+        break;
+
+      case 59: // CharTok
+        value.template destroy< char > ();
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        value.template destroy< int > ();
+        break;
+
+      case 117: // Expression
+        value.template destroy< std::shared_ptr<FC::Expr>  > ();
+        break;
+
+      case 119: // LVal
+        value.template destroy< std::shared_ptr<FC::LVal>  > ();
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        value.template destroy< std::string > ();
+        break;
+
+      default:
+        break;
+    }
+
+  }
+
+  template <typename Base>
+  inline
+  void
+  Parser::basic_symbol<Base>::move (basic_symbol& s)
+  {
+    super_type::move(s);
+      switch (this->type_get ())
+    {
+      case 84: // Type
+      case 85: // SimpleType
+        value.move< FC::Type > (s.value);
+        break;
+
+      case 59: // CharTok
+        value.move< char > (s.value);
+        break;
+
+      case 60: // IntTok
+      case 71: // PSignature
+      case 73: // FSignature
+      case 74: // OptFormalParameters
+      case 75: // FormalParameters
+      case 76: // FormalParameter
+      case 77: // OptVar
+      case 78: // Body
+      case 79: // Block
+      case 80: // StatementList
+      case 86: // RecordType
+      case 87: // FieldDecls
+      case 88: // FieldDecl
+      case 89: // IdentList
+      case 90: // ArrayType
+      case 94: // Statement
+      case 95: // Assignment
+      case 96: // IfStatement
+      case 97: // IfHead
+      case 98: // ThenPart
+      case 99: // ElseIfList
+      case 100: // ElseIfHead
+      case 101: // ElseClause
+      case 102: // WhileStatement
+      case 103: // WhileHead
+      case 104: // RepeatStatement
+      case 105: // ForStatement
+      case 106: // ForHead
+      case 107: // ToHead
+      case 108: // StopStatement
+      case 109: // ReturnStatement
+      case 110: // ReadStatement
+      case 111: // ReadArgs
+      case 112: // WriteStatement
+      case 113: // WriteArgs
+      case 114: // ProcedureCall
+      case 115: // OptArguments
+      case 116: // Arguments
+      case 118: // FunctionCall
+        value.move< int > (s.value);
+        break;
+
+      case 117: // Expression
+        value.move< std::shared_ptr<FC::Expr>  > (s.value);
+        break;
+
+      case 119: // LVal
+        value.move< std::shared_ptr<FC::LVal>  > (s.value);
+        break;
+
+      case 61: // IdentifierTok
+      case 62: // StringTok
+        value.move< std::string > (s.value);
+        break;
+
+      default:
+        break;
+    }
+
+    location = s.location;
+  }
+
+  // by_type.
+  inline
+  Parser::by_type::by_type ()
+     : type (empty)
+  {}
+
+  inline
+  Parser::by_type::by_type (const by_type& other)
+    : type (other.type)
+  {}
+
+  inline
+  Parser::by_type::by_type (token_type t)
+    : type (yytranslate_ (t))
+  {}
+
+  inline
+  void
+  Parser::by_type::move (by_type& that)
+  {
+    type = that.type;
+    that.type = empty;
+  }
+
+  inline
+  int
+  Parser::by_type::type_get () const
+  {
+    return type;
+  }
+
+  inline
+  Parser::token_type
+  Parser::by_type::token () const
+  {
+    // YYTOKNUM[NUM] -- (External) token number corresponding to the
+    // (internal) symbol number NUM (which must be that of a token).  */
+    static
+    const unsigned short int
+    yytoken_number_[] =
+    {
+       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
+     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
+     295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
+     305,   306,   307,   308,   309,   310,   311,   312,   313,   314,
+     315,   316,   317
+    };
+    return static_cast<token_type> (yytoken_number_[type]);
+  }
+  // Implementation of make_symbol for each symbol type.
+  Parser::symbol_type
+  Parser::make_END (const location_type& l)
+  {
+    return symbol_type (token::END, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ArrayTok (const location_type& l)
+  {
+    return symbol_type (token::ArrayTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_BeginTok (const location_type& l)
+  {
+    return symbol_type (token::BeginTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_EndProgTok (const location_type& l)
+  {
+    return symbol_type (token::EndProgTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ChrTok (const location_type& l)
+  {
+    return symbol_type (token::ChrTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ConstTok (const location_type& l)
+  {
+    return symbol_type (token::ConstTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_DoTok (const location_type& l)
+  {
+    return symbol_type (token::DoTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_DowntoTok (const location_type& l)
+  {
+    return symbol_type (token::DowntoTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ElseTok (const location_type& l)
+  {
+    return symbol_type (token::ElseTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ElseifTok (const location_type& l)
+  {
+    return symbol_type (token::ElseifTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_EndTok (const location_type& l)
+  {
+    return symbol_type (token::EndTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ForTok (const location_type& l)
+  {
+    return symbol_type (token::ForTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ForwardTok (const location_type& l)
+  {
+    return symbol_type (token::ForwardTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_FunctionTok (const location_type& l)
+  {
+    return symbol_type (token::FunctionTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_IfTok (const location_type& l)
+  {
+    return symbol_type (token::IfTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_OfTok (const location_type& l)
+  {
+    return symbol_type (token::OfTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_OrdTok (const location_type& l)
+  {
+    return symbol_type (token::OrdTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_PredTok (const location_type& l)
+  {
+    return symbol_type (token::PredTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ProcedureTok (const location_type& l)
+  {
+    return symbol_type (token::ProcedureTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ReadTok (const location_type& l)
+  {
+    return symbol_type (token::ReadTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_RecordTok (const location_type& l)
+  {
+    return symbol_type (token::RecordTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_RefTok (const location_type& l)
+  {
+    return symbol_type (token::RefTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_RepeatTok (const location_type& l)
+  {
+    return symbol_type (token::RepeatTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ReturnTok (const location_type& l)
+  {
+    return symbol_type (token::ReturnTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_StopTok (const location_type& l)
+  {
+    return symbol_type (token::StopTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_SuccTok (const location_type& l)
+  {
+    return symbol_type (token::SuccTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ThenTok (const location_type& l)
+  {
+    return symbol_type (token::ThenTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ToTok (const location_type& l)
+  {
+    return symbol_type (token::ToTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_TypeTok (const location_type& l)
+  {
+    return symbol_type (token::TypeTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_UntilTok (const location_type& l)
+  {
+    return symbol_type (token::UntilTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_VarTok (const location_type& l)
+  {
+    return symbol_type (token::VarTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_WhileTok (const location_type& l)
+  {
+    return symbol_type (token::WhileTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_WriteTok (const location_type& l)
+  {
+    return symbol_type (token::WriteTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_PlusTok (const location_type& l)
+  {
+    return symbol_type (token::PlusTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_MinusTok (const location_type& l)
+  {
+    return symbol_type (token::MinusTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_UnaryMinusTok (const location_type& l)
+  {
+    return symbol_type (token::UnaryMinusTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_MultiplyTok (const location_type& l)
+  {
+    return symbol_type (token::MultiplyTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_DivideTok (const location_type& l)
+  {
+    return symbol_type (token::DivideTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_AndTok (const location_type& l)
+  {
+    return symbol_type (token::AndTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_OrTok (const location_type& l)
+  {
+    return symbol_type (token::OrTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_NotTok (const location_type& l)
+  {
+    return symbol_type (token::NotTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_EqualsTok (const location_type& l)
+  {
+    return symbol_type (token::EqualsTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_NotEqualTok (const location_type& l)
+  {
+    return symbol_type (token::NotEqualTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_LessThanTok (const location_type& l)
+  {
+    return symbol_type (token::LessThanTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_LessEqualTok (const location_type& l)
+  {
+    return symbol_type (token::LessEqualTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_GreaterTok (const location_type& l)
+  {
+    return symbol_type (token::GreaterTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_GreaterEqualTok (const location_type& l)
+  {
+    return symbol_type (token::GreaterEqualTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_DotTok (const location_type& l)
+  {
+    return symbol_type (token::DotTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_CommaTok (const location_type& l)
+  {
+    return symbol_type (token::CommaTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ColonTok (const location_type& l)
+  {
+    return symbol_type (token::ColonTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_SemicolonTok (const location_type& l)
+  {
+    return symbol_type (token::SemicolonTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_OpenParenTok (const location_type& l)
+  {
+    return symbol_type (token::OpenParenTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_CloseParenTok (const location_type& l)
+  {
+    return symbol_type (token::CloseParenTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_OpenBrktTok (const location_type& l)
+  {
+    return symbol_type (token::OpenBrktTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_CloseBrktTok (const location_type& l)
+  {
+    return symbol_type (token::CloseBrktTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_ColonEqualTok (const location_type& l)
+  {
+    return symbol_type (token::ColonEqualTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_PercentTok (const location_type& l)
+  {
+    return symbol_type (token::PercentTok, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_CharTok (const char& v, const location_type& l)
+  {
+    return symbol_type (token::CharTok, v, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_IntTok (const int& v, const location_type& l)
+  {
+    return symbol_type (token::IntTok, v, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_IdentifierTok (const std::string& v, const location_type& l)
+  {
+    return symbol_type (token::IdentifierTok, v, l);
+  }
+
+  Parser::symbol_type
+  Parser::make_StringTok (const std::string& v, const location_type& l)
+  {
+    return symbol_type (token::StringTok, v, l);
+  }
+
+
+
+} // yy
+#line 1859 "/home/fabio/Desktop/UsuCS5300/HW3/parser.hpp" // lalr1.cc:372
 
 
 
 
-#endif // !YY_FC_PARSER_HPP_INCLUDED
+#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW3_PARSER_HPP_INCLUDED

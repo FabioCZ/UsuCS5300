@@ -1,0 +1,16 @@
+	la $s7, 
+	la $s6, 
+	la $s5, 
+	la $s4, 
+	la $s3, 
+	la $s2, 
+	la $s1, 
+	la $s0, 
+	la $t9, 
+	la $t8, 
+	la $t7, 
+	la $t6, 
+	la $t5, 
+	la $t4, 
+Test code.data:
+	x: .dataType 12

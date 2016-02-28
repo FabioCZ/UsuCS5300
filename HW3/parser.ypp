@@ -11,6 +11,7 @@
 {
 # include <string>
 #include "CodeGen/CodeGenerator.hpp"
+#include "CodeGen/Expr/Expr.hpp"
 class Driver;
 }
 
@@ -75,12 +76,14 @@ class Driver;
 %left AndTok
 %left OrTok
 %right NotTok
+
 %nonassoc EqualsTok
 %nonassoc NotEqualTok
 %nonassoc LessThanTok
 %nonassoc LessEqualTok
 %nonassoc GreaterTok
 %nonassoc GreaterEqualTok
+
 %token DotTok
 %token CommaTok
 %token ColonTok
@@ -98,11 +101,10 @@ class Driver;
 %type <int> Assignment
 %type <int> Block
 %type <int> Body
-%type <int> ConstExpression
 %type <int> ElseClause
 %type <int> ElseIfHead
 %type <int> ElseIfList
-%type <int> Expression
+%type <std::shared_ptr<FC::Expr> > Expression
 %type <int> FSignature
 %type <int> FieldDecl
 %type <int> FieldDecls
@@ -116,7 +118,7 @@ class Driver;
 %type <int> OptVar
 %type <int> IfHead
 %type <int> IfStatement
-%type <std::string> LVal
+%type <std::shared_ptr<FC::LVal> > LVal
 %type <int> OptArguments
 %type <int> OptFormalParameters
 %type <int> PSignature
@@ -126,13 +128,13 @@ class Driver;
 %type <int> RecordType
 %type <int> RepeatStatement
 %type <int> ReturnStatement
-%type <int> SimpleType
+%type <FC::Type> SimpleType
 %type <int> Statement
 %type <int> StatementList
 %type <int> StopStatement
 %type <int> ThenPart
 %type <int> ToHead
-%type <int> Type
+%type <FC::Type> Type
 %type <int> WhileHead
 %type <int> WhileStatement
 %type <int> WriteArgs
@@ -146,6 +148,8 @@ class Driver;
 /** PARSE TREE **/
 
 /* Program Structure */
+%start Application;
+
 Application : ProgramHead Block DotTok {FC::AddMain();};
 
 ProgramHead : OptConstDecls OptTypeDecls OptVarDecls PFDecls;
@@ -156,7 +160,7 @@ OptConstDecls : ConstTok ConstDecls
 ConstDecls : ConstDecls ConstDecl
     | ConstDecl ;
 
-ConstDecl : IdentifierTok EqualsTok ConstExpression SemicolonTok {std::cout << "CONST: " << $1 << ", " << $3 << std::endl; FC::AddConst($1,$3);} ;
+ConstDecl : IdentifierTok EqualsTok Expression SemicolonTok {FC::AddConst($1,$3);} ;
 
 PFDecls : PFDecls ProcedureDecl
     | PFDecls FunctionDecl
@@ -199,11 +203,11 @@ TypeDecls : TypeDecls TypeDecl
     
 TypeDecl : IdentifierTok EqualsTok Type SemicolonTok {} ;
 
-Type : SimpleType {}
+Type : SimpleType {$$ = $1;}
     | RecordType {}
     | ArrayType {} ;
-    
-SimpleType : IdentifierTok {/* todo type lookup */};
+
+SimpleType : IdentifierTok {$$ = FC::SimpleTypeLookup($1);};
 
 RecordType : RecordTok FieldDecls EndTok {};
 
@@ -212,8 +216,8 @@ FieldDecls : FieldDecls FieldDecl {}
     
 FieldDecl : IdentList ColonTok Type SemicolonTok {};
 
-IdentList : IdentList CommaTok IdentifierTok {}
-    | IdentifierTok {};
+IdentList : IdentList CommaTok IdentifierTok {FC::AddIdent($3);}
+    | IdentifierTok {FC::AddIdent($1);};
     
 ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {};
 
@@ -223,7 +227,7 @@ OptVarDecls : VarTok VarDecls
 VarDecls : VarDecls VarDecl
     | VarDecl;
     
-VarDecl : IdentList ColonTok Type SemicolonTok {/*todo add var*/};
+VarDecl : IdentList ColonTok Type SemicolonTok {AddVariables($3);};
 
 Statement : Assignment {}
     | IfStatement {}
@@ -237,7 +241,7 @@ Statement : Assignment {}
     | ProcedureCall {}
     | {} ;
 
-Assignment : LVal ColonEqualTok Expression {/* todo assignment*/};
+Assignment : LVal ColonEqualTok Expression {FC::Assignment($1,$3);};
 
 IfStatement : IfHead ThenPart ElseIfList ElseClause EndTok {};
 
@@ -290,8 +294,8 @@ OptArguments : Arguments  {}
 Arguments : Arguments CommaTok Expression {}
     | Expression {};
 
-ConstExpression : Expression {$$ = $1;}
-    | StringTok {$$ = FC::AddString($1);};
+/* ConstExpression : Expression {$$ = $1;}
+    | StringTok {$$ = FC::AddString($1);}; */
 
 Expression : Expression OrTok Expression {}
     | Expression AndTok Expression {}
@@ -315,15 +319,15 @@ Expression : Expression OrTok Expression {}
     | SuccTok OpenParenTok Expression CloseParenTok {}
     | LVal {$$ = FC::LoadLVal($1); }
     | IntTok {$$ = FC::AddIntExpr($1);}
-    /*| StringTok {$$ = FC::AddString($1);}*/
+    | StringTok {$$ = FC::AddString($1);}
     | CharTok {}
-    | FunctionCall {$$=$1;};
+    | FunctionCall {};
     
 FunctionCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
 
-LVal : LVal DotTok IdentifierTok {$$ = "NotImplemented";}
-    | LVal OpenBrktTok Expression CloseBrktTok {$$ = "NotImplemented";}
-    | IdentifierTok {$$ = $1;};
+LVal : LVal DotTok IdentifierTok {$$ = nullptr;}
+    | LVal OpenBrktTok Expression CloseBrktTok {$$ = nullptr;}
+    | IdentifierTok {$$ = FC::GetLValForIdent($1);};
 
 %%
 void

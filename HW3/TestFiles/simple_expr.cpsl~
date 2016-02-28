@@ -1,6 +1,6 @@
 CONST
 x = 12;
-$y = "test";
+y = "test";
 VAR a,b:integer;
 
 BEGIN

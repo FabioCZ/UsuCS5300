@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/fabio/Desktop/UsuCS5300/HW3/HW3New2
+CMAKE_SOURCE_DIR = /home/fabio/Desktop/UsuCS5300/HW3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/fabio/Desktop/UsuCS5300/HW3/HW3New2
+CMAKE_BINARY_DIR = /home/fabio/Desktop/UsuCS5300/HW3
 
 # Include any dependencies generated for this target.
 include CMakeFiles/cpsl.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/cpsl.dir/flags.make
 
 CMakeFiles/cpsl.dir/driver.cpp.o: CMakeFiles/cpsl.dir/flags.make
 CMakeFiles/cpsl.dir/driver.cpp.o: driver.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW3/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/cpsl.dir/driver.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cpsl.dir/driver.cpp.o -c /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/driver.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cpsl.dir/driver.cpp.o -c /home/fabio/Desktop/UsuCS5300/HW3/driver.cpp
 
 CMakeFiles/cpsl.dir/driver.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpsl.dir/driver.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/driver.cpp > CMakeFiles/cpsl.dir/driver.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fabio/Desktop/UsuCS5300/HW3/driver.cpp > CMakeFiles/cpsl.dir/driver.cpp.i
 
 CMakeFiles/cpsl.dir/driver.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpsl.dir/driver.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/driver.cpp -o CMakeFiles/cpsl.dir/driver.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fabio/Desktop/UsuCS5300/HW3/driver.cpp -o CMakeFiles/cpsl.dir/driver.cpp.s
 
 CMakeFiles/cpsl.dir/driver.cpp.o.requires:
 .PHONY : CMakeFiles/cpsl.dir/driver.cpp.o.requires
@@ -102,6 +102,6 @@ CMakeFiles/cpsl.dir/clean:
 .PHONY : CMakeFiles/cpsl.dir/clean
 
 CMakeFiles/cpsl.dir/depend:
-	cd /home/fabio/Desktop/UsuCS5300/HW3/HW3New2 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/fabio/Desktop/UsuCS5300/HW3/HW3New2 /home/fabio/Desktop/UsuCS5300/HW3/HW3New2 /home/fabio/Desktop/UsuCS5300/HW3/HW3New2 /home/fabio/Desktop/UsuCS5300/HW3/HW3New2 /home/fabio/Desktop/UsuCS5300/HW3/HW3New2/CMakeFiles/cpsl.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/fabio/Desktop/UsuCS5300/HW3 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/fabio/Desktop/UsuCS5300/HW3 /home/fabio/Desktop/UsuCS5300/HW3 /home/fabio/Desktop/UsuCS5300/HW3 /home/fabio/Desktop/UsuCS5300/HW3 /home/fabio/Desktop/UsuCS5300/HW3/CMakeFiles/cpsl.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/cpsl.dir/depend
 

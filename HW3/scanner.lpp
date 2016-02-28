@@ -53,6 +53,7 @@ char cleanUpChar(std::string s)
 letter [a-zA-Z]
 digit [0-9]
 blank [ \t]
+
 %{
   // Code run each time a pattern is matched.
   # define YY_USER_ACTION  loc.columns (yyleng);
@@ -66,8 +67,8 @@ blank [ \t]
   loc.step ();
 %}
 
-{blank}+   loc.step ();
-[\n]+      loc.lines (yyleng); loc.step ();
+{blank}+   { loc.step ();}
+[\n]+      {loc.lines (yyleng); loc.step ();}
 
      /* keywords */
 array|ARRAY { return yy::Parser::make_ArrayTok(loc); }
@@ -131,17 +132,16 @@ write|WRITE { return yy::Parser::make_WriteTok(loc); }
 {letter}({letter}|{digit}|_)* { std::string str(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
     /* literals */
 
-0x([0-9a-fA-F])+ { int val = (int)strtol(yytext,NULL,0); yy::Parser::make_IntTok(val,loc);}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
-0({digit})+ { int val = (int)strtol(yytext,NULL,8);yy::Parser::make_IntTok(val,loc);;}
-0|([1-9]({digit})*) { int val = (int)strtol(yytext,NULL,10); yy::Parser::make_IntTok(val,loc);;}
+0x([0-9a-fA-F])+ { int val = (int)strtol(yytext,NULL,0); return yy::Parser::make_IntTok(val,loc);}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
+0({digit})+ { int val = (int)strtol(yytext,NULL,8); return yy::Parser::make_IntTok(val,loc);}
+0|([1-9]({digit})*) { int val = (int)strtol(yytext,NULL,10); return yy::Parser::make_IntTok(val,loc);}
 \"[\x20-\x7e]+\" { std::string str = cleanUpString(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
 '([\x20-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' { char val = cleanUpChar(yytext); return yy::Parser::make_CharTok(val,loc);}
 
  
     /* Comments */
-(\$.*\n)  {/*Comments, don't do anything printComment(yytext);*/ }
-    /* other */
-[ \n\t\r]+ {/*whitespace, nothing to do here*/}
+(\$.*\n)  {loc.lines (yyleng); loc.step ();}
+
 <<EOF>>    return yy::Parser::make_END(loc);
 
 
