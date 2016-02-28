@@ -17,6 +17,35 @@ namespace FC
         if (FC::Code::_code == nullptr)
         {
             FC::Code::_code = std::make_shared<Code>();
+            _code->_outFile << ".global main" << std::endl << "main:" << std::endl;
+
+            LVal t;
+            t.LValType = Const;
+            t.ConstValue = 1;
+            t.Type = BoolType();
+            t.name = "true";
+            _code->LValues["true"] = std::make_shared<LVal>(t);
+
+            LVal t1;
+            t1.LValType = Const;
+            t1.ConstValue = 1;
+            t1.Type = BoolType();
+            t1.name = "TRUE";
+            _code->LValues["TRUE"] = std::make_shared<LVal>(t1);
+
+            LVal f;
+            f.LValType = Const;
+            f.ConstValue = 0;
+            f.Type = BoolType();
+            f.name = "false";
+            _code->LValues["false"] = std::make_shared<LVal>(f);
+
+            LVal f1;
+            f1.LValType = Const;
+            f1.ConstValue = 0;
+            f1.Type = BoolType();
+            f1.name = "FALSE";
+            _code->LValues["FALSE"] = std::make_shared<LVal>(f1);
         }
         return FC::Code::_code;
     }
@@ -24,8 +53,7 @@ namespace FC
     void AddMain()
     {
         auto inst = Code::Inst();
-        std::cout << "Writing Main" << std::endl;
-        inst->_outFile << "Test code";
+        inst->_outFile << "#Finished writing maing, now writing data sector" << std::endl;
         WriteConstData();
     }
 
@@ -43,6 +71,7 @@ namespace FC
 
         LVal lv;
         lv.Type = e->GetType();
+        lv.name = id;
         if(e->GetType().name == "string")
         {
             lv.LValType = Data;
@@ -124,7 +153,11 @@ namespace FC
         inst->_outFile << ".data:" << std::endl;
         for(auto e : inst->ConstData)
         {
-            inst->_outFile << "\t" << e.first << ": .dataType " << e.second->GetVal() << std::endl;
+            if(e.second->GetType().name == "string")
+                inst->_outFile << "\t" << e.first << ": .asciiz \"" << e.second->GetStringVal().c_str() << "\"" << std::endl;
+            else if(e.second->GetType().name == "integer")
+                inst->_outFile << "\t" << e.first << ": .word " << e.second->GetVal() << std::endl;
+
         }
     }
 
@@ -164,7 +197,11 @@ namespace FC
         }
         for(auto a : inst->TempIdentList)
         {
-            //std::cout << "adding var " << a << std::endl;
+            if(inst->LValues.find(a) != inst->LValues.end())
+            {
+                std::cout << "Syntax error: identifier " << a << " has already been defined" << std::endl;
+                exit(1);
+            }
             LVal lv;
             lv.name = a;
             lv.LValType = Global;
@@ -200,6 +237,13 @@ namespace FC
             exit(1);
         }
 
+        if(e == nullptr)
+        {
+            std::cout << "oops. expression is null" << std::endl;
+            exit(1);
+        }
+
+
         if(e->GetExprType() == Str)
         {
             std::cout << "Strings cannot be assigned" << std::endl;
@@ -209,19 +253,7 @@ namespace FC
         std::string mem = lv->LValType == Stack ?
                           (std::to_string(lv->StackPointerOffset) + "($sp)") : (std::to_string(lv->GlobalPointerOffset) + "($gp)");
 
-        //std::cout << "mem: " << mem << std::endl;
-        std::string reg_name;
-        if(e->GetExprType() == Int)
-        {
-            int val = e->GetVal();
-            auto r = Register::Allocate();
-            reg_name = r->name;
-            inst->_outFile << "\tli " << reg_name << ", " << val << " # Expression to register load" << std::endl;
-        }
-        else
-        {
-            reg_name = e->GetRegister()->name;
-        }
+        std::string reg_name = e->GetRegister()->name;
         inst->_outFile << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
 
     }
@@ -239,11 +271,11 @@ namespace FC
     }
 
 
-    const std::shared_ptr<Expr> ProcOrExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    const std::shared_ptr<Expr> ProcBinaryExpr(std::string opName, std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
         auto res = Register::Allocate();
-        inst->_outFile << "\tor " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        inst->_outFile << "\t" << opName << " " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
         if(l->GetType().name != r->GetType().name)
         {
             static yy::location loc;
@@ -251,50 +283,46 @@ namespace FC
             exit(0);
         }
         return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcOrExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        return ProcBinaryExpr("or",l,r);
     }
 
     const std::shared_ptr<Expr> ProcAndExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-        auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_outFile << "\tand " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
-        return std::make_shared<Expr>(res, l->GetType());
+        return ProcBinaryExpr("and",l,r);
     }
 
     const std::shared_ptr<Expr> ProcEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-
+        return ProcBinaryExpr("seq",l,r);
     }
     const std::shared_ptr<Expr> ProcNotEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-        return std::shared_ptr<Expr>();
+        return ProcBinaryExpr("sne",l,r);
     }
 
     const std::shared_ptr<Expr> ProcLessEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-        return std::shared_ptr<Expr>();
+        return ProcBinaryExpr("sle",l,r);
     }
 
 
     const std::shared_ptr<Expr> ProcGreaterEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-        return std::shared_ptr<Expr>();
+        return ProcBinaryExpr("sle",r,l);
     }
 
     const std::shared_ptr<Expr> ProcLessThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-        return std::shared_ptr<Expr>();
+        return ProcBinaryExpr("slt",l,r);
     }
 
     const std::shared_ptr<Expr> ProcGreaterThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
-        return std::shared_ptr<Expr>();
+        return ProcBinaryExpr("slt",r,l);
     }
 
     const std::shared_ptr<Expr> ProcPlusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
@@ -393,16 +421,21 @@ namespace FC
             sysCallType = 11;
         else if (typeName == "string")
             sysCallType = 4;
-        if(sysCallType == 4)
-        {
-            //TODO
-        }
         else
         {
+            std::cout << "trying to print unknown type" << std::endl;
+            exit(0);
+        }
+//        if(sysCallType == 4)
+//        {
+//            //TODO
+//        }
+//        else
+//        {
             inst->_outFile << "\tli $v0, " << sysCallType << std::endl;
             inst->_outFile << "\tmove $a0, " << e->GetRegister()->name << std::endl;
             inst->_outFile << "\tsyscall #print" << std::endl;
-        }
+//        }
     }
 
     void ReadToLVal(std::shared_ptr<LVal> lv)
@@ -415,7 +448,7 @@ namespace FC
         }
 
         inst->_outFile << "\tli $v0, 5" << std::endl;
-        inst->_outFile << "\tlsyscall #read" << std::endl;
+        inst->_outFile << "\tsyscall #read" << std::endl;
         std::string mem = lv->LValType == Stack ?
                           (std::to_string(lv->StackPointerOffset) + "($sp)") : (std::to_string(lv->GlobalPointerOffset) + "($gp)");
         inst->_outFile << "\tsw $v0, " << mem << " #store read value to " << lv->name << std::endl;
@@ -435,7 +468,57 @@ namespace FC
 
     const std::shared_ptr<Expr> ProcCharExpr(char val)
     {
-        auto inst = Code::Inst();
         return std::make_shared<Expr>((int)val,CharType());
+    }
+
+    void Stop()
+    {
+        auto inst = Code::Inst();
+        inst->_outFile << "\tli $v0, 10 #load stop instr" << std::endl;
+        inst->_outFile << "\tsyscall" << std::endl;
+    }
+
+    const std::shared_ptr<Expr> ProcDecrement(std::shared_ptr<Expr> e)
+    {
+        auto typeName = e->GetType().name;
+        if(typeName != "integer" && typeName != "boolean" && typeName != "char")
+        {
+            std::cout << "Pred is only defined for integers, booleans and chars";
+            exit(1);
+        }
+
+        if(typeName == "boolean")
+        {
+            return ProcNotExpr(e);
+        }
+        else
+        {
+            auto inst = Code::Inst();
+            inst->_outFile << "\taddi " << e->GetRegister()->name << ", " << e->GetRegister()->name << ", -1 #decrement" << std::endl;
+            return e;
+        }
+    }
+
+    const std::shared_ptr<Expr> ProcIncrement(std::shared_ptr<Expr> e)
+    {
+        auto typeName = e->GetType().name;
+        if(typeName != "integer" && typeName != "boolean" && typeName != "char")
+        {
+            std::cout << "Succ is only defined for integers, booleans and chars";
+            exit(1);
+        }
+
+        if(typeName == "boolean")
+        {
+            return ProcNotExpr(e);
+        }
+        else
+        {
+            auto inst = Code::Inst();
+            auto regName = e->GetRegister()->name;
+            inst->_outFile << "\taddi " << regName << ", " << regName << ", 1 #increment" << std::endl;
+           // std::cout << e->GetExprType() << " expr type " << e->GetType().name << " type   " << std::endl;
+            return e;
+        }
     }
 }

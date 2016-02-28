@@ -48,7 +48,7 @@ main (int argc, char *argv[])
 
   if(argc == 2 && argv[1] == std::string ("-h"))
   {
-      std::cout << "Fabio Gottlicher's CPSL Compiler\nCreated for USU CS5300 - Compiler Construction, Spring 2016\nUsage: cpsl [OPTIONS] inputFile" << std::endl;
+      std::cout << "Fabio Gottlicher's CPSL Compiler\nCreated for USU CS5300 - Compiler Construction, Spring 2016\nUSAGE: f_cpsl [OPTIONS] inputFileName" << std::endl;
       std::cout << "OPTIONS:\n-p                Parser Tracing\n-s                Scanner Tracing\n-o outFileName    (optional) Output file name (default is out.asm)" << std::endl;
 
       return 0;
@@ -70,7 +70,7 @@ main (int argc, char *argv[])
         FC::Code::ArgFileOutName = argv[i];
     }
     else if (!driver.parse (argv[i]))
-      std::cout << driver.result << std::endl;
+      std::cout << "Successfully parsed and compiled. Your asm file is now ready." << std::endl;
     else
       res = 1;
   return res;

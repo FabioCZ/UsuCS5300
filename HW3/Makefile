@@ -99,19 +99,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cpsl
-
-# Build rule for target.
-cpsl: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cpsl
-.PHONY : cpsl
-
-# fast build rule for target.
-cpsl/fast:
-	$(MAKE) -f CMakeFiles/cpsl.dir/build.make CMakeFiles/cpsl.dir/build
-.PHONY : cpsl/fast
-
-#=============================================================================
 # Target rules for targets named cpsl_common
 
 # Build rule for target.
@@ -123,6 +110,19 @@ cpsl_common: cmake_check_build_system
 cpsl_common/fast:
 	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/build
 .PHONY : cpsl_common/fast
+
+#=============================================================================
+# Target rules for targets named f_cpsl
+
+# Build rule for target.
+f_cpsl: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 f_cpsl
+.PHONY : f_cpsl
+
+# fast build rule for target.
+f_cpsl/fast:
+	$(MAKE) -f CMakeFiles/f_cpsl.dir/build.make CMakeFiles/f_cpsl.dir/build
+.PHONY : f_cpsl/fast
 
 CodeGen/CodeGenerator.o: CodeGen/CodeGenerator.cpp.o
 .PHONY : CodeGen/CodeGenerator.o
@@ -171,54 +171,6 @@ CodeGen/Expr/Expr.s: CodeGen/Expr/Expr.cpp.s
 CodeGen/Expr/Expr.cpp.s:
 	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.s
 .PHONY : CodeGen/Expr/Expr.cpp.s
-
-CodeGen/Expr/IntExpr.o: CodeGen/Expr/IntExpr.cpp.o
-.PHONY : CodeGen/Expr/IntExpr.o
-
-# target to build an object file
-CodeGen/Expr/IntExpr.cpp.o:
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o
-.PHONY : CodeGen/Expr/IntExpr.cpp.o
-
-CodeGen/Expr/IntExpr.i: CodeGen/Expr/IntExpr.cpp.i
-.PHONY : CodeGen/Expr/IntExpr.i
-
-# target to preprocess a source file
-CodeGen/Expr/IntExpr.cpp.i:
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.i
-.PHONY : CodeGen/Expr/IntExpr.cpp.i
-
-CodeGen/Expr/IntExpr.s: CodeGen/Expr/IntExpr.cpp.s
-.PHONY : CodeGen/Expr/IntExpr.s
-
-# target to generate assembly for a file
-CodeGen/Expr/IntExpr.cpp.s:
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.s
-.PHONY : CodeGen/Expr/IntExpr.cpp.s
-
-CodeGen/Expr/OrExpr.o: CodeGen/Expr/OrExpr.cpp.o
-.PHONY : CodeGen/Expr/OrExpr.o
-
-# target to build an object file
-CodeGen/Expr/OrExpr.cpp.o:
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o
-.PHONY : CodeGen/Expr/OrExpr.cpp.o
-
-CodeGen/Expr/OrExpr.i: CodeGen/Expr/OrExpr.cpp.i
-.PHONY : CodeGen/Expr/OrExpr.i
-
-# target to preprocess a source file
-CodeGen/Expr/OrExpr.cpp.i:
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.i
-.PHONY : CodeGen/Expr/OrExpr.cpp.i
-
-CodeGen/Expr/OrExpr.s: CodeGen/Expr/OrExpr.cpp.s
-.PHONY : CodeGen/Expr/OrExpr.s
-
-# target to generate assembly for a file
-CodeGen/Expr/OrExpr.cpp.s:
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.s
-.PHONY : CodeGen/Expr/OrExpr.cpp.s
 
 CodeGen/LVal.o: CodeGen/LVal.cpp.o
 .PHONY : CodeGen/LVal.o
@@ -273,7 +225,7 @@ driver.o: driver.cpp.o
 
 # target to build an object file
 driver.cpp.o:
-	$(MAKE) -f CMakeFiles/cpsl.dir/build.make CMakeFiles/cpsl.dir/driver.cpp.o
+	$(MAKE) -f CMakeFiles/f_cpsl.dir/build.make CMakeFiles/f_cpsl.dir/driver.cpp.o
 .PHONY : driver.cpp.o
 
 driver.i: driver.cpp.i
@@ -281,7 +233,7 @@ driver.i: driver.cpp.i
 
 # target to preprocess a source file
 driver.cpp.i:
-	$(MAKE) -f CMakeFiles/cpsl.dir/build.make CMakeFiles/cpsl.dir/driver.cpp.i
+	$(MAKE) -f CMakeFiles/f_cpsl.dir/build.make CMakeFiles/f_cpsl.dir/driver.cpp.i
 .PHONY : driver.cpp.i
 
 driver.s: driver.cpp.s
@@ -289,7 +241,7 @@ driver.s: driver.cpp.s
 
 # target to generate assembly for a file
 driver.cpp.s:
-	$(MAKE) -f CMakeFiles/cpsl.dir/build.make CMakeFiles/cpsl.dir/driver.cpp.s
+	$(MAKE) -f CMakeFiles/f_cpsl.dir/build.make CMakeFiles/f_cpsl.dir/driver.cpp.s
 .PHONY : driver.cpp.s
 
 parser.o: parser.cpp.o
@@ -346,9 +298,9 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... cpsl"
 	@echo "... cpsl_common"
 	@echo "... edit_cache"
+	@echo "... f_cpsl"
 	@echo "... rebuild_cache"
 	@echo "... CodeGen/CodeGenerator.o"
 	@echo "... CodeGen/CodeGenerator.i"
@@ -356,12 +308,6 @@ help:
 	@echo "... CodeGen/Expr/Expr.o"
 	@echo "... CodeGen/Expr/Expr.i"
 	@echo "... CodeGen/Expr/Expr.s"
-	@echo "... CodeGen/Expr/IntExpr.o"
-	@echo "... CodeGen/Expr/IntExpr.i"
-	@echo "... CodeGen/Expr/IntExpr.s"
-	@echo "... CodeGen/Expr/OrExpr.o"
-	@echo "... CodeGen/Expr/OrExpr.i"
-	@echo "... CodeGen/Expr/OrExpr.s"
 	@echo "... CodeGen/LVal.o"
 	@echo "... CodeGen/LVal.i"
 	@echo "... CodeGen/LVal.s"

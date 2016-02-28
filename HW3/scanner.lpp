@@ -135,7 +135,7 @@ write|WRITE { return yy::Parser::make_WriteTok(loc); }
 0x([0-9a-fA-F])+ { int val = (int)strtol(yytext,NULL,0); return yy::Parser::make_IntTok(val,loc);}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
 0({digit})+ { int val = (int)strtol(yytext,NULL,8); return yy::Parser::make_IntTok(val,loc);}
 0|([1-9]({digit})*) { int val = (int)strtol(yytext,NULL,10); return yy::Parser::make_IntTok(val,loc);}
-\"[\x20-\x7e]+\" { std::string str = cleanUpString(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
+\"[\x20-\x7e]+\" { std::string str = cleanUpString(yytext); return yy::Parser::make_StringTok(str,loc);}
 '([\x20-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))' { char val = cleanUpChar(yytext); return yy::Parser::make_CharTok(val,loc);}
 
  

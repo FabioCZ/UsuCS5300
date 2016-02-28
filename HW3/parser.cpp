@@ -1073,7 +1073,7 @@ namespace yy {
 
   case 79:
 #line 274 "parser.ypp" // lalr1.cc:847
-    {/* TODO stop*/}
+    {FC::Stop();}
 #line 1078 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -1253,25 +1253,25 @@ namespace yy {
 
   case 109:
 #line 316 "parser.ypp" // lalr1.cc:847
-    {FC::ToChar(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ToChar(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1258 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 110:
 #line 317 "parser.ypp" // lalr1.cc:847
-    {FC:ToInt(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ToInt(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1264 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 111:
 #line 318 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcDecrement(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1270 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 112:
 #line 319 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcIncrement(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1276 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 

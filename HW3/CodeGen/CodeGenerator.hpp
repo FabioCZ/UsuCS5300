@@ -24,8 +24,11 @@ namespace FC
     void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e);
     void WriteExpr(std::shared_ptr<Expr> e);
     void ReadToLVal(std::shared_ptr<LVal> lv);
+    void Stop();
+
 
     //Expressions
+    const std::shared_ptr<Expr> ProcBinaryExpr(std::string opName, std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcOrExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcAndExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
@@ -34,6 +37,7 @@ namespace FC
     const std::shared_ptr<Expr> ProcGreaterEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcLessThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcGreaterThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+
     const std::shared_ptr<Expr> ProcPlusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcMinusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcDivideExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
@@ -41,6 +45,10 @@ namespace FC
     const std::shared_ptr<Expr> ProcModExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcNotExpr(std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcUnaryMinusExpr(std::shared_ptr<Expr> r);
+
+    const std::shared_ptr<Expr> ProcDecrement(std::shared_ptr<Expr> e);
+    const std::shared_ptr<Expr> ProcIncrement(std::shared_ptr<Expr> e);
+
     const std::shared_ptr<Expr> ProcIntExpr(int val);
     const std::shared_ptr<Expr> ProcStringExpr(std::string val);
     const std::shared_ptr<Expr> ProcCharExpr(char val);

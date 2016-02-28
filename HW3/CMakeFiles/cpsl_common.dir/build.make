@@ -177,32 +177,9 @@ CMakeFiles/cpsl_common.dir/scanner.cpp.o.provides: CMakeFiles/cpsl_common.dir/sc
 
 CMakeFiles/cpsl_common.dir/scanner.cpp.o.provides.build: CMakeFiles/cpsl_common.dir/scanner.cpp.o
 
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o: CMakeFiles/cpsl_common.dir/flags.make
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o: CodeGen/Expr/OrExpr.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW3/CMakeFiles $(CMAKE_PROGRESS_8)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o -c /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/OrExpr.cpp
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/OrExpr.cpp > CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.i
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/OrExpr.cpp -o CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.s
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.requires:
-.PHONY : CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.requires
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.provides: CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.requires
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.provides.build
-.PHONY : CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.provides
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.provides.build: CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o
-
 CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o: CMakeFiles/cpsl_common.dir/flags.make
 CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o: CodeGen/Expr/Expr.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW3/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW3/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o -c /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/Expr.cpp
 
@@ -223,29 +200,6 @@ CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o.provides: CMakeFiles/cpsl_com
 
 CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o.provides.build: CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o
 
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o: CMakeFiles/cpsl_common.dir/flags.make
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o: CodeGen/Expr/IntExpr.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/fabio/Desktop/UsuCS5300/HW3/CMakeFiles $(CMAKE_PROGRESS_10)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o -c /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/IntExpr.cpp
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/IntExpr.cpp > CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.i
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/IntExpr.cpp -o CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.s
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.requires:
-.PHONY : CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.requires
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.provides: CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.requires
-	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.provides.build
-.PHONY : CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.provides
-
-CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.provides.build: CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o
-
 # Object files for target cpsl_common
 cpsl_common_OBJECTS = \
 "CMakeFiles/cpsl_common.dir/CodeGen/CodeGenerator.cpp.o" \
@@ -253,9 +207,7 @@ cpsl_common_OBJECTS = \
 "CMakeFiles/cpsl_common.dir/CodeGen/LVal.cpp.o" \
 "CMakeFiles/cpsl_common.dir/parser.cpp.o" \
 "CMakeFiles/cpsl_common.dir/scanner.cpp.o" \
-"CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o" \
-"CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o" \
-"CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o"
+"CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o"
 
 # External object files for target cpsl_common
 cpsl_common_EXTERNAL_OBJECTS =
@@ -265,9 +217,7 @@ libcpsl_common.a: CMakeFiles/cpsl_common.dir/CodeGen/Register.cpp.o
 libcpsl_common.a: CMakeFiles/cpsl_common.dir/CodeGen/LVal.cpp.o
 libcpsl_common.a: CMakeFiles/cpsl_common.dir/parser.cpp.o
 libcpsl_common.a: CMakeFiles/cpsl_common.dir/scanner.cpp.o
-libcpsl_common.a: CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o
 libcpsl_common.a: CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o
-libcpsl_common.a: CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o
 libcpsl_common.a: CMakeFiles/cpsl_common.dir/build.make
 libcpsl_common.a: CMakeFiles/cpsl_common.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX static library libcpsl_common.a"
@@ -283,9 +233,7 @@ CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/CodeGen/Register
 CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/CodeGen/LVal.cpp.o.requires
 CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/parser.cpp.o.requires
 CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/scanner.cpp.o.requires
-CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/CodeGen/Expr/OrExpr.cpp.o.requires
 CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o.requires
-CMakeFiles/cpsl_common.dir/requires: CMakeFiles/cpsl_common.dir/CodeGen/Expr/IntExpr.cpp.o.requires
 .PHONY : CMakeFiles/cpsl_common.dir/requires
 
 CMakeFiles/cpsl_common.dir/clean:

@@ -1441,7 +1441,7 @@ YY_RULE_SETUP
 case 61:
 YY_RULE_SETUP
 #line 138 "scanner.lpp"
-{ std::string str = cleanUpString(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
+{ std::string str = cleanUpString(yytext); return yy::Parser::make_StringTok(str,loc);}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP

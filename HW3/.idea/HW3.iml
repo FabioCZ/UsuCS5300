@@ -29,16 +29,13 @@
       <sourceFolder url="file://$MODULE_DIR$/driver.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/CodeGenerator.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/Expr.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/Expr.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Register.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Statements/ReadStatement.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Type.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/LVal.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/CodeGenerator.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/LVal.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/LVal.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Type.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Register.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/driver.hpp" isTestSource="false" />
@@ -71,21 +68,18 @@
         <excluded>
           <root url="file://$MODULE_DIR$/CodeGen/CodeGenerator.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Expr/Expr.hpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.cpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.cpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.hpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.hpp" />
+          <root url="file://$MODULE_DIR$/CodeGen/Expr/Expr.cpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Register.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Statements/ReadStatement.hpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Type.hpp" />
+          <root url="file://$MODULE_DIR$/CodeGen/LVal.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/CodeGenerator.cpp" />
           <root url="file://$MODULE_DIR$/CodeGen/LVal.cpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/LVal.hpp" />
+          <root url="file://$MODULE_DIR$/CodeGen/Type.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Register.cpp" />
-          <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/Release/scanner.cpp" />
           <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/Release/parser.cpp" />
-          <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/Debug/parser.cpp" />
+          <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/Release/scanner.cpp" />
           <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/Debug/scanner.cpp" />
+          <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/Debug/parser.cpp" />
           <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/RelWithDebInfo/parser.cpp" />
           <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/RelWithDebInfo/scanner.cpp" />
           <root url="file://$USER_HOME$/.CLion12/system/cmake/generated/29aca9c4/29aca9c4/MinSizeRel/parser.cpp" />

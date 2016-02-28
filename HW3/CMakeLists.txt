@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(cpsl)
+project(f_cpsl)
 
 set(Boost_USE_STATIC_LIBS ON)
 
@@ -53,12 +53,8 @@ set(cpsl_srcs ${CODEGEN_SRCS})
 #list(APPEND cpsl_srcs ${AUX_SRCS})
 
 set(EXPR_SRCS
-        CodeGen/Expr/OrExpr.hpp
-        CodeGen/Expr/OrExpr.cpp
         CodeGen/Expr/Expr.hpp
         CodeGen/Expr/Expr.cpp
-        CodeGen/Expr/IntExpr.hpp
-        CodeGen/Expr/IntExpr.cpp
         )
 
 source_group("Expr" FILES ${EXPR_SRCS})
@@ -74,7 +70,7 @@ list(APPEND cpsl_srcs ${STAT_SRCS})
 set(CMAKE_INSTALL_RPATH ".")
 add_library(cpsl_common STATIC ${cpsl_srcs})
 
-add_executable(cpsl ${main_srcs})
+add_executable(f_cpsl ${main_srcs})
 
 target_link_libraries(cpsl_common ${FLEX_LIBRARIES} ${BISON_LIBRARIES} ${Boost_LIBRARIES})
-target_link_libraries(cpsl cpsl_common)
+target_link_libraries(f_cpsl cpsl_common)

@@ -21,8 +21,8 @@ namespace FC
         std::shared_ptr<Code> inst = Code::Inst();
         _reg = Register::Allocate();
         _exprType = Reg;
-        this->_val = INT32_MIN;
-        inst->_outFile << "\tli " << _reg->name << ", " << _val;
+        inst->_outFile << "\tli " << _reg->name << ", " << _val << std::endl;
+        this->_val = INT32_MIN; //reset value, as we shouldn't need it
         return _reg;
     }
 }

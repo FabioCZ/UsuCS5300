@@ -146,7 +146,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=cpsl
+CMAKE_PROJECT_NAME:STATIC=f_cpsl
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -217,6 +217,12 @@ cpsl_SOURCE_DIR:STATIC=/home/fabio/Desktop/UsuCS5300/HW3
 
 //Dependencies for the target
 cpsl_common_LIB_DEPENDS:STATIC=general;/usr/lib/x86_64-linux-gnu/libfl.so;general;/usr/lib/x86_64-linux-gnu/libboost_program_options.a;general;/usr/lib/x86_64-linux-gnu/libboost_system.a;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.a;
+
+//Value Computed by CMake
+f_cpsl_BINARY_DIR:STATIC=/home/fabio/Desktop/UsuCS5300/HW3
+
+//Value Computed by CMake
+f_cpsl_SOURCE_DIR:STATIC=/home/fabio/Desktop/UsuCS5300/HW3
 
 
 ########################

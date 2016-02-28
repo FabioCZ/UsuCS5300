@@ -271,7 +271,7 @@ ForHead : ForTok IdentifierTok ColonEqualTok Expression {};
 ToHead : ToTok Expression {}
     | DowntoTok Expression {};
     
-StopStatement : StopTok {/* TODO stop*/};
+StopStatement : StopTok {FC::Stop();};
 
 ReturnStatement : ReturnTok Expression {}
     | ReturnTok {};
@@ -313,10 +313,10 @@ Expression : Expression OrTok Expression {$$ = ProcOrExpr($1,$3);}
     | NotTok Expression {$$ = ProcNotExpr($2);}
     | MinusTok Expression %prec UnaryMinusTok {$$ = ProcUnaryMinusExpr($2);}
     | OpenParenTok Expression CloseParenTok {$$ = $2;}
-    | ChrTok OpenParenTok Expression CloseParenTok {FC::ToChar($3);}
-    | OrdTok OpenParenTok Expression CloseParenTok {FC:ToInt($3);}
-    | PredTok OpenParenTok Expression CloseParenTok {}
-    | SuccTok OpenParenTok Expression CloseParenTok {}
+    | ChrTok OpenParenTok Expression CloseParenTok {$$ = FC::ToChar($3);}
+    | OrdTok OpenParenTok Expression CloseParenTok {$$ = FC::ToInt($3);}
+    | PredTok OpenParenTok Expression CloseParenTok {$$ = FC::ProcDecrement($3);}
+    | SuccTok OpenParenTok Expression CloseParenTok {$$ = FC::ProcIncrement($3);}
     | LVal {$$ = FC::LValToExpr($1); }
     | IntTok {$$ = FC::ProcIntExpr($1);}
     | StringTok {$$ = FC::ProcStringExpr($1);}
