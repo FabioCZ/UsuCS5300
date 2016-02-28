@@ -4,6 +4,7 @@
 CMakeFiles/cpsl.dir/driver.cpp.o: CodeGen/CodeGenerator.hpp
 CMakeFiles/cpsl.dir/driver.cpp.o: CodeGen/Expr/Expr.hpp
 CMakeFiles/cpsl.dir/driver.cpp.o: CodeGen/Register.hpp
+CMakeFiles/cpsl.dir/driver.cpp.o: CodeGen/Type.hpp
 CMakeFiles/cpsl.dir/driver.cpp.o: driver.cpp
 CMakeFiles/cpsl.dir/driver.cpp.o: driver.hpp
 CMakeFiles/cpsl.dir/driver.cpp.o: location.hh

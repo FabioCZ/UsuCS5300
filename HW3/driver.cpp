@@ -1,5 +1,6 @@
 #include "driver.hpp"
 #include "parser.hpp"
+#include "CodeGen/CodeGenerator.hpp"
 
 Driver::Driver ()
   : trace_scanning (false), trace_parsing (false)
@@ -38,6 +39,7 @@ Driver::error (const std::string& m)
 
 
 
+
 int
 main (int argc, char *argv[])
 {
@@ -46,7 +48,9 @@ main (int argc, char *argv[])
 
   if(argc == 2 && argv[1] == std::string ("-h"))
   {
-      std::cout << "this is help" << std::endl;
+      std::cout << "Fabio Gottlicher's CPSL Compiler\nCreated for USU CS5300 - Compiler Construction, Spring 2016\nUsage: cpsl [OPTIONS] inputFile" << std::endl;
+      std::cout << "OPTIONS:\n-p                Parser Tracing\n-s                Scanner Tracing\n-o outFileName    (optional) Output file name (default is out.asm)" << std::endl;
+
       return 0;
   }
   
@@ -55,6 +59,16 @@ main (int argc, char *argv[])
       driver.trace_parsing = true;
     else if (argv[i] == std::string ("-s"))
       driver.trace_scanning = true;
+    else if (argv[i] == std::string ("-o"))
+    {
+        i++;
+        if(argv[i] == NULL)
+        {
+            std::cout << "You must pass in a an output fileName";
+            return 1;
+        }
+        FC::Code::ArgFileOutName = argv[i];
+    }
     else if (!driver.parse (argv[i]))
       std::cout << driver.result << std::endl;
     else

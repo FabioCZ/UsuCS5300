@@ -27,7 +27,9 @@ unordered_map
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Register.hpp
 memory
 -
-CodeGen/Type.hpp
+../Type.hpp
+/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Type.hpp
+iostream
 -
 
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Register.hpp
@@ -40,11 +42,15 @@ string
 memory
 -
 
+/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Type.hpp
+
 /home/fabio/Desktop/UsuCS5300/HW3/driver.cpp
 driver.hpp
 /home/fabio/Desktop/UsuCS5300/HW3/driver.hpp
 parser.hpp
 /home/fabio/Desktop/UsuCS5300/HW3/parser.hpp
+CodeGen/CodeGenerator.hpp
+/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/CodeGenerator.hpp
 
 /home/fabio/Desktop/UsuCS5300/HW3/driver.hpp
 string
@@ -101,7 +107,9 @@ CodeGen/Expr/Expr.hpp
 CodeGen/Register.hpp
 memory
 -
+../Type.hpp
 CodeGen/Type.hpp
+iostream
 -
 
 CodeGen/LVal.hpp

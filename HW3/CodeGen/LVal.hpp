@@ -11,10 +11,10 @@ namespace FC
 {
     enum LValType
     {
-        Stack,
-        Global,
-        Data,
-        Const
+        Stack = 1,
+        Global = 2,
+        Data = 3,
+        Const = 4
     };
 
     struct LVal

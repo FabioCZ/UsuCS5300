@@ -1097,13 +1097,13 @@ namespace yy {
 
   case 83:
 #line 281 "parser.ypp" // lalr1.cc:847
-    {/*todo readval */}
+    {FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
 #line 1102 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 84:
 #line 282 "parser.ypp" // lalr1.cc:847
-    {/*todo*/}
+    {FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
 #line 1108 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -1115,13 +1115,13 @@ namespace yy {
 
   case 86:
 #line 286 "parser.ypp" // lalr1.cc:847
-    {}
+    {FC::WriteExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1120 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 87:
 #line 287 "parser.ypp" // lalr1.cc:847
-    {}
+    {FC::WriteExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1126 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -1253,13 +1253,13 @@ namespace yy {
 
   case 109:
 #line 316 "parser.ypp" // lalr1.cc:847
-    {}
+    {FC::ToChar(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1258 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 110:
 #line 317 "parser.ypp" // lalr1.cc:847
-    {}
+    {FC:ToInt(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1264 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -1295,7 +1295,7 @@ namespace yy {
 
   case 116:
 #line 323 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcCharExpr(yystack_[0].value.as< char > ());}
 #line 1300 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 

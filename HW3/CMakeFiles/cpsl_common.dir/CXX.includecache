@@ -21,8 +21,6 @@ memory
 -
 boost/algorithm/string.hpp
 -
-parser.hpp
--
 location.hh
 -
 
@@ -45,6 +43,8 @@ unordered_map
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/Expr.cpp
 Expr.hpp
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/Expr.hpp
+../CodeGenerator.hpp
+/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/CodeGenerator.hpp
 
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/Expr.hpp
 ../Register.hpp
@@ -53,26 +53,8 @@ memory
 -
 ../Type.hpp
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Type.hpp
-../CodeGenerator.hpp
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/CodeGenerator.hpp
 iostream
 -
-
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/IntExpr.cpp
-IntExpr.hpp
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/IntExpr.hpp
-
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/IntExpr.hpp
-Expr.hpp
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/Expr.hpp
-
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/OrExpr.cpp
-OrExpr.hpp
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/OrExpr.hpp
-
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/OrExpr.hpp
-Expr.hpp
-/home/fabio/Desktop/UsuCS5300/HW3/CodeGen/Expr/Expr.hpp
 
 /home/fabio/Desktop/UsuCS5300/HW3/CodeGen/LVal.hpp
 string
@@ -207,8 +189,6 @@ memory
 -
 ../Type.hpp
 CodeGen/Type.hpp
-../CodeGenerator.hpp
-CodeGen/CodeGenerator.hpp
 iostream
 -
 
@@ -224,41 +204,11 @@ location.hh
 position.hh
 position.hh
 
-parser.hpp
-string
--
-CodeGen/CodeGenerator.hpp
-CodeGen/CodeGenerator.hpp
-CodeGen/Expr/Expr.hpp
-CodeGen/Expr/Expr.hpp
-cassert
--
-vector
--
-iostream
--
-stdexcept
--
-string
--
-stack.hh
-stack.hh
-location.hh
-location.hh
-typeinfo
--
-cassert
--
-
 position.hh
 algorithm
 -
 iostream
 -
 string
--
-
-stack.hh
-vector
 -
 

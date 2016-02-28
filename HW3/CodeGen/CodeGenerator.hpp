@@ -18,9 +18,14 @@ namespace FC
     void AddVariables(Type type);
     Type SimpleTypeLookup(std::string typeName);
     void WriteConstData();
-    void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e);
     std::shared_ptr<LVal> GetLValForIdent(std::string s);
 
+    //Statements
+    void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e);
+    void WriteExpr(std::shared_ptr<Expr> e);
+    void ReadToLVal(std::shared_ptr<LVal> lv);
+
+    //Expressions
     const std::shared_ptr<Expr> ProcOrExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcAndExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
@@ -38,18 +43,20 @@ namespace FC
     const std::shared_ptr<Expr> ProcUnaryMinusExpr(std::shared_ptr<Expr> r);
     const std::shared_ptr<Expr> ProcIntExpr(int val);
     const std::shared_ptr<Expr> ProcStringExpr(std::string val);
+    const std::shared_ptr<Expr> ProcCharExpr(char val);
     const std::shared_ptr<Expr> LValToExpr(std::shared_ptr<LVal> lv);
-
+    const std::shared_ptr<Expr> ToChar(std::shared_ptr<Expr> e);
+    const std::shared_ptr<Expr> ToInt(std::shared_ptr<Expr> e);
     class Code
     {
         public:
         
         static std::shared_ptr<Code> Inst();
         static std::string ArgFileOutName;
-        Code(std::string fileName="out.asm")
+        Code()
         {
-            std::cout << "Outputting code to: " << fileName << std::endl;
-            _outFile.open(fileName);
+            std::cout << "Outputting code to: " << ArgFileOutName << std::endl;
+            _outFile.open(ArgFileOutName);
         }
         
         ~Code()

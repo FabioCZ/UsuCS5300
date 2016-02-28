@@ -9,7 +9,7 @@ namespace FC
     class Type
     {
     public:
-        int size;
+        int size = -2;
         std::string name;
         ~Type() = default;
 
@@ -18,29 +18,42 @@ namespace FC
     class IntType : public Type
     {
     public:
-        const int size = 4;
-        const std::string name = "int";
+        IntType()
+        {
+            this->size = 4;
+            this->name = "integer";
+        }
+
     };
 
     class CharType : public Type
     {
     public:
-        const int size = 4;
-        const std::string name = "char";
+        CharType()
+        {
+            this->size = 4;
+            this->name = "char";
+        }
     };
 
     class BoolType : public Type
     {
     public:
-        const int size = 4;
-        const std::string name = "bool";
+        BoolType()
+        {
+            this->size = 4;
+            this->name = "boolean";
+        }
     };
 
     class StringType : public Type
     {
     public:
-        const int size = -1;
-        const std::string name = "string";
+        StringType()
+        {
+            this->size = -1;
+            this->name = "string";
+        }
     };
 }
 #endif //CPSL_TYPE_HPP

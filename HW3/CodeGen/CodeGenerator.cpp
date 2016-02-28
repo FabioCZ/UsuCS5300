@@ -5,12 +5,12 @@
 #include "Expr/Expr.hpp"
 #include <memory>
 #include <boost/algorithm/string.hpp>
-#include <parser.hpp>
 #include <location.hh>
 
 namespace FC
 {
     std::shared_ptr<Code> Code::_code = nullptr;
+    std::string Code::ArgFileOutName = "out.asm";
 
     std::shared_ptr<Code> Code::Inst()
     {
@@ -43,9 +43,16 @@ namespace FC
 
         LVal lv;
         lv.Type = e->GetType();
-        lv.LValType = Data;
-        lv.DataLabel = id;
-
+        if(e->GetType().name == "string")
+        {
+            lv.LValType = Data;
+            lv.DataLabel = id;
+        }
+        else
+        {
+            lv.LValType = Global;
+            lv.GlobalPointerOffset = inst->AllocateGlobalPointer(4);
+        }
         inst->LValues[id] = std::make_shared<LVal>(lv);
 
         if(e->GetExprType() == Reg)
@@ -60,16 +67,13 @@ namespace FC
     const std::shared_ptr<Expr> ProcIntExpr(int val)
     {
         auto inst = Code::Inst();
-        inst->Expressions.push_back(std::make_shared<Expr>(val,IntType()));
-        return inst->Expressions.back();
+        return std::make_shared<Expr>(val,IntType());
     }
 
     const std::shared_ptr<Expr> ProcStringExpr(std::string val)
     {
         auto inst = Code::Inst();
-
-        inst->Expressions.push_back(std::make_shared<Expr>(val));
-        return inst->Expressions.back();
+        return std::make_shared<Expr>(val);
     }
 
     const std::shared_ptr<Expr> LValToExpr(std::shared_ptr<LVal> lv)
@@ -87,28 +91,31 @@ namespace FC
         if(lval->LValType == Const)
         {
             FC::Expr e(lval->ConstValue, lval->Type);
-            inst->Expressions.push_back(std::make_shared<Expr>(e));
+            return std::make_shared<Expr>(e);
         }
         else if(lval->LValType == Stack)
         {
             FC::Expr e(FC::Register::Allocate(), lval->Type);
             inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval->StackPointerOffset << "($sp)" << std::endl;
-            inst->Expressions.push_back(std::make_shared<Expr>(e));
+            return std::make_shared<Expr>(e);
         }
         else if(lval->LValType == Global)
         {
             FC::Expr e(FC::Register::Allocate(), lval->Type);
-            inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval->GlobalPointerOffset << "($gp)" << std::endl;
-            inst->Expressions.push_back(std::make_shared<Expr>(e));
-
+            inst->_outFile << "\tlw " << e.GetRegister()->name << ", " << lval->GlobalPointerOffset << "($gp) #" << id << std::endl;
+            return std::make_shared<Expr>(e);
         }
-        else // data
+        else if(lval->LValType == Data)// data
         {
             FC::Expr e(FC::Register::Allocate(), lval->Type);
             inst->_outFile << "\tla " << e.GetRegister()->name << ", " << lval->DataLabel << std::endl;
-            inst->Expressions.push_back(std::make_shared<Expr>(e));
+            return std::make_shared<Expr>(e);
         }
-        return inst->Expressions.back();
+        else
+        {
+            std::cout << "Internal compiler error with LValues" << std::endl;
+            exit(1);
+        }
     }
 
     void WriteConstData()
@@ -138,7 +145,6 @@ namespace FC
         }
         std::cout << "Type: " << typeName << " is not a valid type" << std::endl;
         exit(1);
-        return Type();
     }
 
     void AddIdent(std::string id)
@@ -161,6 +167,8 @@ namespace FC
             //std::cout << "adding var " << a << std::endl;
             LVal lv;
             lv.name = a;
+            lv.LValType = Global;
+            lv.Type = type;
             lv.GlobalPointerOffset = inst->AllocateGlobalPointer(type.size);
             inst->LValues[a] = std::make_shared<LVal>(lv);
         }
@@ -177,6 +185,7 @@ namespace FC
 
     int Code::AllocateGlobalPointer(int size)
     {
+        //std::cout << "Allocating new, at: " << _currGPOffset << " size: " << size << std::endl;
         int pt = _currGPOffset;
         _currGPOffset += size;
         return pt;
@@ -184,6 +193,36 @@ namespace FC
 
     void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e)
     {
+        auto inst = Code::Inst();
+        if(lv->LValType == Data || lv->LValType == Const)
+        {
+            std::cout << "Constants cannot be overwritten with assignment" << std::endl;
+            exit(1);
+        }
+
+        if(e->GetExprType() == Str)
+        {
+            std::cout << "Strings cannot be assigned" << std::endl;
+            exit(1);
+        }
+
+        std::string mem = lv->LValType == Stack ?
+                          (std::to_string(lv->StackPointerOffset) + "($sp)") : (std::to_string(lv->GlobalPointerOffset) + "($gp)");
+
+        //std::cout << "mem: " << mem << std::endl;
+        std::string reg_name;
+        if(e->GetExprType() == Int)
+        {
+            int val = e->GetVal();
+            auto r = Register::Allocate();
+            reg_name = r->name;
+            inst->_outFile << "\tli " << reg_name << ", " << val << " # Expression to register load" << std::endl;
+        }
+        else
+        {
+            reg_name = e->GetRegister()->name;
+        }
+        inst->_outFile << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
 
     }
 
@@ -340,5 +379,63 @@ namespace FC
         auto inst = Code::Inst();
         inst->_outFile << "\tsub " << r->GetRegister()->name << ", $zero, " << r->GetRegister()->name << std::endl;
         return r;
+    }
+
+    void WriteExpr(std::shared_ptr<Expr> e)
+    {
+        auto inst = Code::Inst();
+        int sysCallType = -1;
+        auto typeName = e->GetType().name;
+        //std::cout << "Type Name for print: " << typeName << std::endl;
+        if(typeName == "integer" || typeName == "boolean")
+            sysCallType = 1;
+        else if(typeName == "char")
+            sysCallType = 11;
+        else if (typeName == "string")
+            sysCallType = 4;
+        if(sysCallType == 4)
+        {
+            //TODO
+        }
+        else
+        {
+            inst->_outFile << "\tli $v0, " << sysCallType << std::endl;
+            inst->_outFile << "\tmove $a0, " << e->GetRegister()->name << std::endl;
+            inst->_outFile << "\tsyscall #print" << std::endl;
+        }
+    }
+
+    void ReadToLVal(std::shared_ptr<LVal> lv)
+    {
+        auto inst = Code::Inst();
+        if(lv->Type.name != "integer" && lv->Type.name != "char")
+        {
+            std::cout << "Read statement can only be used with integers and characters" << std::endl;
+            exit(1);
+        }
+
+        inst->_outFile << "\tli $v0, 5" << std::endl;
+        inst->_outFile << "\tlsyscall #read" << std::endl;
+        std::string mem = lv->LValType == Stack ?
+                          (std::to_string(lv->StackPointerOffset) + "($sp)") : (std::to_string(lv->GlobalPointerOffset) + "($gp)");
+        inst->_outFile << "\tsw $v0, " << mem << " #store read value to " << lv->name << std::endl;
+    }
+
+    const std::shared_ptr<Expr> ToChar(std::shared_ptr<Expr> e)
+    {
+        e->CastIntToChar();
+        return e;
+    }
+
+    const std::shared_ptr<Expr> ToInt(std::shared_ptr<Expr> e)
+    {
+        e->CastCharToInt();
+        return e;
+    }
+
+    const std::shared_ptr<Expr> ProcCharExpr(char val)
+    {
+        auto inst = Code::Inst();
+        return std::make_shared<Expr>((int)val,CharType());
     }
 }

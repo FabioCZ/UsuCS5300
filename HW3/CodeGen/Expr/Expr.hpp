@@ -8,12 +8,10 @@
 #include "../Register.hpp"
 #include <memory>
 #include "../Type.hpp"
-#include "../CodeGenerator.hpp"
 #include <iostream>
 
 namespace FC
 {
-    class Code;
 
     enum ExprType
     {
@@ -51,24 +49,34 @@ namespace FC
             this->_type = StringType();
         }
 
-        std::shared_ptr<FC::Register> GetRegister()
+        void CastCharToInt()
         {
-            if(_exprType == Reg)
+            if(this->_type.name == "char")
             {
-                return _reg;
+                this->_type = IntType();
             }
-            if(_exprType == Str)
+            else
             {
-                std::cout << "Internal compiler error, li string" << std::cout;
+                std::cout << "Only chars can be cast to integers" << std::endl;
                 exit(1);
             }
-            auto inst = Code::Inst();
-            _reg = Register::Allocate();
-            _exprType = Reg;
-            this->_val = INT32_MIN;
-            inst->_outFile << "\tli " << _reg->name << ", " << _val;
-            return _reg;
         }
+
+        void CastIntToChar()
+        {
+            if(this->_type.name == "integer")
+            {
+                this->_type = CharType();
+            }
+            else
+            {
+                std::cout << "Only integers can be cast to chars" << std::endl;
+                exit(1);
+            }
+        }
+
+        std::shared_ptr<FC::Register> GetRegister();
+
     private:
         int _val = -1;
         std::string _stringVal = "ERROR! THIS VALUE IS NOT SET!";

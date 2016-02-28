@@ -28,12 +28,11 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/driver.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/CodeGenerator.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/Expr.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/Expr.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Register.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Statements/ReadStatement.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CodeGen/Type.hpp" isTestSource="false" />
@@ -71,12 +70,11 @@
         </SOURCES>
         <excluded>
           <root url="file://$MODULE_DIR$/CodeGen/CodeGenerator.hpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.hpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.cpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.hpp" />
-          <root url="file://$MODULE_DIR$/CodeGen/Expr/Expr.cpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Expr/Expr.hpp" />
+          <root url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.cpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.cpp" />
+          <root url="file://$MODULE_DIR$/CodeGen/Expr/IntExpr.hpp" />
+          <root url="file://$MODULE_DIR$/CodeGen/Expr/OrExpr.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Register.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Statements/ReadStatement.hpp" />
           <root url="file://$MODULE_DIR$/CodeGen/Type.hpp" />
