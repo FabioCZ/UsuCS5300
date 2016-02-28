@@ -1,6 +1,8 @@
-//
-// Created by fabio on 2/27/16.
-//
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
 
 #ifndef CPSL_TYPE_HPP
 #define CPSL_TYPE_HPP

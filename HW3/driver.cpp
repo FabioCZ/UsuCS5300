@@ -1,3 +1,9 @@
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 #include "driver.hpp"
 #include "parser.hpp"
 #include "CodeGen/CodeGenerator.hpp"

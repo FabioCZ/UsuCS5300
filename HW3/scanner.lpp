@@ -1,4 +1,10 @@
 %{ /* -*- C++ -*- */
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 # include <cerrno>
 # include <climits>
 # include <cstdlib>
@@ -34,7 +40,7 @@ std::string replaceReserved(std::string s)
 std::string cleanUpString(std::string s)
 {
     boost::erase_all(s, "\"");
-    s = replaceReserved(s);
+    //s = replaceReserved(s);
     return s;
 }
 

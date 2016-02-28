@@ -17,7 +17,6 @@ include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/CodeGen
         ${CMAKE_CURRENT_SOURCE_DIR}/CodeGen/Expr
-        ${CMAKE_CURRENT_SOURCE_DIR}/CodeGen/Statements
         ${Boost_INCLUDE_DIRS}
 )
 
@@ -59,13 +58,6 @@ set(EXPR_SRCS
 
 source_group("Expr" FILES ${EXPR_SRCS})
 list(APPEND cpsl_srcs ${EXPR_SRCS})
-
-set(STAT_SRCS
-        CodeGen/Statements/ReadStatement.hpp
-        )
-
-source_group("Stat" FILES ${STAT_SRCS})
-list(APPEND cpsl_srcs ${STAT_SRCS})
 
 set(CMAKE_INSTALL_RPATH ".")
 add_library(cpsl_common STATIC ${cpsl_srcs})

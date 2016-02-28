@@ -1,3 +1,9 @@
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 #include <CodeGenerator.hpp>
 #include <unordered_map>
 #include "LVal.hpp"
@@ -53,6 +59,7 @@ namespace FC
     void AddMain()
     {
         auto inst = Code::Inst();
+        Stop(); //Add stop stament
         inst->_outFile << "#Finished writing maing, now writing data sector" << std::endl;
         WriteConstData();
     }
@@ -74,23 +81,21 @@ namespace FC
         lv.name = id;
         if(e->GetType().name == "string")
         {
+            //std::cout << "adding const " << id << std::endl;
             lv.LValType = Data;
             lv.DataLabel = id;
+            inst->ConstData[id] = e;
         }
         else
         {
             lv.LValType = Global;
             lv.GlobalPointerOffset = inst->AllocateGlobalPointer(4);
+            std::string reg_name = e->GetRegister()->name;
+            inst->_outFile << "\tsw " << reg_name << ", " << lv.GlobalPointerOffset << "($gp) #Storing " << lv.name << std::endl;
         }
         inst->LValues[id] = std::make_shared<LVal>(lv);
 
-        if(e->GetExprType() == Reg)
-        {
-            std::cout << "Constant parsing error";
-            exit(1);
-        }
 
-        inst->ConstData[id] = e;
     }
 
     const std::shared_ptr<Expr> ProcIntExpr(int val)
@@ -276,12 +281,11 @@ namespace FC
         auto inst = Code::Inst();
         auto res = Register::Allocate();
         inst->_outFile << "\t" << opName << " " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
+//        if(l->GetType().name != "char" && r->GetType().name != "integer")
+//        {
+//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
+//            exit(0);
+//        }
         return std::make_shared<Expr>(res, l->GetType());
     }
 
@@ -330,12 +334,12 @@ namespace FC
         auto inst = Code::Inst();
         auto res = Register::Allocate();
         inst->_outFile << "\tadd " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
+//        if(l->GetType().name != r->GetType().name)
+//        {
+//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
+//
+//            exit(0);
+//        }
         return std::make_shared<Expr>(res, l->GetType());
     }
 
@@ -344,12 +348,12 @@ namespace FC
         auto inst = Code::Inst();
         auto res = Register::Allocate();
         inst->_outFile << "\tsub " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
+//        if(l->GetType().name != r->GetType().name)
+//        {
+//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
+//
+//            exit(0);
+//        }
         return std::make_shared<Expr>(res, l->GetType());
     }
 
@@ -358,12 +362,12 @@ namespace FC
         auto inst = Code::Inst();
         auto res = Register::Allocate();
         inst->_outFile << "\tdiv " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
+//        if(l->GetType().name != r->GetType().name)
+//        {
+//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
+//
+//            exit(0);
+//        }
         return std::make_shared<Expr>(res, l->GetType());
     }
 
@@ -372,12 +376,12 @@ namespace FC
         auto inst = Code::Inst();
         auto res = Register::Allocate();
         inst->_outFile << "\tmul " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
+//        if(l->GetType().name != r->GetType().name)
+//        {
+//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
+//
+//            exit(0);
+//        }
         return std::make_shared<Expr>(res, l->GetType());
     }
 
@@ -385,13 +389,13 @@ namespace FC
     {
         auto inst = Code::Inst();
         auto res = Register::Allocate();
-        inst->_outFile << "\tmod " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-        if(l->GetType().name != r->GetType().name)
-        {
-            static yy::location loc;
-            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
-            exit(0);
-        }
+        inst->_outFile << "\trem " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+//        if(l->GetType().name != r->GetType().name)
+//        {
+//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
+//
+//            exit(0);
+//        }
         return std::make_shared<Expr>(res, l->GetType());
     }
 
@@ -420,7 +424,19 @@ namespace FC
         else if(typeName == "char")
             sysCallType = 11;
         else if (typeName == "string")
+        {
+            if(e->GetExprType() == Str)
+            {
+                auto label = inst->GetNextStringDataLabel();
+
+                //std::cout << e->GetStringVal() << " string type" << std::endl;
+                AddConst(label, std::make_shared<Expr>(e->GetStringVal())); // this is bad, but it works
+                std::shared_ptr<LVal> lv = GetLValForIdent(label);
+                auto ex = LValToExpr(lv);
+                e = ex;
+            }
             sysCallType = 4;
+        }
         else
         {
             std::cout << "trying to print unknown type" << std::endl;
@@ -447,7 +463,9 @@ namespace FC
             exit(1);
         }
 
-        inst->_outFile << "\tli $v0, 5" << std::endl;
+        int syscallType = lv->Type.name == "integer" ? 5 : 12;
+
+        inst->_outFile << "\tli $v0, " << syscallType << std::endl;
         inst->_outFile << "\tsyscall #read" << std::endl;
         std::string mem = lv->LValType == Stack ?
                           (std::to_string(lv->StackPointerOffset) + "($sp)") : (std::to_string(lv->GlobalPointerOffset) + "($gp)");

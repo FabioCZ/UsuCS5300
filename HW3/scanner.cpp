@@ -699,13 +699,13 @@ int yy_flex_debug = 1;
 
 static yyconst flex_int16_t yy_rule_linenum[64] =
     {   0,
-       70,   71,   74,   75,   76,   77,   78,   79,   80,   81,
-       82,   83,   84,   85,   86,   87,   88,   89,   90,   91,
-       92,   93,   94,   95,   96,   97,   98,   99,  100,  101,
-      102,  103,  104,  107,  108,  109,  110,  111,  112,  113,
-      114,  115,  116,  117,  118,  119,  120,  121,  122,  123,
-      124,  125,  126,  127,  128,  129,  132,  135,  136,  137,
-      138,  139,  143
+       76,   77,   80,   81,   82,   83,   84,   85,   86,   87,
+       88,   89,   90,   91,   92,   93,   94,   95,   96,   97,
+       98,   99,  100,  101,  102,  103,  104,  105,  106,  107,
+      108,  109,  110,  113,  114,  115,  116,  117,  118,  119,
+      120,  121,  122,  123,  124,  125,  126,  127,  128,  129,
+      130,  131,  132,  133,  134,  135,  138,  141,  142,  143,
+      144,  145,  149
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -718,6 +718,12 @@ static yyconst flex_int16_t yy_rule_linenum[64] =
 char *yytext;
 #line 1 "scanner.lpp"
 #line 2 "scanner.lpp"
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 # include <cerrno>
 # include <climits>
 # include <cstdlib>
@@ -753,7 +759,7 @@ std::string replaceReserved(std::string s)
 std::string cleanUpString(std::string s)
 {
     boost::erase_all(s, "\"");
-    s = replaceReserved(s);
+    //s = replaceReserved(s);
     return s;
 }
 
@@ -765,11 +771,11 @@ char cleanUpChar(std::string s)
 }
 
 #define YY_NO_INPUT 1
-#line 58 "scanner.lpp"
+#line 64 "scanner.lpp"
   // Code run each time a pattern is matched.
   # define YY_USER_ACTION  loc.columns (yyleng);
 /****************************/
-#line 773 "/home/fabio/Desktop/UsuCS5300/HW3/scanner.cpp"
+#line 779 "/home/fabio/Desktop/UsuCS5300/HW3/scanner.cpp"
 
 #define INITIAL 0
 
@@ -1014,7 +1020,7 @@ YY_DECL
 	register int yy_act;
     
 /* %% [7.0] user's declarations go here */
-#line 62 "scanner.lpp"
+#line 68 "scanner.lpp"
 
  /****************************/
 
@@ -1023,7 +1029,7 @@ YY_DECL
   loc.step ();
 
 
-#line 1027 "/home/fabio/Desktop/UsuCS5300/HW3/scanner.cpp"
+#line 1033 "/home/fabio/Desktop/UsuCS5300/HW3/scanner.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -1135,336 +1141,336 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 70 "scanner.lpp"
+#line 76 "scanner.lpp"
 { loc.step ();}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 71 "scanner.lpp"
+#line 77 "scanner.lpp"
 {loc.lines (yyleng); loc.step ();}
 	YY_BREAK
 /* keywords */
 case 3:
 YY_RULE_SETUP
-#line 74 "scanner.lpp"
+#line 80 "scanner.lpp"
 { return yy::Parser::make_ArrayTok(loc); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 75 "scanner.lpp"
+#line 81 "scanner.lpp"
 { return  yy::Parser::make_BeginTok(loc); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 76 "scanner.lpp"
+#line 82 "scanner.lpp"
 { return yy::Parser::make_ChrTok(loc); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 77 "scanner.lpp"
+#line 83 "scanner.lpp"
 { return yy::Parser::make_ConstTok(loc); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 78 "scanner.lpp"
+#line 84 "scanner.lpp"
 { return yy::Parser::make_DoTok(loc); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 79 "scanner.lpp"
+#line 85 "scanner.lpp"
 { return yy::Parser::make_DowntoTok(loc); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 80 "scanner.lpp"
+#line 86 "scanner.lpp"
 { return yy::Parser::make_ElseTok(loc); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 81 "scanner.lpp"
+#line 87 "scanner.lpp"
 { return yy::Parser::make_ElseifTok(loc); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 82 "scanner.lpp"
+#line 88 "scanner.lpp"
 { return yy::Parser::make_EndTok(loc); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 83 "scanner.lpp"
+#line 89 "scanner.lpp"
 { return yy::Parser::make_ForTok(loc); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 84 "scanner.lpp"
+#line 90 "scanner.lpp"
 { return yy::Parser::make_ForwardTok(loc); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 85 "scanner.lpp"
+#line 91 "scanner.lpp"
 { return yy::Parser::make_FunctionTok(loc); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 86 "scanner.lpp"
+#line 92 "scanner.lpp"
 { return yy::Parser::make_IfTok(loc); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 87 "scanner.lpp"
+#line 93 "scanner.lpp"
 { return yy::Parser::make_OfTok(loc); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 88 "scanner.lpp"
+#line 94 "scanner.lpp"
 { return yy::Parser::make_OrdTok(loc); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 89 "scanner.lpp"
+#line 95 "scanner.lpp"
 { return yy::Parser::make_PredTok(loc); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 90 "scanner.lpp"
+#line 96 "scanner.lpp"
 { return yy::Parser::make_ProcedureTok(loc); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 91 "scanner.lpp"
+#line 97 "scanner.lpp"
 { return yy::Parser::make_ReadTok(loc); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 92 "scanner.lpp"
+#line 98 "scanner.lpp"
 { return yy::Parser::make_RecordTok(loc); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 93 "scanner.lpp"
+#line 99 "scanner.lpp"
 { return yy::Parser::make_RefTok(loc); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 94 "scanner.lpp"
+#line 100 "scanner.lpp"
 { return yy::Parser::make_RepeatTok(loc); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 95 "scanner.lpp"
+#line 101 "scanner.lpp"
 { return yy::Parser::make_ReturnTok(loc); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 96 "scanner.lpp"
+#line 102 "scanner.lpp"
 { return yy::Parser::make_StopTok(loc); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 97 "scanner.lpp"
+#line 103 "scanner.lpp"
 { return yy::Parser::make_SuccTok(loc); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 98 "scanner.lpp"
+#line 104 "scanner.lpp"
 { return yy::Parser::make_ThenTok(loc); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 99 "scanner.lpp"
+#line 105 "scanner.lpp"
 { return yy::Parser::make_ToTok(loc); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 100 "scanner.lpp"
+#line 106 "scanner.lpp"
 { return yy::Parser::make_TypeTok(loc); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 101 "scanner.lpp"
+#line 107 "scanner.lpp"
 { return yy::Parser::make_UntilTok(loc); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 102 "scanner.lpp"
+#line 108 "scanner.lpp"
 { return yy::Parser::make_VarTok(loc); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 103 "scanner.lpp"
+#line 109 "scanner.lpp"
 { return yy::Parser::make_WhileTok(loc); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 104 "scanner.lpp"
+#line 110 "scanner.lpp"
 { return yy::Parser::make_WriteTok(loc); }
 	YY_BREAK
 /* operators */
 case 34:
 YY_RULE_SETUP
-#line 107 "scanner.lpp"
+#line 113 "scanner.lpp"
 { return yy::Parser::make_PlusTok(loc);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 108 "scanner.lpp"
+#line 114 "scanner.lpp"
 { return yy::Parser::make_MinusTok(loc);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 109 "scanner.lpp"
+#line 115 "scanner.lpp"
 { return yy::Parser::make_MultiplyTok(loc);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 110 "scanner.lpp"
+#line 116 "scanner.lpp"
 { return yy::Parser::make_DivideTok(loc);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 111 "scanner.lpp"
+#line 117 "scanner.lpp"
 { return yy::Parser::make_AndTok(loc);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 112 "scanner.lpp"
+#line 118 "scanner.lpp"
 { return yy::Parser::make_OrTok(loc);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 113 "scanner.lpp"
+#line 119 "scanner.lpp"
 { return yy::Parser::make_NotTok(loc);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 114 "scanner.lpp"
+#line 120 "scanner.lpp"
 { return yy::Parser::make_EqualsTok(loc);} 
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 115 "scanner.lpp"
+#line 121 "scanner.lpp"
 { return yy::Parser::make_NotEqualTok(loc);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 116 "scanner.lpp"
+#line 122 "scanner.lpp"
 { return yy::Parser::make_LessThanTok(loc);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 117 "scanner.lpp"
+#line 123 "scanner.lpp"
 { return yy::Parser::make_LessEqualTok(loc);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 118 "scanner.lpp"
+#line 124 "scanner.lpp"
 { return yy::Parser::make_GreaterTok(loc);}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 119 "scanner.lpp"
+#line 125 "scanner.lpp"
 { return yy::Parser::make_GreaterEqualTok(loc);}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 120 "scanner.lpp"
+#line 126 "scanner.lpp"
 { return yy::Parser::make_DotTok(loc);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 121 "scanner.lpp"
+#line 127 "scanner.lpp"
 { return yy::Parser::make_CommaTok(loc);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 122 "scanner.lpp"
+#line 128 "scanner.lpp"
 { return yy::Parser::make_ColonTok(loc);}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 123 "scanner.lpp"
+#line 129 "scanner.lpp"
 { return yy::Parser::make_SemicolonTok(loc);}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 124 "scanner.lpp"
+#line 130 "scanner.lpp"
 { return yy::Parser::make_OpenParenTok(loc);}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 125 "scanner.lpp"
+#line 131 "scanner.lpp"
 { return yy::Parser::make_CloseParenTok(loc);}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 126 "scanner.lpp"
+#line 132 "scanner.lpp"
 { return yy::Parser::make_OpenBrktTok(loc);}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 127 "scanner.lpp"
+#line 133 "scanner.lpp"
 { return yy::Parser::make_CloseBrktTok(loc);}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 128 "scanner.lpp"
+#line 134 "scanner.lpp"
 { return yy::Parser::make_ColonEqualTok(loc);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 129 "scanner.lpp"
+#line 135 "scanner.lpp"
 { return yy::Parser::make_PercentTok(loc);}
 	YY_BREAK
 /* Identifier */
 case 57:
 YY_RULE_SETUP
-#line 132 "scanner.lpp"
+#line 138 "scanner.lpp"
 { std::string str(yytext); return yy::Parser::make_IdentifierTok(str,loc);}
 	YY_BREAK
 /* literals */
 case 58:
 YY_RULE_SETUP
-#line 135 "scanner.lpp"
+#line 141 "scanner.lpp"
 { int val = (int)strtol(yytext,NULL,0); return yy::Parser::make_IntTok(val,loc);}  //Here the language specification is vague whether a-f should be caps or no caps, so I match both
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 136 "scanner.lpp"
+#line 142 "scanner.lpp"
 { int val = (int)strtol(yytext,NULL,8); return yy::Parser::make_IntTok(val,loc);}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 137 "scanner.lpp"
+#line 143 "scanner.lpp"
 { int val = (int)strtol(yytext,NULL,10); return yy::Parser::make_IntTok(val,loc);}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 138 "scanner.lpp"
+#line 144 "scanner.lpp"
 { std::string str = cleanUpString(yytext); return yy::Parser::make_StringTok(str,loc);}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 139 "scanner.lpp"
+#line 145 "scanner.lpp"
 { char val = cleanUpChar(yytext); return yy::Parser::make_CharTok(val,loc);}
 	YY_BREAK
 /* Comments */
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
-#line 143 "scanner.lpp"
+#line 149 "scanner.lpp"
 {loc.lines (yyleng); loc.step ();}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 145 "scanner.lpp"
+#line 151 "scanner.lpp"
 return yy::Parser::make_END(loc);
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 148 "scanner.lpp"
+#line 154 "scanner.lpp"
 ECHO;
 	YY_BREAK
-#line 1468 "/home/fabio/Desktop/UsuCS5300/HW3/scanner.cpp"
+#line 1474 "/home/fabio/Desktop/UsuCS5300/HW3/scanner.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2555,7 +2561,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 148 "scanner.lpp"
+#line 154 "scanner.lpp"
 
 
 

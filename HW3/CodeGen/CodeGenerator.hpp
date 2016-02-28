@@ -1,3 +1,9 @@
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 #ifndef CODE_GEN
 #define CODE_GEN
 
@@ -81,7 +87,7 @@ namespace FC
         std::string GetNextStringDataLabel()
         {
             _stringDataCt++;
-            return "stringVal" + _stringDataCt;
+            return "stringVal" + std::to_string(_stringDataCt);
         }
         int AllocateStackPointer(int size);
         int AllocateGlobalPointer(int size);

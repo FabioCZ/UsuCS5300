@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/CS5300HW2.dir/gottlicher_lexical.cpp.o CMakeFiles/CS5300HW2.dir/gottlicher_parser.cpp.o  -o CS5300HW2 -rdynamic 

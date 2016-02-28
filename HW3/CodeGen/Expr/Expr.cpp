@@ -1,6 +1,9 @@
-//
-// Created by fabio on 2/27/16.
-//
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 #include "Expr.hpp"
 #include "../CodeGenerator.hpp"
 namespace FC

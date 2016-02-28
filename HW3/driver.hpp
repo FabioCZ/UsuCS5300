@@ -1,3 +1,9 @@
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
 #ifndef DRIVER_HPP
 # define DRIVER_HPP
 # include <string>

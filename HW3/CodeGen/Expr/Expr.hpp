@@ -1,6 +1,8 @@
-//
-// Created by fabio on 2/27/16.
-//
+/*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
 
 #ifndef CPSL_EXPR_HPP
 #define CPSL_EXPR_HPP
@@ -51,7 +53,7 @@ namespace FC
 
         void CastCharToInt()
         {
-            if(this->_type.name == "char")
+            if(this->_type.name == "integer" || this->_type.name == "char")
             {
                 this->_type = IntType();
             }
@@ -64,7 +66,7 @@ namespace FC
 
         void CastIntToChar()
         {
-            if(this->_type.name == "integer")
+            if(this->_type.name == "integer" || this->_type.name == "char")
             {
                 this->_type = CharType();
             }
