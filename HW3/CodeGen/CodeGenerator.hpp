@@ -13,9 +13,7 @@ namespace FC
 {
     void AddMain();
     void AddConst(std::string id, std::shared_ptr<Expr> e);
-    const std::shared_ptr<Expr> AddIntExpr(int val);
-    const std::shared_ptr<Expr> AddString(std::string val);
-    const std::shared_ptr<Expr> LoadLVal(std::shared_ptr<LVal> lv);
+
     void AddIdent(std::string id);
     void AddVariables(Type type);
     Type SimpleTypeLookup(std::string typeName);
@@ -23,6 +21,24 @@ namespace FC
     void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e);
     std::shared_ptr<LVal> GetLValForIdent(std::string s);
 
+    const std::shared_ptr<Expr> ProcOrExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcAndExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcNotEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcLessEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcGreaterEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcLessThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcGreaterThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcPlusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcMinusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcDivideExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcMultiplyExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcModExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcNotExpr(std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcUnaryMinusExpr(std::shared_ptr<Expr> r);
+    const std::shared_ptr<Expr> ProcIntExpr(int val);
+    const std::shared_ptr<Expr> ProcStringExpr(std::string val);
+    const std::shared_ptr<Expr> LValToExpr(std::shared_ptr<LVal> lv);
 
     class Code
     {

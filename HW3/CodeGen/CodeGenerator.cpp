@@ -5,6 +5,9 @@
 #include "Expr/Expr.hpp"
 #include <memory>
 #include <boost/algorithm/string.hpp>
+#include <parser.hpp>
+#include <location.hh>
+
 namespace FC
 {
     std::shared_ptr<Code> Code::_code = nullptr;
@@ -54,14 +57,14 @@ namespace FC
         inst->ConstData[id] = e;
     }
 
-    const std::shared_ptr<Expr> AddIntExpr(int val)
+    const std::shared_ptr<Expr> ProcIntExpr(int val)
     {
         auto inst = Code::Inst();
         inst->Expressions.push_back(std::make_shared<Expr>(val,IntType()));
         return inst->Expressions.back();
     }
 
-    const std::shared_ptr<Expr> AddString(std::string val)
+    const std::shared_ptr<Expr> ProcStringExpr(std::string val)
     {
         auto inst = Code::Inst();
 
@@ -69,7 +72,7 @@ namespace FC
         return inst->Expressions.back();
     }
 
-    const std::shared_ptr<Expr> LoadLVal(std::shared_ptr<LVal> lv)
+    const std::shared_ptr<Expr> LValToExpr(std::shared_ptr<LVal> lv)
     {
         auto id = lv->name;
         auto inst = Code::Inst();
@@ -194,5 +197,148 @@ namespace FC
             exit(1);
         }
         return lvalRes->second;
+    }
+
+
+    const std::shared_ptr<Expr> ProcOrExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tor " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcAndExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tand " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+
+    }
+    const std::shared_ptr<Expr> ProcNotEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        return std::shared_ptr<Expr>();
+    }
+
+    const std::shared_ptr<Expr> ProcLessEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        return std::shared_ptr<Expr>();
+    }
+
+
+    const std::shared_ptr<Expr> ProcGreaterEqualExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        return std::shared_ptr<Expr>();
+    }
+
+    const std::shared_ptr<Expr> ProcLessThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        return std::shared_ptr<Expr>();
+    }
+
+    const std::shared_ptr<Expr> ProcGreaterThanExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        return std::shared_ptr<Expr>();
+    }
+
+    const std::shared_ptr<Expr> ProcPlusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tadd " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcMinusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tsub " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcDivideExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tdiv " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcMultiplyExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tmul " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcModExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        auto res = Register::Allocate();
+        inst->_outFile << "\tmod " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        if(l->GetType().name != r->GetType().name)
+        {
+            static yy::location loc;
+            std::cout << "Syntax Error: Expressions don't agree in type, line: " << loc << std::endl;
+            exit(0);
+        }
+        return std::make_shared<Expr>(res, l->GetType());
+    }
+
+    const std::shared_ptr<Expr> ProcNotExpr(std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        inst->_outFile << "\tnot " << r->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
+        return r;
+    }
+
+    const std::shared_ptr<Expr> ProcUnaryMinusExpr(std::shared_ptr<Expr> r)
+    {
+        auto inst = Code::Inst();
+        inst->_outFile << "\tsub " << r->GetRegister()->name << ", $zero, " << r->GetRegister()->name << std::endl;
+        return r;
     }
 }

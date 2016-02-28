@@ -339,7 +339,7 @@ namespace yy {
       char dummy3[sizeof(int)];
 
       // Expression
-      char dummy4[sizeof(std::shared_ptr<FC::Expr> )];
+      char dummy4[sizeof(std::shared_ptr<FC::Expr>)];
 
       // LVal
       char dummy5[sizeof(std::shared_ptr<FC::LVal> )];
@@ -470,7 +470,7 @@ namespace yy {
 
   basic_symbol (typename Base::kind_type t, const int v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr>  v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr> v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::LVal>  v, const location_type& l);
 
@@ -1119,7 +1119,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        value.copy< std::shared_ptr<FC::Expr>  > (other.value);
+        value.copy< std::shared_ptr<FC::Expr> > (other.value);
         break;
 
       case 119: // LVal
@@ -1200,7 +1200,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        value.copy< std::shared_ptr<FC::Expr>  > (v);
+        value.copy< std::shared_ptr<FC::Expr> > (v);
         break;
 
       case 119: // LVal
@@ -1249,7 +1249,7 @@ namespace yy {
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr>  v, const location_type& l)
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1337,7 +1337,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        value.template destroy< std::shared_ptr<FC::Expr>  > ();
+        value.template destroy< std::shared_ptr<FC::Expr> > ();
         break;
 
       case 119: // LVal
@@ -1415,7 +1415,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        value.move< std::shared_ptr<FC::Expr>  > (s.value);
+        value.move< std::shared_ptr<FC::Expr> > (s.value);
         break;
 
       case 119: // LVal

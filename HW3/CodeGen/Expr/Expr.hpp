@@ -7,10 +7,14 @@
 
 #include "../Register.hpp"
 #include <memory>
-#include <CodeGen/Type.hpp>
+#include "../Type.hpp"
+#include "../CodeGenerator.hpp"
+#include <iostream>
 
 namespace FC
 {
+    class Code;
+
     enum ExprType
     {
         Reg,
@@ -22,7 +26,6 @@ namespace FC
 
         std::string GetStringVal() {return _stringVal;}
         int GetVal() {return _val;}
-        std::shared_ptr<FC::Register> GetRegister() {return _reg;}
         ExprType GetExprType() { return _exprType;}
         Type GetType() {return _type;}
 
@@ -46,6 +49,25 @@ namespace FC
             this->_stringVal = val;
             this->_exprType = Str;
             this->_type = StringType();
+        }
+
+        std::shared_ptr<FC::Register> GetRegister()
+        {
+            if(_exprType == Reg)
+            {
+                return _reg;
+            }
+            if(_exprType == Str)
+            {
+                std::cout << "Internal compiler error, li string" << std::cout;
+                exit(1);
+            }
+            auto inst = Code::Inst();
+            _reg = Register::Allocate();
+            _exprType = Reg;
+            this->_val = INT32_MIN;
+            inst->_outFile << "\tli " << _reg->name << ", " << _val;
+            return _reg;
         }
     private:
         int _val = -1;

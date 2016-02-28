@@ -104,7 +104,7 @@ class Driver;
 %type <int> ElseClause
 %type <int> ElseIfHead
 %type <int> ElseIfList
-%type <std::shared_ptr<FC::Expr> > Expression
+%type <std::shared_ptr<FC::Expr>> Expression
 %type <int> FSignature
 %type <int> FieldDecl
 %type <int> FieldDecls
@@ -297,29 +297,29 @@ Arguments : Arguments CommaTok Expression {}
 /* ConstExpression : Expression {$$ = $1;}
     | StringTok {$$ = FC::AddString($1);}; */
 
-Expression : Expression OrTok Expression {}
-    | Expression AndTok Expression {}
-    | Expression EqualsTok Expression {}
-    | Expression NotEqualTok Expression {}
-    | Expression LessEqualTok Expression {}
-    | Expression GreaterEqualTok Expression {}
-    | Expression LessThanTok Expression {}
-    | Expression GreaterTok Expression {}
-    | Expression PlusTok Expression {}
-    | Expression MinusTok Expression {}
-    | Expression DivideTok Expression {}
-    | Expression MultiplyTok Expression {}
-    | Expression PercentTok Expression {}
-    | NotTok Expression {}
-    | MinusTok Expression %prec UnaryMinusTok {}
+Expression : Expression OrTok Expression {$$ = ProcOrExpr($1,$3);}
+    | Expression AndTok Expression {$$ = ProcAndExpr($1,$3);}
+    | Expression EqualsTok Expression {$$ = ProcEqualExpr($1,$3);}
+    | Expression NotEqualTok Expression {$$ = ProcNotEqualExpr($1,$3);}
+    | Expression LessEqualTok Expression {$$ = ProcLessEqualExpr($1,$3);}
+    | Expression GreaterEqualTok Expression {$$ = ProcGreaterEqualExpr($1,$3);}
+    | Expression LessThanTok Expression {$$ = ProcLessThanExpr($1,$3);}
+    | Expression GreaterTok Expression {$$ = ProcGreaterThanExpr($1,$3);}
+    | Expression PlusTok Expression {$$ = ProcPlusExpr($1,$3);}
+    | Expression MinusTok Expression {$$ = ProcMinusExpr($1,$3);}
+    | Expression DivideTok Expression {$$ = ProcDivideExpr($1,$3);}
+    | Expression MultiplyTok Expression {$$ = ProcMultiplyExpr($1,$3);}
+    | Expression PercentTok Expression {$$ = ProcModExpr($1,$3);}
+    | NotTok Expression {$$ = ProcNotExpr($2);}
+    | MinusTok Expression %prec UnaryMinusTok {$$ = ProcUnaryMinusExpr($2);}
     | OpenParenTok Expression CloseParenTok {$$ = $2;}
     | ChrTok OpenParenTok Expression CloseParenTok {}
     | OrdTok OpenParenTok Expression CloseParenTok {}
     | PredTok OpenParenTok Expression CloseParenTok {}
     | SuccTok OpenParenTok Expression CloseParenTok {}
-    | LVal {$$ = FC::LoadLVal($1); }
-    | IntTok {$$ = FC::AddIntExpr($1);}
-    | StringTok {$$ = FC::AddString($1);}
+    | LVal {$$ = FC::LValToExpr($1); }
+    | IntTok {$$ = FC::ProcIntExpr($1);}
+    | StringTok {$$ = FC::ProcStringExpr($1);}
     | CharTok {}
     | FunctionCall {};
     

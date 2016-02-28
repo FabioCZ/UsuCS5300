@@ -293,7 +293,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        value.move< std::shared_ptr<FC::Expr>  > (that.value);
+        value.move< std::shared_ptr<FC::Expr> > (that.value);
         break;
 
       case 119: // LVal
@@ -372,7 +372,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        value.copy< std::shared_ptr<FC::Expr>  > (that.value);
+        value.copy< std::shared_ptr<FC::Expr> > (that.value);
         break;
 
       case 119: // LVal
@@ -676,7 +676,7 @@ namespace yy {
         break;
 
       case 117: // Expression
-        yylhs.value.build< std::shared_ptr<FC::Expr>  > ();
+        yylhs.value.build< std::shared_ptr<FC::Expr> > ();
         break;
 
       case 119: // LVal
@@ -713,7 +713,7 @@ namespace yy {
 
   case 8:
 #line 163 "parser.ypp" // lalr1.cc:847
-    {FC::AddConst(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<FC::Expr>  > ());}
+    {FC::AddConst(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 718 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -971,7 +971,7 @@ namespace yy {
 
   case 62:
 #line 244 "parser.ypp" // lalr1.cc:847
-    {FC::Assignment(yystack_[2].value.as< std::shared_ptr<FC::LVal>  > (),yystack_[0].value.as< std::shared_ptr<FC::Expr>  > ());}
+    {FC::Assignment(yystack_[2].value.as< std::shared_ptr<FC::LVal>  > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 976 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -1157,97 +1157,97 @@ namespace yy {
 
   case 93:
 #line 300 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcOrExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1162 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 94:
 #line 301 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcAndExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1168 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 95:
 #line 302 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1174 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 96:
 #line 303 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcNotEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1180 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 97:
 #line 304 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcLessEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1186 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 98:
 #line 305 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcGreaterEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1192 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 99:
 #line 306 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcLessThanExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1198 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 100:
 #line 307 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcGreaterThanExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1204 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 101:
 #line 308 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcPlusExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1210 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 102:
 #line 309 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcMinusExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1216 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 103:
 #line 310 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcDivideExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1222 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 104:
 #line 311 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcMultiplyExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1228 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 105:
 #line 312 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcModExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1234 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 106:
 #line 313 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcNotExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1240 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 107:
 #line 314 "parser.ypp" // lalr1.cc:847
-    {}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcUnaryMinusExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1246 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 108:
 #line 315 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = yystack_[1].value.as< std::shared_ptr<FC::Expr>  > ();}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = yystack_[1].value.as< std::shared_ptr<FC::Expr> > ();}
 #line 1252 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
@@ -1277,19 +1277,19 @@ namespace yy {
 
   case 113:
 #line 320 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = FC::LoadLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ()); }
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::LValToExpr(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ()); }
 #line 1282 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 114:
 #line 321 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = FC::AddIntExpr(yystack_[0].value.as< int > ());}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcIntExpr(yystack_[0].value.as< int > ());}
 #line 1288 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
   case 115:
 #line 322 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr>  > () = FC::AddString(yystack_[0].value.as< std::string > ());}
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcStringExpr(yystack_[0].value.as< std::string > ());}
 #line 1294 "/home/fabio/Desktop/UsuCS5300/HW3/parser.cpp" // lalr1.cc:847
     break;
 
