@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug/parser.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug/parser.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug/scanner.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug/scanner.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel/parser.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel/parser.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel/scanner.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel/scanner.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo/parser.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo/parser.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo/scanner.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo/scanner.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release/parser.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release/parser.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release/scanner.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release/scanner.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/driver.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/CodeGenerator.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/Expr.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Expr/Expr.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Register.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/LVal.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/CodeGenerator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/LVal.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Type.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CodeGen/Register.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/driver.hpp" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel" />
+        </SOURCES>
+        <excluded>
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release/parser.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Release/scanner.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug/parser.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/Debug/scanner.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo/parser.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/RelWithDebInfo/scanner.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel/scanner.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/HW3-29aca9c5/29aca9c5/MinSizeRel/parser.cpp" />
+        </excluded>
+      </library>
+    </orderEntry>
+  </component>
+</module>
