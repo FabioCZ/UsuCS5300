@@ -38,7 +38,8 @@ namespace FC
 
     //Control structures/Statements
     void AddIfStatement();
-    void While(std::shared_ptr<Expr> e);
+    void WhileHead(std::shared_ptr<Expr> e);
+    void WhileEnd();
 
 
     //Expressions

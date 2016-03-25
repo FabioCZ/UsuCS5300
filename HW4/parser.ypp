@@ -265,9 +265,9 @@ ElseIfHead : ElseifTok Expression {}
 ElseClause : ElseTok StatementList {}
     | {};
     
-WhileStatement : WhileHead DoTok StatementList EndTok {FC::While($1);};
+WhileStatement : WhileHead DoTok StatementList EndTok {FC::WhileEnd();};
 
-WhileHead : WhileTok Expression {std::cout << "while" << std::endl;$$ = $2;};
+WhileHead : WhileTok Expression {FC::WhileHead($2);};
 
 RepeatStatement : RepeatTok StatementList UntilTok Expression {};
 

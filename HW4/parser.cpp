@@ -1031,13 +1031,13 @@ namespace yy {
 
   case 72:
 #line 268 "parser.ypp" // lalr1.cc:847
-    {FC::While(yystack_[3].value.as< std::shared_ptr<FC::Expr> > ());}
+    {FC::WhileEnd();}
 #line 1036 "/home/fabio/Desktop/UsuCS5300/HW4/parser.cpp" // lalr1.cc:847
     break;
 
   case 73:
 #line 270 "parser.ypp" // lalr1.cc:847
-    {std::cout << "while" << std::endl;yylhs.value.as< std::shared_ptr<FC::Expr> > () = yystack_[0].value.as< std::shared_ptr<FC::Expr> > ();}
+    {FC::WhileHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1042 "/home/fabio/Desktop/UsuCS5300/HW4/parser.cpp" // lalr1.cc:847
     break;
 

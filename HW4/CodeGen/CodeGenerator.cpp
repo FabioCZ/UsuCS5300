@@ -557,12 +557,22 @@ namespace FC
         Code::Inst()->WriteToFileNow();
     }
 
-    void While(std::shared_ptr<Expr> e)
+    void WhileHead(std::shared_ptr<Expr> e)
     {
-        std::cout << "while" << std::endl;
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
+        inst->_stream << "\twhileBegin:" << std::endl;
+        inst->_stream << "\tbeq $zero," << e->GetRegister()->name << ", whileEnd" << std::endl;
+        std::cout << "WhileHead" << std::endl;
 
+    }
+
+
+    void WhileEnd()
+    {
+        auto inst = Code::Inst();
+        inst->_stream << "\tj whileBegin" << std::endl;
+        inst->_stream << "\twhileEnd:" << std::endl;
+        inst->WriteToFileNow();
     }
 
 
