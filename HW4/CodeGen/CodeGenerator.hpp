@@ -28,7 +28,7 @@ namespace FC
     std::shared_ptr<LVal> GetLValForIdent(std::string s);
 
     //StatementList
-    void StatementList();
+    void WriteStatement();
 
     //Statements
     void Assignment(std::shared_ptr<LVal> lv, std::shared_ptr<Expr> e);
@@ -38,6 +38,7 @@ namespace FC
 
     //Control structures/Statements
     void AddIfStatement();
+    void WhileSuperHead();
     void WhileHead(std::shared_ptr<Expr> e);
     void WhileEnd();
 

@@ -143,6 +143,7 @@ class Driver;
 %type <int> ToHead
 %type <FC::Type> Type
 %type <std::shared_ptr<FC::Expr>> WhileHead
+%type <std::shared_ptr<FC::Expr>> WhileSuperHead
 %type <int> WhileStatement
 %type <int> WriteArgs
 %type <int> WriteStatement
@@ -197,10 +198,10 @@ OptVar : VarTok {}
     
 Body : OptConstDecls OptTypeDecls OptVarDecls Block {};
 
-Block : BeginTok StatementList EndTok {};
+Block : BeginTok StatementList EndTok {FC::WriteStatement();};
 
-StatementList : StatementList SemicolonTok Statement {FC::StatementList();}
-    | Statement{FC::StatementList();} ;
+StatementList : StatementList SemicolonTok Statement {}
+    | Statement{} ;
     
 OptTypeDecls : TypeTok TypeDecls
     | ;
@@ -267,7 +268,9 @@ ElseClause : ElseTok StatementList {}
     
 WhileStatement : WhileHead DoTok StatementList EndTok {FC::WhileEnd();};
 
-WhileHead : WhileTok Expression {FC::WhileHead($2);};
+WhileHead : WhileSuperHead Expression {FC::WhileHead($2);};
+
+WhileSuperHead : WhileTok {FC::WhileSuperHead();};
 
 RepeatStatement : RepeatTok StatementList UntilTok Expression {};
 

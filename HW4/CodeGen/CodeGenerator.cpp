@@ -551,28 +551,32 @@ namespace FC
         }
     }
 
-    void StatementList()
+    void WriteStatement()
     {
-        std::cout << "statements" << std::endl;
         Code::Inst()->WriteToFileNow();
+    }
+
+    void WhileSuperHead()
+    {
+        Code::Inst()->WriteToFileNow();
+        auto inst = Code::Inst();
+        inst->_outFile << "\twhileBegin:" << std::endl;
     }
 
     void WhileHead(std::shared_ptr<Expr> e)
     {
         auto inst = Code::Inst();
-        inst->_stream << "\twhileBegin:" << std::endl;
-        inst->_stream << "\tbeq $zero," << e->GetRegister()->name << ", whileEnd" << std::endl;
-        std::cout << "WhileHead" << std::endl;
-
+        inst->WriteToFileNow();
+        inst->_outFile << "\tbeq $zero," << e->GetRegister()->name << ", whileEnd" << std::endl;
     }
 
 
     void WhileEnd()
     {
         auto inst = Code::Inst();
-        inst->_stream << "\tj whileBegin" << std::endl;
-        inst->_stream << "\twhileEnd:" << std::endl;
         inst->WriteToFileNow();
+        inst->_outFile << "\tj whileBegin" << std::endl;
+        inst->_outFile << "\twhileEnd:" << std::endl;
     }
 
 

@@ -1,13 +1,13 @@
 .global main
 main:
-	li $s7, 0
+	li $s7, 0 #loading expr to register
 	sw $s7, 0($gp) #Storing i
-	li $s5, 20
-	li $s6, 32
+	whileBegin:
+	li $s5, 20 #loading expr to register
 	lw $s7, 0($gp) #i
 	slt $s6, $s7, $s5
-	whileBegin:
 	beq $zero,$s6, whileEnd
+	li $s6, 32 #loading expr to register
 	lw $s6, 0($gp) #i
 	li $v0, 1
 	move $a0, $s6
@@ -20,7 +20,7 @@ main:
 	sw $s6, 0($gp) #Storing i
 	j whileBegin
 	whileEnd:
-	li $s6, 10
+	li $s6, 10 #loading expr to register
 	li $v0, 11
 	move $a0, $s6
 	syscall #print
