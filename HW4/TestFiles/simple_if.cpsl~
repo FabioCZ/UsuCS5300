@@ -6,9 +6,10 @@ i := 13;
 
 if (i < 12) then
   write(i, " is less than 12");
-end;
+$end;
 
-if (i > 12) then
+$if (i > 12) then
+else
   write(i, " is greater than 12");
 end;
 

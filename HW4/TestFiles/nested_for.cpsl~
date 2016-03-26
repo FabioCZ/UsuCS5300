@@ -1,4 +1,4 @@
-$VAR a,b : integer;
+VAR a,b : integer;
 
 BEGIN
 

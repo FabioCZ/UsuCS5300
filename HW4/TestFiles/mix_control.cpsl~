@@ -13,7 +13,7 @@ else
       k := 0;
       repeat
         if k = 0 then
-          write("0=",k,", ");
+          write("0=" ,k,", ");
         elseif 1=k then
           write("1=",k,", ");
         elseif k<>3 then
