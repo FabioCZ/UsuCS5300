@@ -241,6 +241,25 @@ namespace FC
         return pt;
     }
 
+    int Code::addLabelNumber()
+    {
+        auto toRet = ++_labelCounter;
+        _labelNumbers.push_back(toRet);
+        return toRet;
+    }
+
+    int Code::getCurrLabelNumber()
+    {
+        return _labelNumbers.back();
+    }
+
+    int Code::dropLabelNumber()
+    {
+        auto toRet = _labelNumbers.back();
+        _labelNumbers.pop_back();
+        return toRet;
+    }
+
 
 
 
@@ -560,14 +579,14 @@ namespace FC
     {
         Code::Inst()->WriteToFileNow();
         auto inst = Code::Inst();
-        inst->_outFile << "\twhileBegin:" << std::endl;
+        inst->_outFile << "WhileBegin" << inst->addLabelNumber() << ":" << std::endl;
     }
 
     void WhileHead(std::shared_ptr<Expr> e)
     {
         auto inst = Code::Inst();
         inst->WriteToFileNow();
-        inst->_outFile << "\tbeq $zero," << e->GetRegister()->name << ", whileEnd" << std::endl;
+        inst->_outFile << "\tbeq $zero," << e->GetRegister()->name << ", WhileEnd" << inst->getCurrLabelNumber() << std::endl;
     }
 
 
@@ -575,8 +594,46 @@ namespace FC
     {
         auto inst = Code::Inst();
         inst->WriteToFileNow();
-        inst->_outFile << "\tj whileBegin" << std::endl;
-        inst->_outFile << "\twhileEnd:" << std::endl;
+        auto labelNum = inst->dropLabelNumber();
+        inst->_outFile << "\tj WhileBegin" << labelNum << std::endl;
+        inst->_outFile << "\tWhileEnd"<< labelNum << ":" << std::endl;
+    }
+
+    void RepeatHead()
+    {
+        auto inst = Code::Inst();
+        inst->WriteToFileNow();
+        inst->_outFile << "RepeatBegin" << inst->addLabelNumber() << ":" << std::endl;
+
+    }
+
+    void RepeatEnd(std::shared_ptr<Expr> e)
+    {
+        auto inst = Code::Inst();
+        inst->WriteToFileNow();
+        inst->_outFile << "\tbeq $zero," << e->GetRegister()->name << ", RepeatBegin" << inst->dropLabelNumber() << std::endl;
+    }
+
+    void IfHead(std::shared_ptr<Expr> e)
+    {
+        auto inst = Code::Inst();
+        inst->WriteToFileNow();
+        inst->_outFile << "\t beq $zero, " << e->GetRegister()->name << ", "
+    }
+
+    void ElseIfHead(std::shared_ptr<Expr> e)
+    {
+
+    }
+
+    void ElseHead()
+    {
+
+    }
+
+    void IfEnd()
+    {
+
     }
 
 

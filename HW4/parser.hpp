@@ -980,8 +980,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 458,     ///< Last index in yytable_.
-      yynnts_ = 58,  ///< Number of nonterminal symbols.
+      yylast_ = 474,     ///< Last index in yytable_.
+      yynnts_ = 60,  ///< Number of nonterminal symbols.
       yyempty_ = -2,
       yyfinal_ = 8, ///< Termination state number.
       yyterror_ = 1,
@@ -1101,29 +1101,29 @@ namespace yy {
       case 101: // ElseClause
       case 102: // WhileStatement
       case 105: // RepeatStatement
-      case 106: // ForStatement
-      case 107: // ForHead
-      case 108: // ToHead
-      case 109: // StopStatement
-      case 110: // ReturnStatement
-      case 111: // ReadStatement
-      case 112: // ReadArgs
-      case 113: // WriteStatement
-      case 114: // WriteArgs
-      case 115: // ProcedureCall
-      case 116: // OptArguments
-      case 117: // Arguments
-      case 119: // FunctionCall
+      case 108: // ForStatement
+      case 109: // ForHead
+      case 110: // ToHead
+      case 111: // StopStatement
+      case 112: // ReturnStatement
+      case 113: // ReadStatement
+      case 114: // ReadArgs
+      case 115: // WriteStatement
+      case 116: // WriteArgs
+      case 117: // ProcedureCall
+      case 118: // OptArguments
+      case 119: // Arguments
+      case 121: // FunctionCall
         value.copy< int > (other.value);
         break;
 
       case 103: // WhileHead
       case 104: // WhileSuperHead
-      case 118: // Expression
+      case 120: // Expression
         value.copy< std::shared_ptr<FC::Expr> > (other.value);
         break;
 
-      case 120: // LVal
+      case 122: // LVal
         value.copy< std::shared_ptr<FC::LVal>  > (other.value);
         break;
 
@@ -1183,29 +1183,29 @@ namespace yy {
       case 101: // ElseClause
       case 102: // WhileStatement
       case 105: // RepeatStatement
-      case 106: // ForStatement
-      case 107: // ForHead
-      case 108: // ToHead
-      case 109: // StopStatement
-      case 110: // ReturnStatement
-      case 111: // ReadStatement
-      case 112: // ReadArgs
-      case 113: // WriteStatement
-      case 114: // WriteArgs
-      case 115: // ProcedureCall
-      case 116: // OptArguments
-      case 117: // Arguments
-      case 119: // FunctionCall
+      case 108: // ForStatement
+      case 109: // ForHead
+      case 110: // ToHead
+      case 111: // StopStatement
+      case 112: // ReturnStatement
+      case 113: // ReadStatement
+      case 114: // ReadArgs
+      case 115: // WriteStatement
+      case 116: // WriteArgs
+      case 117: // ProcedureCall
+      case 118: // OptArguments
+      case 119: // Arguments
+      case 121: // FunctionCall
         value.copy< int > (v);
         break;
 
       case 103: // WhileHead
       case 104: // WhileSuperHead
-      case 118: // Expression
+      case 120: // Expression
         value.copy< std::shared_ptr<FC::Expr> > (v);
         break;
 
-      case 120: // LVal
+      case 122: // LVal
         value.copy< std::shared_ptr<FC::LVal>  > (v);
         break;
 
@@ -1321,29 +1321,29 @@ namespace yy {
       case 101: // ElseClause
       case 102: // WhileStatement
       case 105: // RepeatStatement
-      case 106: // ForStatement
-      case 107: // ForHead
-      case 108: // ToHead
-      case 109: // StopStatement
-      case 110: // ReturnStatement
-      case 111: // ReadStatement
-      case 112: // ReadArgs
-      case 113: // WriteStatement
-      case 114: // WriteArgs
-      case 115: // ProcedureCall
-      case 116: // OptArguments
-      case 117: // Arguments
-      case 119: // FunctionCall
+      case 108: // ForStatement
+      case 109: // ForHead
+      case 110: // ToHead
+      case 111: // StopStatement
+      case 112: // ReturnStatement
+      case 113: // ReadStatement
+      case 114: // ReadArgs
+      case 115: // WriteStatement
+      case 116: // WriteArgs
+      case 117: // ProcedureCall
+      case 118: // OptArguments
+      case 119: // Arguments
+      case 121: // FunctionCall
         value.template destroy< int > ();
         break;
 
       case 103: // WhileHead
       case 104: // WhileSuperHead
-      case 118: // Expression
+      case 120: // Expression
         value.template destroy< std::shared_ptr<FC::Expr> > ();
         break;
 
-      case 120: // LVal
+      case 122: // LVal
         value.template destroy< std::shared_ptr<FC::LVal>  > ();
         break;
 
@@ -1400,29 +1400,29 @@ namespace yy {
       case 101: // ElseClause
       case 102: // WhileStatement
       case 105: // RepeatStatement
-      case 106: // ForStatement
-      case 107: // ForHead
-      case 108: // ToHead
-      case 109: // StopStatement
-      case 110: // ReturnStatement
-      case 111: // ReadStatement
-      case 112: // ReadArgs
-      case 113: // WriteStatement
-      case 114: // WriteArgs
-      case 115: // ProcedureCall
-      case 116: // OptArguments
-      case 117: // Arguments
-      case 119: // FunctionCall
+      case 108: // ForStatement
+      case 109: // ForHead
+      case 110: // ToHead
+      case 111: // StopStatement
+      case 112: // ReturnStatement
+      case 113: // ReadStatement
+      case 114: // ReadArgs
+      case 115: // WriteStatement
+      case 116: // WriteArgs
+      case 117: // ProcedureCall
+      case 118: // OptArguments
+      case 119: // Arguments
+      case 121: // FunctionCall
         value.move< int > (s.value);
         break;
 
       case 103: // WhileHead
       case 104: // WhileSuperHead
-      case 118: // Expression
+      case 120: // Expression
         value.move< std::shared_ptr<FC::Expr> > (s.value);
         break;
 
-      case 120: // LVal
+      case 122: // LVal
         value.move< std::shared_ptr<FC::LVal>  > (s.value);
         break;
 

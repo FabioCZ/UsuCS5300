@@ -41,6 +41,12 @@ namespace FC
     void WhileSuperHead();
     void WhileHead(std::shared_ptr<Expr> e);
     void WhileEnd();
+    void RepeatHead();
+    void RepeatEnd(std::shared_ptr<Expr> e);
+    void IfHead(std::shared_ptr<Expr> e);
+    void ElseIfHead(std::shared_ptr<Expr> e);
+    void ElseHead();
+    void IfEnd();
 
 
     //Expressions
@@ -71,6 +77,7 @@ namespace FC
     const std::shared_ptr<Expr> LValToExpr(std::shared_ptr<LVal> lv);
     const std::shared_ptr<Expr> ToChar(std::shared_ptr<Expr> e);
     const std::shared_ptr<Expr> ToInt(std::shared_ptr<Expr> e);
+
     class Code
     {
         public:
@@ -92,6 +99,14 @@ namespace FC
         std::stringstream _stream;
         void WriteToFileNow();
 
+        int addLabelNumber();
+        int getCurrLabelNumber();
+        int  dropLabelNumber();
+
+        int IncrElseCt() { return ++_elseIfCt;}
+        int GetElseCt() { return _elseIfCt;}
+
+
         std::vector<std::shared_ptr<Expr>> Expressions;
         std::unordered_map<std::string, std::shared_ptr<Expr>> ConstData;
         std::unordered_map<std::string,std::shared_ptr<FC::LVal> > LValues;
@@ -105,7 +120,11 @@ namespace FC
         int AllocateGlobalPointer(int size);
 
         private:
-        static std::shared_ptr<Code> _code; 
+        std::vector<int> _labelNumbers;
+        int _labelCounter = 0;
+        int _elseIfCt = 0;
+
+        static std::shared_ptr<Code> _code;
         int _stringDataCt = -1;
 
         int _currGPOffset = 0;

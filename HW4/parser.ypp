@@ -251,20 +251,22 @@ Statement : Assignment {}
 
 Assignment : LVal ColonEqualTok Expression {FC::Assignment($1,$3);};
 
-IfStatement : IfHead ThenPart ElseIfList ElseClause EndTok {};
+IfStatement : IfHead ThenPart ElseIfList ElseClause EndTok {FC::IfEnd();};
 
-IfHead : IfTok Expression {};
+IfHead : IfTok Expression {FC::IfHead($2);};
 
 ThenPart : ThenTok StatementList {};
 
 ElseIfList : ElseIfList ElseIfHead ThenPart {}
     |{};
     
-ElseIfHead : ElseifTok Expression {}
+ElseIfHead : ElseifTok Expression {FC::ElseIfHead($2);}
     | {};
     
-ElseClause : ElseTok StatementList {}
+ElseClause : ElseHead StatementList {}
     | {};
+
+ElseHead : ElseTok {FC::ElseHead();}
     
 WhileStatement : WhileHead DoTok StatementList EndTok {FC::WhileEnd();};
 
@@ -272,7 +274,11 @@ WhileHead : WhileSuperHead Expression {FC::WhileHead($2);};
 
 WhileSuperHead : WhileTok {FC::WhileSuperHead();};
 
-RepeatStatement : RepeatTok StatementList UntilTok Expression {};
+RepeatStatement : RepeatHead StatementList RepeatEnd {};
+
+RepeatEnd : UntilTok Expression {FC::RepeatEnd($2);};
+
+RepeatHead : RepeatTok{FC::RepeatHead();}
 
 ForStatement : ForHead ToHead DoTok StatementList EndTok{};
 

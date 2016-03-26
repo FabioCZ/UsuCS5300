@@ -1,12 +1,19 @@
 VAR i:integer;
-
+	j:integer;
 BEGIN
 
 i:= 0;
+j:= 30;
 while i < 20 do
-  write(i,' ');
+	while j < 40 do
+	  write('j',j,' ');
+	  j := succ(j);
+	end;
+  write('i',i,' ');
   i := succ(i);
 end;
+
+
 
 write('\n');
 
