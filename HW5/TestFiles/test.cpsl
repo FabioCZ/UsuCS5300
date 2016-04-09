@@ -1,0 +1,11 @@
+const
+	NUMS_LENGTH = 12;
+	Test = "assadfg";
+
+var 
+	x : integer;
+
+begin
+	write(Test,NUMS_LENGTH);
+	x := 10;
+end.

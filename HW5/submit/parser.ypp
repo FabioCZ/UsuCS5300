@@ -1,0 +1,353 @@
+ /*
+ * Fabio Gottlicher's CPSL Compiler
+ * A01647928
+ * Created for USU CS5300 - Compiler Construction, Spring 2016
+ */
+
+%skeleton "lalr1.cc" /* -*- C++ -*- */
+%require "3.0.2"
+%defines
+%define parser_class_name {Parser}
+
+%define api.token.constructor
+%define api.value.type variant
+%define parse.assert
+
+%code requires
+{
+#include <string>
+#include <iostream>
+#include "CodeGen/CodeGenerator.hpp"
+#include "CodeGen/Expr/Expr.hpp"
+class Driver;
+}
+
+// The parsing context.
+%param { Driver& driver }
+
+%locations
+%initial-action
+{
+  // Initialize the initial location.
+  @$.begin.filename = @$.end.filename = &driver.file;
+};
+
+%define parse.trace
+%define parse.error verbose
+
+%code
+{
+# include "driver.hpp"
+}
+
+%token END 0 "end of file"
+%token ArrayTok
+%token BeginTok
+%token EndProgTok
+%token ChrTok
+%token ConstTok
+%token DoTok
+%token DowntoTok
+%token ElseTok
+%token ElseifTok
+%token EndTok
+%token ForTok
+%token ForwardTok
+%token FunctionTok
+%token IfTok
+%token OfTok
+%token OrdTok
+%token PredTok
+%token ProcedureTok
+%token ReadTok
+%token RecordTok
+%token RefTok
+%token RepeatTok
+%token ReturnTok
+%token StopTok
+%token SuccTok
+%token ThenTok
+%token ToTok
+%token TypeTok
+%token UntilTok
+%token VarTok
+%token WhileTok
+%token WriteTok
+
+
+%left PlusTok
+%left MinusTok
+%right UnaryMinusTok
+%left MultiplyTok
+%left DivideTok
+%left AndTok
+%left OrTok
+%right NotTok
+
+%nonassoc EqualsTok
+%nonassoc NotEqualTok
+%nonassoc LessThanTok
+%nonassoc LessEqualTok
+%nonassoc GreaterTok
+%nonassoc GreaterEqualTok
+
+%token DotTok
+%token CommaTok
+%token ColonTok
+%token SemicolonTok
+%token OpenParenTok
+%token CloseParenTok
+%token OpenBrktTok
+%token CloseBrktTok
+%token ColonEqualTok
+%left PercentTok
+
+%token <char> CharTok
+%type <int> Arguments
+%type <int> ArrayType
+%type <int> Assignment
+%type <int> Block
+%type <int> Body
+%type <int> ElseClause
+%type <int> ElseIfHead
+%type <int> ElseIfList
+%type <std::shared_ptr<FC::Expr>> Expression
+%type <int> FSignature
+%type <int> FieldDecl
+%type <int> FieldDecls
+%type <int> ForHead
+%type <int> ForStatement
+%type <int> FormalParameter
+%type <int> FormalParameters
+%type <int> FunctionCall
+%token <int> IntTok
+%type <int> IdentList
+%type <int> OptVar
+%type <int> IfHead
+%type <int> IfStatement
+%type <std::shared_ptr<FC::LVal> > LVal
+%type <int> OptArguments
+%type <int> OptFormalParameters
+%type <int> PSignature
+%type <int> ProcedureCall
+%type <int> ReadArgs
+%type <int> ReadStatement
+%type <int> RecordType
+%type <int> RepeatStatement
+%type <int> ReturnStatement
+%type <FC::Type> SimpleType
+%type <std::string> Statement
+%type <std::string> StatementList
+%type <int> StopStatement
+%type <int> ThenPart
+%type <int> ToHead
+%type <FC::Type> Type
+%type <std::shared_ptr<FC::Expr>> WhileHead
+%type <std::shared_ptr<FC::Expr>> WhileSuperHead
+%type <int> WhileStatement
+%type <int> WriteArgs
+%type <int> WriteStatement
+%token <std::string> IdentifierTok
+%token <std::string> StringTok
+
+
+%%
+
+/** PARSE TREE **/
+
+/* Program Structure */
+%start Application;
+
+Application : ProgramHead Block DotTok {FC::AddMain();};
+
+ProgramHead : OptConstDecls OptTypeDecls OptVarDecls PFDecls;
+
+OptConstDecls : ConstTok ConstDecls 
+    | ;
+
+ConstDecls : ConstDecls ConstDecl
+    | ConstDecl ;
+
+ConstDecl : IdentifierTok EqualsTok Expression SemicolonTok {FC::AddConst($1,$3);} ;
+
+PFDecls : PFDecls ProcedureDecl
+    | PFDecls FunctionDecl
+    |;
+    
+ProcedureDecl : PSignature SemicolonTok ForwardTok SemicolonTok {}
+    | PSignature SemicolonTok Body SemicolonTok {}
+    
+PSignature : ProcedureTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok {};
+
+FunctionDecl : FSignature SemicolonTok ForwardTok SemicolonTok {}
+    | FSignature SemicolonTok Body SemicolonTok {} ;
+    
+FSignature : FunctionTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok ColonTok Type {} ;
+
+OptFormalParameters : FormalParameters {}
+    | {};
+    
+FormalParameters : FormalParameters SemicolonTok FormalParameter {}
+    | FormalParameter {};
+    
+FormalParameter : OptVar IdentList ColonTok Type {};
+
+OptVar : VarTok {}
+    | RefTok {}
+    | {};
+    
+Body : OptConstDecls OptTypeDecls OptVarDecls Block {};
+
+Block : BeginTok StatementList EndTok {FC::WriteStatement();};
+
+StatementList : StatementList SemicolonTok Statement {}
+    | Statement{} ;
+    
+OptTypeDecls : TypeTok TypeDecls
+    | ;
+    
+TypeDecls : TypeDecls TypeDecl
+    | TypeDecl ;
+    
+TypeDecl : IdentifierTok EqualsTok Type SemicolonTok {} ;
+
+Type : SimpleType {$$ = $1;}
+    | RecordType {}
+    | ArrayType {} ;
+
+SimpleType : IdentifierTok {$$ = FC::SimpleTypeLookup($1);};
+
+RecordType : RecordTok FieldDecls EndTok {};
+
+FieldDecls : FieldDecls FieldDecl {}
+    | {};
+    
+FieldDecl : IdentList ColonTok Type SemicolonTok {};
+
+IdentList : IdentList CommaTok IdentifierTok {FC::AddIdent($3);}
+    | IdentifierTok {FC::AddIdent($1);};
+    
+ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {};
+
+OptVarDecls : VarTok VarDecls
+    |;
+    
+VarDecls : VarDecls VarDecl
+    | VarDecl;
+    
+VarDecl : IdentList ColonTok Type SemicolonTok {AddVariables($3);};
+
+Statement : Assignment {}
+    | IfStatement {}
+    | WhileStatement {}
+    | RepeatStatement {}
+    | ForStatement {}
+    | StopStatement {}
+    | ReturnStatement {}
+    | ReadStatement {}
+    | WriteStatement {}
+    | ProcedureCall {}
+    | {} ;
+
+Assignment : LVal ColonEqualTok Expression {FC::Assignment($1,$3);};
+
+IfStatement : IfHead ThenPart ElseIfList ElseClause EndTok {FC::IfEnd();};
+
+IfHead : IfTok Expression {FC::IfHead($2);};
+
+ThenPart : ThenTok StatementList {};
+
+ElseIfList : ElseIfList ElseIfHead ThenPart {}
+    |{};
+    
+ElseIfHead : ElseIfSuperHead Expression {FC::ElseIfHead($2);}
+    | {};
+
+ElseIfSuperHead : ElseifTok {FC::ElseIfSuperHead();}
+    
+ElseClause : ElseHead StatementList {}
+    | {FC::ElseHead();};
+
+ElseHead : ElseTok {FC::ElseHead();}
+    
+WhileStatement : WhileHead DoTok StatementList EndTok {FC::WhileEnd();};
+
+WhileHead : WhileSuperHead Expression {FC::WhileHead($2);};
+
+WhileSuperHead : WhileTok {FC::WhileSuperHead();};
+
+RepeatStatement : RepeatHead StatementList RepeatEnd {};
+
+RepeatEnd : UntilTok Expression {FC::RepeatEnd($2);};
+
+RepeatHead : RepeatTok{FC::RepeatHead();}
+
+ForStatement : ForHead ToHead DoTok StatementList EndTok{FC::ForEnd();};
+
+ForHead : ForTok IdentifierTok ColonEqualTok Expression {FC::ForHead($2,$4);};
+
+ToHead : ToTok Expression {FC::ToHead(true,$2);}
+    | DowntoTok Expression {FC::ToHead(false,$2);};
+    
+StopStatement : StopTok {FC::Stop();};
+
+ReturnStatement : ReturnTok Expression {}
+    | ReturnTok {};
+    
+ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
+
+ReadArgs : ReadArgs CommaTok LVal {FC::ReadToLVal($3);}
+    | LVal {std::cout << "dafuq" << std::endl;FC::ReadToLVal($1);};
+    
+WriteStatement : WriteTok OpenParenTok WriteArgs CloseParenTok {};
+
+WriteArgs : WriteArgs CommaTok Expression {FC::WriteExpr($3);}
+    | Expression {FC::WriteExpr($1);};
+    
+ProcedureCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
+
+OptArguments : Arguments  {}
+    | {};
+    
+Arguments : Arguments CommaTok Expression {}
+    | Expression {};
+
+Expression : Expression OrTok Expression {$$ = ProcOrExpr($1,$3);}
+    | Expression AndTok Expression {$$ = ProcAndExpr($1,$3);}
+    | Expression EqualsTok Expression {$$ = ProcEqualExpr($1,$3);}
+    | Expression NotEqualTok Expression {$$ = ProcNotEqualExpr($1,$3);}
+    | Expression LessEqualTok Expression {$$ = ProcLessEqualExpr($1,$3);}
+    | Expression GreaterEqualTok Expression {$$ = ProcGreaterEqualExpr($1,$3);}
+    | Expression LessThanTok Expression {$$ = ProcLessThanExpr($1,$3);}
+    | Expression GreaterTok Expression {$$ = ProcGreaterThanExpr($1,$3);}
+    | Expression PlusTok Expression {$$ = ProcPlusExpr($1,$3);}
+    | Expression MinusTok Expression {$$ = ProcMinusExpr($1,$3);}
+    | Expression DivideTok Expression {$$ = ProcDivideExpr($1,$3);}
+    | Expression MultiplyTok Expression {$$ = ProcMultiplyExpr($1,$3);}
+    | Expression PercentTok Expression {$$ = ProcModExpr($1,$3);}
+    | NotTok Expression {$$ = ProcNotExpr($2);}
+    | MinusTok Expression %prec UnaryMinusTok {$$ = ProcUnaryMinusExpr($2);}
+    | OpenParenTok Expression CloseParenTok {$$ = $2;}
+    | ChrTok OpenParenTok Expression CloseParenTok {$$ = FC::ToChar($3);}
+    | OrdTok OpenParenTok Expression CloseParenTok {$$ = FC::ToInt($3);}
+    | PredTok OpenParenTok Expression CloseParenTok {$$ = FC::ProcDecrement($3);}
+    | SuccTok OpenParenTok Expression CloseParenTok {$$ = FC::ProcIncrement($3);}
+    | LVal {$$ = FC::LValToExpr($1); }
+    | IntTok {$$ = FC::ProcIntExpr($1);}
+    | StringTok {$$ = FC::ProcStringExpr($1);}
+    | CharTok {$$ = FC::ProcCharExpr($1);}
+    | FunctionCall {/*todo*/};
+    
+FunctionCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
+
+LVal : LVal DotTok IdentifierTok {$$ = nullptr;}
+    | LVal OpenBrktTok Expression CloseBrktTok {$$ = nullptr;}
+    | IdentifierTok {$$ = FC::GetLValForIdent($1);};
+
+%%
+void
+yy::Parser::error (const location_type& l,
+                          const std::string& m)
+{
+  driver.error (l, m);
+}
