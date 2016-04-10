@@ -6,6 +6,7 @@
 
 #ifndef CPSL_TYPE_HPP
 #define CPSL_TYPE_HPP
+#include<string>
 namespace FC
 {
     class Type

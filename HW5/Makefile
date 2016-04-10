@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/fabio/Desktop/UsuCS5300/HW4
+CMAKE_SOURCE_DIR = /home/fabio/Desktop/UsuCS5300/HW5
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/fabio/Desktop/UsuCS5300/HW4
+CMAKE_BINARY_DIR = /home/fabio/Desktop/UsuCS5300/HW5
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fabio/Desktop/UsuCS5300/HW4/CMakeFiles /home/fabio/Desktop/UsuCS5300/HW4/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fabio/Desktop/UsuCS5300/HW5/CMakeFiles /home/fabio/Desktop/UsuCS5300/HW5/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fabio/Desktop/UsuCS5300/HW4/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fabio/Desktop/UsuCS5300/HW5/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -171,6 +171,30 @@ CodeGen/Expr/Expr.s: CodeGen/Expr/Expr.cpp.s
 CodeGen/Expr/Expr.cpp.s:
 	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.s
 .PHONY : CodeGen/Expr/Expr.cpp.s
+
+CodeGen/Func.o: CodeGen/Func.cpp.o
+.PHONY : CodeGen/Func.o
+
+# target to build an object file
+CodeGen/Func.cpp.o:
+	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Func.cpp.o
+.PHONY : CodeGen/Func.cpp.o
+
+CodeGen/Func.i: CodeGen/Func.cpp.i
+.PHONY : CodeGen/Func.i
+
+# target to preprocess a source file
+CodeGen/Func.cpp.i:
+	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Func.cpp.i
+.PHONY : CodeGen/Func.cpp.i
+
+CodeGen/Func.s: CodeGen/Func.cpp.s
+.PHONY : CodeGen/Func.s
+
+# target to generate assembly for a file
+CodeGen/Func.cpp.s:
+	$(MAKE) -f CMakeFiles/cpsl_common.dir/build.make CMakeFiles/cpsl_common.dir/CodeGen/Func.cpp.s
+.PHONY : CodeGen/Func.cpp.s
 
 CodeGen/LVal.o: CodeGen/LVal.cpp.o
 .PHONY : CodeGen/LVal.o
@@ -308,6 +332,9 @@ help:
 	@echo "... CodeGen/Expr/Expr.o"
 	@echo "... CodeGen/Expr/Expr.i"
 	@echo "... CodeGen/Expr/Expr.s"
+	@echo "... CodeGen/Func.o"
+	@echo "... CodeGen/Func.i"
+	@echo "... CodeGen/Func.s"
 	@echo "... CodeGen/LVal.o"
 	@echo "... CodeGen/LVal.i"
 	@echo "... CodeGen/LVal.s"

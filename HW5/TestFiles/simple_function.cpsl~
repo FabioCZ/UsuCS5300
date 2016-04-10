@@ -1,0 +1,10 @@
+function simpleFunction() : integer;
+BEGIN
+  write("Entered Function. Returning 5.\n");
+  return 5;
+END;
+
+BEGIN
+  simpleFunction()
+  $write(simpleFunction(),'\n');
+END.

@@ -91,6 +91,11 @@ namespace FC
     const std::shared_ptr<Expr> ToChar(std::shared_ptr<Expr> e);
     const std::shared_ptr<Expr> ToInt(std::shared_ptr<Expr> e);
 
+    //Function stuff
+    void AddFunction(std::shared_ptr<Func> f);
+    void CheckForwardDecls();
+    const std::shared_ptr<Expr> CallFunction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Expr>>> args);
+
     class Code
     {
         public:

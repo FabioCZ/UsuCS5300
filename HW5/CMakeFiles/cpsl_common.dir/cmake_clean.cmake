@@ -5,6 +5,7 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/cpsl_common.dir/CodeGen/CodeGenerator.cpp.o"
   "CMakeFiles/cpsl_common.dir/CodeGen/Register.cpp.o"
   "CMakeFiles/cpsl_common.dir/CodeGen/LVal.cpp.o"
+  "CMakeFiles/cpsl_common.dir/CodeGen/Func.cpp.o"
   "CMakeFiles/cpsl_common.dir/parser.cpp.o"
   "CMakeFiles/cpsl_common.dir/scanner.cpp.o"
   "CMakeFiles/cpsl_common.dir/CodeGen/Expr/Expr.cpp.o"

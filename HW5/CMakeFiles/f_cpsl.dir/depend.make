@@ -3,6 +3,7 @@
 
 CMakeFiles/f_cpsl.dir/driver.cpp.o: CodeGen/CodeGenerator.hpp
 CMakeFiles/f_cpsl.dir/driver.cpp.o: CodeGen/Expr/Expr.hpp
+CMakeFiles/f_cpsl.dir/driver.cpp.o: CodeGen/Func.hpp
 CMakeFiles/f_cpsl.dir/driver.cpp.o: CodeGen/Register.hpp
 CMakeFiles/f_cpsl.dir/driver.cpp.o: CodeGen/Type.hpp
 CMakeFiles/f_cpsl.dir/driver.cpp.o: driver.cpp

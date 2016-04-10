@@ -724,7 +724,63 @@ namespace FC
         inst->LValues.erase(forInfo->varName);
     }
 
+    const std::shared_ptr<Expr> CallFunction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Expr>>> args)
+    {
+        auto inst = Code::Inst();
+        auto func = inst->Functions.find(name);
+        if(func == inst->Functions.end())
+        {
+            std::cout << "Cannot find function: " << name << std::endl;
+            exit(0);
+        }
 
+        //spill registers
+        std::cout << "calling func" << std::endl;
+        inst->_stream << "\tjal " << name << " #function call" << std::endl;
+        return nullptr;
+        //restore registers
+
+    }
+
+    void AddFunction(std::shared_ptr<Func> f)
+    {
+        auto inst = Code::Inst();
+        auto res = inst->Functions.find(f->name);
+        if(res != inst->Functions.end())
+        {
+            if (res->second->isForwardDeclared && !f->isForwardDeclared) // == forward decl implementation
+            {
+                inst->Functions.erase(f->name);
+                //TODO check params and return type
+                inst->Functions.emplace(f->name, f);
+            }
+            else
+            {
+                std::cout << "Proc/Func " << f->name << " error: multiple declaration/definition" << std::endl;
+            }
+        }
+        else
+        {
+            inst->Functions.emplace(f->name, f);
+            if(!f->isForwardDeclared)
+            {
+                inst->_outFile << f->name << ": #proc/func" << std::endl;
+            }
+        }
+    }
+
+    void CheckForwardDecls()
+    {
+        auto inst = Code::Inst();
+        for(auto e : inst->Functions)
+        {
+            if(e.second->isForwardDeclared)
+            {
+                std::cout << "Proc/Func " << e.first << " has been forward declared but not defined" << std::endl;
+                exit(0);
+            }
+        }
+    }
 
 
 }

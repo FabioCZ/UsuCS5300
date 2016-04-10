@@ -31,24 +31,26 @@
 // version 2.2 of Bison.
 
 /**
- ** \file /home/fabio/Desktop/UsuCS5300/HW4/parser.hpp
+ ** \file /home/fabio/Desktop/UsuCS5300/HW5/parser.hpp
  ** Define the yy::parser class.
  */
 
 // C++ LALR(1) parser skeleton written by Akim Demaille.
 
-#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW4_PARSER_HPP_INCLUDED
-# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW4_PARSER_HPP_INCLUDED
+#ifndef YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW5_PARSER_HPP_INCLUDED
+# define YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW5_PARSER_HPP_INCLUDED
 // //                    "%code requires" blocks.
 #line 17 "parser.ypp" // lalr1.cc:372
 
 #include <string>
+#include <vector>
 #include <iostream>
+#include <utility>
 #include "CodeGen/CodeGenerator.hpp"
 #include "CodeGen/Expr/Expr.hpp"
 class Driver;
 
-#line 52 "/home/fabio/Desktop/UsuCS5300/HW4/parser.hpp" // lalr1.cc:372
+#line 54 "/home/fabio/Desktop/UsuCS5300/HW5/parser.hpp" // lalr1.cc:372
 
 # include <cassert>
 # include <vector>
@@ -124,7 +126,7 @@ class Driver;
 
 
 namespace yy {
-#line 128 "/home/fabio/Desktop/UsuCS5300/HW4/parser.hpp" // lalr1.cc:372
+#line 130 "/home/fabio/Desktop/UsuCS5300/HW5/parser.hpp" // lalr1.cc:372
 
 
 
@@ -295,15 +297,14 @@ namespace yy {
       // SimpleType
       char dummy1[sizeof(FC::Type)];
 
+      // PBody
+      // FBody
+      char dummy2[sizeof(bool)];
+
       // CharTok
-      char dummy2[sizeof(char)];
+      char dummy3[sizeof(char)];
 
       // IntTok
-      // PSignature
-      // FSignature
-      // OptFormalParameters
-      // FormalParameters
-      // FormalParameter
       // OptVar
       // Body
       // Block
@@ -331,24 +332,38 @@ namespace yy {
       // WriteStatement
       // WriteArgs
       // ProcedureCall
-      // OptArguments
-      // Arguments
-      // FunctionCall
-      char dummy3[sizeof(int)];
+      char dummy4[sizeof(int)];
 
       // WhileHead
       // WhileSuperHead
       // Expression
-      char dummy4[sizeof(std::shared_ptr<FC::Expr>)];
+      // FunctionCall
+      char dummy5[sizeof(std::shared_ptr<FC::Expr>)];
+
+      // PSignature
+      // FSignature
+      char dummy6[sizeof(std::shared_ptr<FC::Func> )];
 
       // LVal
-      char dummy5[sizeof(std::shared_ptr<FC::LVal> )];
+      char dummy7[sizeof(std::shared_ptr<FC::LVal> )];
+
+      // OptFormalParameters
+      // FormalParameters
+      // FormalParameter
+      char dummy8[sizeof(std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > )];
+
+      // OptArguments
+      // Arguments
+      char dummy9[sizeof(std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > > )];
+
+      // ParamIdentList
+      char dummy10[sizeof(std::shared_ptr<std::vector<std::string> > )];
 
       // IdentifierTok
       // StringTok
       // StatementList
       // Statement
-      char dummy6[sizeof(std::string)];
+      char dummy11[sizeof(std::string)];
 };
 
     /// Symbol semantic values.
@@ -468,13 +483,23 @@ namespace yy {
 
   basic_symbol (typename Base::kind_type t, const FC::Type v, const location_type& l);
 
+  basic_symbol (typename Base::kind_type t, const bool v, const location_type& l);
+
   basic_symbol (typename Base::kind_type t, const char v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const int v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr> v, const location_type& l);
 
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Func>  v, const location_type& l);
+
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::LVal>  v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::pair<std::string, FC::Type> > >  v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::string> >  v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l);
 
@@ -838,7 +863,7 @@ namespace yy {
     /// \param yyvalue   the value to check
     static bool yy_table_value_is_error_ (int yyvalue);
 
-    static const short int yypact_ninf_;
+    static const signed char yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token number \a t to a symbol number.
@@ -980,8 +1005,8 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 436,     ///< Last index in yytable_.
-      yynnts_ = 62,  ///< Number of nonterminal symbols.
+      yylast_ = 464,     ///< Last index in yytable_.
+      yynnts_ = 67,  ///< Number of nonterminal symbols.
       yyempty_ = -2,
       yyfinal_ = 8, ///< Termination state number.
       yyterror_ = 1,
@@ -1069,9 +1094,14 @@ namespace yy {
   {
       switch (other.type_get ())
     {
-      case 84: // Type
-      case 85: // SimpleType
+      case 89: // Type
+      case 90: // SimpleType
         value.copy< FC::Type > (other.value);
+        break;
+
+      case 73: // PBody
+      case 76: // FBody
+        value.copy< bool > (other.value);
         break;
 
       case 59: // CharTok
@@ -1079,58 +1109,71 @@ namespace yy {
         break;
 
       case 60: // IntTok
-      case 71: // PSignature
-      case 73: // FSignature
-      case 74: // OptFormalParameters
-      case 75: // FormalParameters
-      case 76: // FormalParameter
-      case 77: // OptVar
-      case 78: // Body
-      case 79: // Block
-      case 86: // RecordType
-      case 87: // FieldDecls
-      case 88: // FieldDecl
-      case 89: // IdentList
-      case 90: // ArrayType
-      case 95: // Assignment
-      case 96: // IfStatement
-      case 97: // IfHead
-      case 98: // ThenPart
-      case 99: // ElseIfList
-      case 100: // ElseIfHead
-      case 102: // ElseClause
-      case 104: // WhileStatement
-      case 107: // RepeatStatement
-      case 110: // ForStatement
-      case 111: // ForHead
-      case 112: // ToHead
-      case 113: // StopStatement
-      case 114: // ReturnStatement
-      case 115: // ReadStatement
-      case 116: // ReadArgs
-      case 117: // WriteStatement
-      case 118: // WriteArgs
-      case 119: // ProcedureCall
-      case 120: // OptArguments
-      case 121: // Arguments
-      case 123: // FunctionCall
+      case 82: // OptVar
+      case 83: // Body
+      case 84: // Block
+      case 91: // RecordType
+      case 92: // FieldDecls
+      case 93: // FieldDecl
+      case 94: // IdentList
+      case 95: // ArrayType
+      case 100: // Assignment
+      case 101: // IfStatement
+      case 102: // IfHead
+      case 103: // ThenPart
+      case 104: // ElseIfList
+      case 105: // ElseIfHead
+      case 107: // ElseClause
+      case 109: // WhileStatement
+      case 112: // RepeatStatement
+      case 115: // ForStatement
+      case 116: // ForHead
+      case 117: // ToHead
+      case 118: // StopStatement
+      case 119: // ReturnStatement
+      case 120: // ReadStatement
+      case 121: // ReadArgs
+      case 122: // WriteStatement
+      case 123: // WriteArgs
+      case 124: // ProcedureCall
         value.copy< int > (other.value);
         break;
 
-      case 105: // WhileHead
-      case 106: // WhileSuperHead
-      case 122: // Expression
+      case 110: // WhileHead
+      case 111: // WhileSuperHead
+      case 127: // Expression
+      case 128: // FunctionCall
         value.copy< std::shared_ptr<FC::Expr> > (other.value);
         break;
 
-      case 124: // LVal
+      case 74: // PSignature
+      case 77: // FSignature
+        value.copy< std::shared_ptr<FC::Func>  > (other.value);
+        break;
+
+      case 129: // LVal
         value.copy< std::shared_ptr<FC::LVal>  > (other.value);
+        break;
+
+      case 78: // OptFormalParameters
+      case 79: // FormalParameters
+      case 80: // FormalParameter
+        value.copy< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (other.value);
+        break;
+
+      case 125: // OptArguments
+      case 126: // Arguments
+        value.copy< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > (other.value);
+        break;
+
+      case 81: // ParamIdentList
+        value.copy< std::shared_ptr<std::vector<std::string> >  > (other.value);
         break;
 
       case 61: // IdentifierTok
       case 62: // StringTok
-      case 80: // StatementList
-      case 94: // Statement
+      case 85: // StatementList
+      case 99: // Statement
         value.copy< std::string > (other.value);
         break;
 
@@ -1151,9 +1194,14 @@ namespace yy {
     (void) v;
       switch (this->type_get ())
     {
-      case 84: // Type
-      case 85: // SimpleType
+      case 89: // Type
+      case 90: // SimpleType
         value.copy< FC::Type > (v);
+        break;
+
+      case 73: // PBody
+      case 76: // FBody
+        value.copy< bool > (v);
         break;
 
       case 59: // CharTok
@@ -1161,58 +1209,71 @@ namespace yy {
         break;
 
       case 60: // IntTok
-      case 71: // PSignature
-      case 73: // FSignature
-      case 74: // OptFormalParameters
-      case 75: // FormalParameters
-      case 76: // FormalParameter
-      case 77: // OptVar
-      case 78: // Body
-      case 79: // Block
-      case 86: // RecordType
-      case 87: // FieldDecls
-      case 88: // FieldDecl
-      case 89: // IdentList
-      case 90: // ArrayType
-      case 95: // Assignment
-      case 96: // IfStatement
-      case 97: // IfHead
-      case 98: // ThenPart
-      case 99: // ElseIfList
-      case 100: // ElseIfHead
-      case 102: // ElseClause
-      case 104: // WhileStatement
-      case 107: // RepeatStatement
-      case 110: // ForStatement
-      case 111: // ForHead
-      case 112: // ToHead
-      case 113: // StopStatement
-      case 114: // ReturnStatement
-      case 115: // ReadStatement
-      case 116: // ReadArgs
-      case 117: // WriteStatement
-      case 118: // WriteArgs
-      case 119: // ProcedureCall
-      case 120: // OptArguments
-      case 121: // Arguments
-      case 123: // FunctionCall
+      case 82: // OptVar
+      case 83: // Body
+      case 84: // Block
+      case 91: // RecordType
+      case 92: // FieldDecls
+      case 93: // FieldDecl
+      case 94: // IdentList
+      case 95: // ArrayType
+      case 100: // Assignment
+      case 101: // IfStatement
+      case 102: // IfHead
+      case 103: // ThenPart
+      case 104: // ElseIfList
+      case 105: // ElseIfHead
+      case 107: // ElseClause
+      case 109: // WhileStatement
+      case 112: // RepeatStatement
+      case 115: // ForStatement
+      case 116: // ForHead
+      case 117: // ToHead
+      case 118: // StopStatement
+      case 119: // ReturnStatement
+      case 120: // ReadStatement
+      case 121: // ReadArgs
+      case 122: // WriteStatement
+      case 123: // WriteArgs
+      case 124: // ProcedureCall
         value.copy< int > (v);
         break;
 
-      case 105: // WhileHead
-      case 106: // WhileSuperHead
-      case 122: // Expression
+      case 110: // WhileHead
+      case 111: // WhileSuperHead
+      case 127: // Expression
+      case 128: // FunctionCall
         value.copy< std::shared_ptr<FC::Expr> > (v);
         break;
 
-      case 124: // LVal
+      case 74: // PSignature
+      case 77: // FSignature
+        value.copy< std::shared_ptr<FC::Func>  > (v);
+        break;
+
+      case 129: // LVal
         value.copy< std::shared_ptr<FC::LVal>  > (v);
+        break;
+
+      case 78: // OptFormalParameters
+      case 79: // FormalParameters
+      case 80: // FormalParameter
+        value.copy< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (v);
+        break;
+
+      case 125: // OptArguments
+      case 126: // Arguments
+        value.copy< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > (v);
+        break;
+
+      case 81: // ParamIdentList
+        value.copy< std::shared_ptr<std::vector<std::string> >  > (v);
         break;
 
       case 61: // IdentifierTok
       case 62: // StringTok
-      case 80: // StatementList
-      case 94: // Statement
+      case 85: // StatementList
+      case 99: // Statement
         value.copy< std::string > (v);
         break;
 
@@ -1233,6 +1294,13 @@ namespace yy {
 
   template <typename Base>
   Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const FC::Type v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const bool v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1260,7 +1328,35 @@ namespace yy {
   {}
 
   template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Func>  v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
   Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::LVal>  v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::pair<std::string, FC::Type> > >  v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::string> >  v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1289,9 +1385,14 @@ namespace yy {
     // Type destructor.
     switch (yytype)
     {
-      case 84: // Type
-      case 85: // SimpleType
+      case 89: // Type
+      case 90: // SimpleType
         value.template destroy< FC::Type > ();
+        break;
+
+      case 73: // PBody
+      case 76: // FBody
+        value.template destroy< bool > ();
         break;
 
       case 59: // CharTok
@@ -1299,58 +1400,71 @@ namespace yy {
         break;
 
       case 60: // IntTok
-      case 71: // PSignature
-      case 73: // FSignature
-      case 74: // OptFormalParameters
-      case 75: // FormalParameters
-      case 76: // FormalParameter
-      case 77: // OptVar
-      case 78: // Body
-      case 79: // Block
-      case 86: // RecordType
-      case 87: // FieldDecls
-      case 88: // FieldDecl
-      case 89: // IdentList
-      case 90: // ArrayType
-      case 95: // Assignment
-      case 96: // IfStatement
-      case 97: // IfHead
-      case 98: // ThenPart
-      case 99: // ElseIfList
-      case 100: // ElseIfHead
-      case 102: // ElseClause
-      case 104: // WhileStatement
-      case 107: // RepeatStatement
-      case 110: // ForStatement
-      case 111: // ForHead
-      case 112: // ToHead
-      case 113: // StopStatement
-      case 114: // ReturnStatement
-      case 115: // ReadStatement
-      case 116: // ReadArgs
-      case 117: // WriteStatement
-      case 118: // WriteArgs
-      case 119: // ProcedureCall
-      case 120: // OptArguments
-      case 121: // Arguments
-      case 123: // FunctionCall
+      case 82: // OptVar
+      case 83: // Body
+      case 84: // Block
+      case 91: // RecordType
+      case 92: // FieldDecls
+      case 93: // FieldDecl
+      case 94: // IdentList
+      case 95: // ArrayType
+      case 100: // Assignment
+      case 101: // IfStatement
+      case 102: // IfHead
+      case 103: // ThenPart
+      case 104: // ElseIfList
+      case 105: // ElseIfHead
+      case 107: // ElseClause
+      case 109: // WhileStatement
+      case 112: // RepeatStatement
+      case 115: // ForStatement
+      case 116: // ForHead
+      case 117: // ToHead
+      case 118: // StopStatement
+      case 119: // ReturnStatement
+      case 120: // ReadStatement
+      case 121: // ReadArgs
+      case 122: // WriteStatement
+      case 123: // WriteArgs
+      case 124: // ProcedureCall
         value.template destroy< int > ();
         break;
 
-      case 105: // WhileHead
-      case 106: // WhileSuperHead
-      case 122: // Expression
+      case 110: // WhileHead
+      case 111: // WhileSuperHead
+      case 127: // Expression
+      case 128: // FunctionCall
         value.template destroy< std::shared_ptr<FC::Expr> > ();
         break;
 
-      case 124: // LVal
+      case 74: // PSignature
+      case 77: // FSignature
+        value.template destroy< std::shared_ptr<FC::Func>  > ();
+        break;
+
+      case 129: // LVal
         value.template destroy< std::shared_ptr<FC::LVal>  > ();
+        break;
+
+      case 78: // OptFormalParameters
+      case 79: // FormalParameters
+      case 80: // FormalParameter
+        value.template destroy< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ();
+        break;
+
+      case 125: // OptArguments
+      case 126: // Arguments
+        value.template destroy< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ();
+        break;
+
+      case 81: // ParamIdentList
+        value.template destroy< std::shared_ptr<std::vector<std::string> >  > ();
         break;
 
       case 61: // IdentifierTok
       case 62: // StringTok
-      case 80: // StatementList
-      case 94: // Statement
+      case 85: // StatementList
+      case 99: // Statement
         value.template destroy< std::string > ();
         break;
 
@@ -1368,9 +1482,14 @@ namespace yy {
     super_type::move(s);
       switch (this->type_get ())
     {
-      case 84: // Type
-      case 85: // SimpleType
+      case 89: // Type
+      case 90: // SimpleType
         value.move< FC::Type > (s.value);
+        break;
+
+      case 73: // PBody
+      case 76: // FBody
+        value.move< bool > (s.value);
         break;
 
       case 59: // CharTok
@@ -1378,58 +1497,71 @@ namespace yy {
         break;
 
       case 60: // IntTok
-      case 71: // PSignature
-      case 73: // FSignature
-      case 74: // OptFormalParameters
-      case 75: // FormalParameters
-      case 76: // FormalParameter
-      case 77: // OptVar
-      case 78: // Body
-      case 79: // Block
-      case 86: // RecordType
-      case 87: // FieldDecls
-      case 88: // FieldDecl
-      case 89: // IdentList
-      case 90: // ArrayType
-      case 95: // Assignment
-      case 96: // IfStatement
-      case 97: // IfHead
-      case 98: // ThenPart
-      case 99: // ElseIfList
-      case 100: // ElseIfHead
-      case 102: // ElseClause
-      case 104: // WhileStatement
-      case 107: // RepeatStatement
-      case 110: // ForStatement
-      case 111: // ForHead
-      case 112: // ToHead
-      case 113: // StopStatement
-      case 114: // ReturnStatement
-      case 115: // ReadStatement
-      case 116: // ReadArgs
-      case 117: // WriteStatement
-      case 118: // WriteArgs
-      case 119: // ProcedureCall
-      case 120: // OptArguments
-      case 121: // Arguments
-      case 123: // FunctionCall
+      case 82: // OptVar
+      case 83: // Body
+      case 84: // Block
+      case 91: // RecordType
+      case 92: // FieldDecls
+      case 93: // FieldDecl
+      case 94: // IdentList
+      case 95: // ArrayType
+      case 100: // Assignment
+      case 101: // IfStatement
+      case 102: // IfHead
+      case 103: // ThenPart
+      case 104: // ElseIfList
+      case 105: // ElseIfHead
+      case 107: // ElseClause
+      case 109: // WhileStatement
+      case 112: // RepeatStatement
+      case 115: // ForStatement
+      case 116: // ForHead
+      case 117: // ToHead
+      case 118: // StopStatement
+      case 119: // ReturnStatement
+      case 120: // ReadStatement
+      case 121: // ReadArgs
+      case 122: // WriteStatement
+      case 123: // WriteArgs
+      case 124: // ProcedureCall
         value.move< int > (s.value);
         break;
 
-      case 105: // WhileHead
-      case 106: // WhileSuperHead
-      case 122: // Expression
+      case 110: // WhileHead
+      case 111: // WhileSuperHead
+      case 127: // Expression
+      case 128: // FunctionCall
         value.move< std::shared_ptr<FC::Expr> > (s.value);
         break;
 
-      case 124: // LVal
+      case 74: // PSignature
+      case 77: // FSignature
+        value.move< std::shared_ptr<FC::Func>  > (s.value);
+        break;
+
+      case 129: // LVal
         value.move< std::shared_ptr<FC::LVal>  > (s.value);
+        break;
+
+      case 78: // OptFormalParameters
+      case 79: // FormalParameters
+      case 80: // FormalParameter
+        value.move< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (s.value);
+        break;
+
+      case 125: // OptArguments
+      case 126: // Arguments
+        value.move< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > (s.value);
+        break;
+
+      case 81: // ParamIdentList
+        value.move< std::shared_ptr<std::vector<std::string> >  > (s.value);
         break;
 
       case 61: // IdentifierTok
       case 62: // StringTok
-      case 80: // StatementList
-      case 94: // Statement
+      case 85: // StatementList
+      case 99: // Statement
         value.move< std::string > (s.value);
         break;
 
@@ -1861,9 +1993,9 @@ namespace yy {
 
 
 } // yy
-#line 1865 "/home/fabio/Desktop/UsuCS5300/HW4/parser.hpp" // lalr1.cc:372
+#line 1997 "/home/fabio/Desktop/UsuCS5300/HW5/parser.hpp" // lalr1.cc:372
 
 
 
 
-#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW4_PARSER_HPP_INCLUDED
+#endif // !YY_YY_HOME_FABIO_DESKTOP_USUCS5300_HW5_PARSER_HPP_INCLUDED

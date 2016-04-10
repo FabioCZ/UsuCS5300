@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/CodeGenerator.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/CodeGenerator.hpp
 memory
 -
 iostream
@@ -25,18 +25,32 @@ sstream
 -
 map
 -
+Func.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Func.hpp
 
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/Expr/Expr.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Expr/Expr.hpp
 ../Register.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/Register.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Register.hpp
 memory
 -
 ../Type.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/Type.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Type.hpp
 iostream
 -
 
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/Register.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Func.hpp
+Type.hpp
+-
+vector
+-
+string
+-
+utility
+-
+memory
+-
+
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Register.hpp
 stdexcept
 -
 vector
@@ -46,37 +60,43 @@ string
 memory
 -
 
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/Type.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Type.hpp
+string
+-
 
-/home/fabio/Desktop/UsuCS5300/HW4/driver.cpp
+/home/fabio/Desktop/UsuCS5300/HW5/driver.cpp
 driver.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/driver.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/driver.hpp
 parser.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/parser.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/parser.hpp
 CodeGen/CodeGenerator.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/CodeGenerator.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/CodeGenerator.hpp
 
-/home/fabio/Desktop/UsuCS5300/HW4/driver.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/driver.hpp
 string
 -
 map
 -
 parser.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/parser.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/parser.hpp
 
-/home/fabio/Desktop/UsuCS5300/HW4/location.hh
+/home/fabio/Desktop/UsuCS5300/HW5/location.hh
 position.hh
-/home/fabio/Desktop/UsuCS5300/HW4/position.hh
+/home/fabio/Desktop/UsuCS5300/HW5/position.hh
 
-/home/fabio/Desktop/UsuCS5300/HW4/parser.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/parser.hpp
 string
+-
+vector
 -
 iostream
 -
+utility
+-
 CodeGen/CodeGenerator.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/CodeGenerator.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/CodeGenerator.hpp
 CodeGen/Expr/Expr.hpp
-/home/fabio/Desktop/UsuCS5300/HW4/CodeGen/Expr/Expr.hpp
+/home/fabio/Desktop/UsuCS5300/HW5/CodeGen/Expr/Expr.hpp
 cassert
 -
 vector
@@ -88,15 +108,15 @@ stdexcept
 string
 -
 stack.hh
-/home/fabio/Desktop/UsuCS5300/HW4/stack.hh
+/home/fabio/Desktop/UsuCS5300/HW5/stack.hh
 location.hh
-/home/fabio/Desktop/UsuCS5300/HW4/location.hh
+/home/fabio/Desktop/UsuCS5300/HW5/location.hh
 typeinfo
 -
 cassert
 -
 
-/home/fabio/Desktop/UsuCS5300/HW4/position.hh
+/home/fabio/Desktop/UsuCS5300/HW5/position.hh
 algorithm
 -
 iostream
@@ -104,7 +124,7 @@ iostream
 string
 -
 
-/home/fabio/Desktop/UsuCS5300/HW4/stack.hh
+/home/fabio/Desktop/UsuCS5300/HW5/stack.hh
 vector
 -
 
@@ -125,4 +145,6 @@ Type.hpp
 CodeGen/Type.hpp
 
 CodeGen/Type.hpp
+string
+-
 
