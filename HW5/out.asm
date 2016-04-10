@@ -1,7 +1,5 @@
 .global main
 j main_impl
-	jr $ra #jump out of function
-	jr $ra #jump out of function
 simpleFunction: #proc/func
 	li $s7, 12 #loading expr to register
 	sw $s7, 0($gp) #Storing x
@@ -13,6 +11,9 @@ simpleFunction: #proc/func
 	li $v0, 4
 	move $a0, $s6
 	syscall #print
+	li $s6, 6 #loading expr to register
+	sw $s6, -4($fp) #Storing _return
+	jr $ra #jump out of function
 j ElseLabelEnd_1 #jump to after else
 ElseLabel1_1: #else label
 ElseLabelEnd_1:
@@ -30,6 +31,7 @@ ElseLabelEnd_1:
 	syscall #print
 	li $s6, 5 #loading expr to register
 	sw $s6, -4($fp) #Storing _return
+	jr $ra #jump out of function
 	jr $ra #jump out of function
 main_impl:
 	addi $sp, $sp, -8 #spilling registers

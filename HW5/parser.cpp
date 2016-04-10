@@ -1221,7 +1221,7 @@ namespace yy {
 
   case 92:
 #line 324 "parser.ypp" // lalr1.cc:847
-    {FC::AddReturn(nullptr);}
+    {std::cout << "EMpty return" ; FC::AddReturn(nullptr);}
 #line 1226 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 

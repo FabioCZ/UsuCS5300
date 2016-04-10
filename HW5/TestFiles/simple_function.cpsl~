@@ -3,7 +3,8 @@ CONST
 x = 12;
 BEGIN
 	if(x < 15) then
-	return;
+	write("in if");
+	return 6;
 	end;
 	write(x,'\n');
   write("Entered Function. Returning 5.\n");

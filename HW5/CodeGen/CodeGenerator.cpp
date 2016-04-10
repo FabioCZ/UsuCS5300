@@ -1078,11 +1078,17 @@ namespace FC
             std::cout << "Return statement cannot be in the main body" << std::endl;
             exit(0);
         }
+        if(e->GetType().name != inst->LocalLValues["_return"]->Type.name)
+        {
+            std::cout << "Return statement expression doesn't match proc/func declared return type:" << std::endl;
+            std::cout << "declared: " << inst->LocalLValues["_return"]->name << " attempted to return: " << e->GetType().name << std::endl;
+            exit(0);
+        }
         if(e != nullptr)
         {
             Assignment(GetLValForIdent("_return"),e);   //assign expression to return value
         }
-        inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
+        inst->_stream << "\tjr $ra #jump out of function" << std::endl;
     }
 
 

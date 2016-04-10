@@ -4,7 +4,7 @@ x = 12;
 BEGIN
 	if(x < 15) then
 	write("in if");
-	return;
+	return 6;
 	end;
 	write(x,'\n');
   write("Entered Function. Returning 5.\n");

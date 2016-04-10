@@ -36,11 +36,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="parser.ypp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="parser.ypp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/parser.ypp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="224" column="121" selection-start-line="224" selection-start-column="121" selection-end-line="224" selection-end-column="121" />
+            <state relative-caret-position="3510">
+              <caret line="195" column="125" selection-start-line="195" selection-start-column="123" selection-end-line="195" selection-end-column="125" />
               <folding />
             </state>
           </provider>
@@ -61,7 +61,7 @@
       <file leaf-file-name="Register.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
+            <state relative-caret-position="414">
               <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
               <folding />
             </state>
@@ -71,7 +71,7 @@
       <file leaf-file-name="Register.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/Register.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
+            <state relative-caret-position="468">
               <caret line="26" column="62" selection-start-line="26" selection-start-column="62" selection-end-line="26" selection-end-column="62" />
               <folding>
                 <element signature="e#38#61#0" expanded="true" />
@@ -92,11 +92,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CodeGenerator.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CodeGenerator.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="261">
-              <caret line="1004" column="74" selection-start-line="1004" selection-start-column="74" selection-end-line="1004" selection-end-column="74" />
+            <state relative-caret-position="901">
+              <caret line="1090" column="21" selection-start-line="1090" selection-start-column="21" selection-end-line="1090" selection-end-column="21" />
               <folding>
                 <element signature="e#120#148#0" expanded="true" />
                 <element signature="e#4652#4800#0" expanded="false" />
@@ -142,9 +142,12 @@
       <file leaf-file-name="Expr.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/Expr/Expr.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="649">
+            <state relative-caret-position="774">
               <caret line="43" column="46" selection-start-line="43" selection-start-column="46" selection-end-line="43" selection-end-column="46" />
-              <folding />
+              <folding>
+                <marker date="1460263081253" expanded="true" signature="185:1429" placeholder="{...}" />
+                <marker date="1460263081253" expanded="true" signature="247:790" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -162,9 +165,17 @@
       <file leaf-file-name="Expr.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/Expr/Expr.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
+            <state relative-caret-position="1440">
               <caret line="80" column="30" selection-start-line="80" selection-start-column="30" selection-end-line="80" selection-end-column="30" />
-              <folding />
+              <folding>
+                <marker date="1460262738157" expanded="true" signature="267:2112" placeholder="{...}" />
+                <marker date="1460262738157" expanded="true" signature="354:2109" placeholder="{...}" />
+                <marker date="1460262738157" expanded="true" signature="620:764" placeholder="{...}" />
+                <marker date="1460262738157" expanded="true" signature="807:915" placeholder="{...}" />
+                <marker date="1460262738157" expanded="true" signature="956:1078" placeholder="{...}" />
+                <marker date="1460262738157" expanded="true" signature="1117:1423" placeholder="{...}" />
+                <marker date="1460262738157" expanded="true" signature="1462:1769" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -199,8 +210,8 @@
         <option value="$PROJECT_DIR$/CodeGen/Register.hpp" />
         <option value="$PROJECT_DIR$/CodeGen/Expr/Expr.cpp" />
         <option value="$PROJECT_DIR$/CodeGen/Register.cpp" />
-        <option value="$PROJECT_DIR$/CodeGen/CodeGenerator.cpp" />
         <option value="$PROJECT_DIR$/parser.ypp" />
+        <option value="$PROJECT_DIR$/CodeGen/CodeGenerator.cpp" />
       </list>
     </option>
   </component>
@@ -1089,16 +1100,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CodeGen/Func.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="18" column="46" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="110" />
-          <folding>
-            <element signature="e#87#105#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/Type.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
@@ -1109,35 +1110,64 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/Expr/Expr.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="649">
+        <state relative-caret-position="774">
           <caret line="43" column="46" selection-start-line="43" selection-start-column="46" selection-end-line="43" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
-          <folding />
+          <folding>
+            <marker date="1460263081253" expanded="true" signature="185:1429" placeholder="{...}" />
+            <marker date="1460263081253" expanded="true" signature="247:790" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/Expr/Expr.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
+        <state relative-caret-position="1440">
           <caret line="80" column="30" selection-start-line="80" selection-start-column="30" selection-end-line="80" selection-end-column="30" />
-          <folding />
+          <folding>
+            <marker date="1460262738157" expanded="true" signature="267:2112" placeholder="{...}" />
+            <marker date="1460262738157" expanded="true" signature="354:2109" placeholder="{...}" />
+            <marker date="1460262738157" expanded="true" signature="620:764" placeholder="{...}" />
+            <marker date="1460262738157" expanded="true" signature="807:915" placeholder="{...}" />
+            <marker date="1460262738157" expanded="true" signature="956:1078" placeholder="{...}" />
+            <marker date="1460262738157" expanded="true" signature="1117:1423" placeholder="{...}" />
+            <marker date="1460262738157" expanded="true" signature="1462:1769" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/Register.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
+        <state relative-caret-position="468">
           <caret line="26" column="62" selection-start-line="26" selection-start-column="62" selection-end-line="26" selection-end-column="62" />
           <folding>
             <element signature="e#38#61#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CodeGen/Func.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="46" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="110" />
+          <folding>
+            <element signature="e#87#105#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser.ypp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3510">
+          <caret line="195" column="125" selection-start-line="195" selection-start-column="123" selection-end-line="195" selection-end-column="125" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1153,8 +1183,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="1004" column="74" selection-start-line="1004" selection-start-column="74" selection-end-line="1004" selection-end-column="74" />
+        <state relative-caret-position="901">
+          <caret line="1090" column="21" selection-start-line="1090" selection-start-column="21" selection-end-line="1090" selection-end-column="21" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
             <element signature="e#4652#4800#0" expanded="false" />
@@ -1193,14 +1223,6 @@
             <element signature="e#26865#27630#0" expanded="false" />
             <element signature="e#27636#28353#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parser.ypp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="224" column="121" selection-start-line="224" selection-start-column="121" selection-end-line="224" selection-end-column="121" />
-          <folding />
         </state>
       </provider>
     </entry>
