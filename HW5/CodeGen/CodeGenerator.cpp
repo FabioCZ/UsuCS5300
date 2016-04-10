@@ -23,6 +23,7 @@ namespace FC
         if (FC::Code::_code == nullptr)
         {
             FC::Code::_code = std::make_shared<Code>();
+            FC::Code::_code->InMain = false;
             _code->_stream << ".global main" << std::endl << "j main_impl" << std::endl;
 
             LVal t;
@@ -75,8 +76,9 @@ namespace FC
     void MainBlock()
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "main_impl:" << std::endl;
+        inst->InMain = true;
+        //inst->WriteToFileNow();
+        inst->_stream << "main_impl:" << std::endl;
     }
 
 
@@ -85,31 +87,38 @@ namespace FC
 
         auto inst = Code::Inst();
         auto lvalRes = inst->LValues.find(id);
-        if(lvalRes != inst->LValues.end())
+        if(inst->InMain)
         {
-            std::cout << "Constant " << id << "has already been defined" << std::endl;
-            exit(1);
-        }
+            if (lvalRes != inst->LValues.end())
+            {
+                std::cout << "Constant " << id << "has already been defined" << std::endl;
+                exit(1);
+            }
 
-        LVal lv;
-        lv.Type = e->GetType();
-        lv.name = id;
-        if(e->GetType().name == "string")
-        {
-            //std::cout << "adding const " << id << std::endl;
-            lv.LValType = Data;
-            lv.DataLabel = id;
-            inst->ConstData[id] = e;
+            LVal lv;
+            lv.Type = e->GetType();
+            lv.name = id;
+            if (e->GetType().name == "string")
+            {
+                //std::cout << "adding const " << id << std::endl;
+                lv.LValType = Data;
+                lv.DataLabel = id;
+                inst->ConstData[id] = e;
+            }
+            else
+            {
+                lv.LValType = Global;
+                lv.GlobalPointerOffset = inst->AllocateGlobalPointer(4);
+                std::string reg_name = e->GetRegister()->name;
+                inst->_stream << "\tsw " << reg_name << ", " << lv.GlobalPointerOffset << "($gp) #Storing " <<
+                lv.name << std::endl;
+            }
+            inst->LValues[id] = std::make_shared<LVal>(lv);
         }
-        else
+        else    //CONST in func body
         {
-            lv.LValType = Global;
-            lv.GlobalPointerOffset = inst->AllocateGlobalPointer(4);
-            std::string reg_name = e->GetRegister()->name;
-            inst->_stream << "\tsw " << reg_name << ", " << lv.GlobalPointerOffset << "($gp) #Storing " << lv.name << std::endl;
+            inst->_stream << "adding const in function!";
         }
-        inst->LValues[id] = std::make_shared<LVal>(lv);
-
 
     }
 
@@ -202,35 +211,48 @@ namespace FC
 
     void AddIdent(std::string id)
     {
-        //std::cout << "Ident " << id << " added to temp list" << std::endl;
         auto inst = Code::Inst();
-        inst->TempIdentList.push_back(id);
+        if(inst->InMain)
+        {
+            inst->TempIdentList.push_back(id);
+        }
+        else // temp ident list in function
+        {
+
+        }
     }
 
     void AddVariables(Type type)
     {
         auto inst = Code::Inst();
-        if(inst->TempIdentList.size() == 0)
+        if(inst->InMain)
         {
-            std::cout << "Internal error when initializing variables" << std::endl;
-            exit(1);
-        }
-        for(auto a : inst->TempIdentList)
-        {
-            if(inst->LValues.find(a) != inst->LValues.end())
+            if (inst->TempIdentList.size() == 0)
             {
-                std::cout << "Syntax error: identifier " << a << " has already been defined" << std::endl;
+                std::cout << "Internal error when initializing variables" << std::endl;
                 exit(1);
             }
-            LVal lv;
-            lv.name = a;
-            lv.LValType = Global;
-            lv.Type = type;
-            lv.GlobalPointerOffset = inst->AllocateGlobalPointer(type.size);
-            inst->LValues[a] = std::make_shared<LVal>(lv);
-        }
+            for (auto a : inst->TempIdentList)
+            {
+                if (inst->LValues.find(a) != inst->LValues.end())
+                {
+                    std::cout << "Syntax error: identifier " << a << " has already been defined" << std::endl;
+                    exit(1);
+                }
+                LVal lv;
+                lv.name = a;
+                lv.LValType = Global;
+                lv.Type = type;
+                lv.GlobalPointerOffset = inst->AllocateGlobalPointer(type.size);
+                inst->LValues[a] = std::make_shared<LVal>(lv);
+            }
 
-        inst->TempIdentList.clear();
+            inst->TempIdentList.clear();
+        }
+        else    //vars in function
+        {
+            inst->_stream << "# adding vars in function!" << std::endl;
+        }
     }
 
 
@@ -596,79 +618,79 @@ namespace FC
     {
         Code::Inst()->WriteToFileNow();
         auto inst = Code::Inst();
-        inst->_outFile << "WhileBegin" << inst->addLabelNumber() << ":" << std::endl;
+        inst->_stream << "WhileBegin" << inst->addLabelNumber() << ":" << std::endl;
     }
 
     void WhileHead(std::shared_ptr<Expr> e)
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "\tbeq $zero," << e->GetRegister()->name << ", WhileEnd" << inst->getCurrLabelNumber() << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "\tbeq $zero," << e->GetRegister()->name << ", WhileEnd" << inst->getCurrLabelNumber() << std::endl;
     }
 
 
     void WhileEnd()
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
+        //inst->WriteToFileNow();
         auto labelNum = inst->dropLabelNumber();
-        inst->_outFile << "\tj WhileBegin" << labelNum << std::endl;
-        inst->_outFile << "\tWhileEnd"<< labelNum << ":" << std::endl;
+        inst->_stream << "\tj WhileBegin" << labelNum << std::endl;
+        inst->_stream << "\tWhileEnd"<< labelNum << ":" << std::endl;
     }
 
     void RepeatHead()
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "RepeatBegin" << inst->addLabelNumber() << ":" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "RepeatBegin" << inst->addLabelNumber() << ":" << std::endl;
 
     }
 
     void RepeatEnd(std::shared_ptr<Expr> e)
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "\tbeq $zero," << e->GetRegister()->name << ", RepeatBegin" << inst->dropLabelNumber() << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "\tbeq $zero," << e->GetRegister()->name << ", RepeatBegin" << inst->dropLabelNumber() << std::endl;
     }
 
     void IfHead(std::shared_ptr<Expr> e)
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "\t beq $zero, " << e->GetRegister()->name << ", ElseLabel" << inst->incrElseCount() << "_" << inst->addLabelNumber() << " #if/else jump" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "\t beq $zero, " << e->GetRegister()->name << ", ElseLabel" << inst->incrElseCount() << "_" << inst->addLabelNumber() << " #if/else jump" << std::endl;
     }
 
     void ElseIfSuperHead()
     {
         auto inst = Code::Inst();
         auto elseLabel = inst->getElseCount();
-        inst->WriteToFileNow();
-        inst->_outFile << "j ElseLabelEnd" << "_" << inst->getCurrLabelNumber() << " #jump to after else" << std::endl;
-        inst->_outFile << "ElseLabel" << elseLabel << "_" << inst->getCurrLabelNumber() << ": #else label" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "j ElseLabelEnd" << "_" << inst->getCurrLabelNumber() << " #jump to after else" << std::endl;
+        inst->_stream << "ElseLabel" << elseLabel << "_" << inst->getCurrLabelNumber() << ": #else label" << std::endl;
     }
 
 
     void ElseIfHead(std::shared_ptr<Expr> e)
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "\t beq $zero, " << e->GetRegister()->name << ", ElseLabel" << inst->incrElseCount() << "_" << inst->getCurrLabelNumber() << " #if/else jump" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream<< "\t beq $zero, " << e->GetRegister()->name << ", ElseLabel" << inst->incrElseCount() << "_" << inst->getCurrLabelNumber() << " #if/else jump" << std::endl;
     }
 
     void ElseHead()
     {
         auto inst = Code::Inst();
         auto elseLabel = inst->getElseCount();
-        inst->WriteToFileNow();
-        inst->_outFile << "j ElseLabelEnd" << "_" << inst->getCurrLabelNumber() << " #jump to after else" << std::endl;
-        inst->_outFile << "ElseLabel" << elseLabel << "_" << inst->getCurrLabelNumber() << ": #else label" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "j ElseLabelEnd" << "_" << inst->getCurrLabelNumber() << " #jump to after else" << std::endl;
+        inst->_stream << "ElseLabel" << elseLabel << "_" << inst->getCurrLabelNumber() << ": #else label" << std::endl;
     }
 
     void IfEnd()
     {
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "ElseLabelEnd" << "_" << inst->dropLabelNumber() << ":" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "ElseLabelEnd" << "_" << inst->dropLabelNumber() << ":" << std::endl;
     }
 
     void ForHead(std::string s, std::shared_ptr<Expr> e)
@@ -687,16 +709,16 @@ namespace FC
     {
         //std::cout << "Tohead" << isUp << std::endl;
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
-        inst->_outFile << "ForStart" << inst->addLabelNumber() << ":" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "ForStart" << inst->addLabelNumber() << ":" << std::endl;
         auto fi = inst->ForInfos.back()->varName;
         inst->ForInfos.pop_back();
         inst->ForInfos.push_back(std::make_shared<ForInfo>(fi,isUp));
         auto name = inst->ForInfos.back()->varName;
         auto e2 = std::const_pointer_cast<Expr>(LValToExpr(GetLValForIdent(name)))->GetRegister();
         auto e1 = e->GetRegister();
-        inst->WriteToFileNow();
-        inst->_outFile << "\tbeq " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "\tbeq " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() << std::endl;
 
     }
 
@@ -704,7 +726,7 @@ namespace FC
     {
         //std::cout << "forend" << std::endl;
         auto inst = Code::Inst();
-        inst->WriteToFileNow();
+        //inst->WriteToFileNow();
         auto forInfo = inst->ForInfos.back();
         inst->ForInfos.pop_back();
         auto lv = GetLValForIdent(forInfo->varName);
@@ -717,9 +739,9 @@ namespace FC
             Assignment(lv,ProcDecrement(LValToExpr(lv)));
 
         }
-        inst->WriteToFileNow();
-        inst->_outFile << "\tj ForStart" << inst->getCurrLabelNumber() << std::endl;
-        inst->_outFile << "ForEnd" << inst->dropLabelNumber() << ":" << std::endl;
+        //inst->WriteToFileNow();
+        inst->_stream << "\tj ForStart" << inst->getCurrLabelNumber() << std::endl;
+        inst->_stream << "ForEnd" << inst->dropLabelNumber() << ":" << std::endl;
 
         inst->LValues.erase(forInfo->varName);
     }
@@ -734,12 +756,80 @@ namespace FC
             exit(0);
         }
 
-        //spill registers
-        std::cout << "calling func" << std::endl;
-        inst->_stream << "\tjal " << name << " #function call" << std::endl;
-        return nullptr;
-        //restore registers
+        if(args != nullptr && func->second->params != nullptr)
+        {
+            if ((*args).size() != func->second->params->size())
+            {
+                std::cout << "The provided number of arguments in proc/func call for " << func->first <<
+                " was incorrect" << std::endl;
+                exit(0);
+            }
+            for (int i = 0; i < (*args).size(); i++)
+            {
+                auto arg = (*args)[i]->GetType();
+                auto f = (*func->second->params)[i].second;
+                if (arg.size != f.size || arg.name != f.name)
+                {
+                    std::cout << "One of the provided arguments in proc/func call for " << func->first <<
+                    " was incorrect" << std::endl;
+                    exit(0);
+                }
+            }
+        }
+        else if (args == nullptr && func->second->params != nullptr ||
+                args != nullptr && func->second->params == nullptr)
+        {
+            std::cout << "The provided number of arguments in proc/func call for " << func->first <<
+            " was incorrect" << std::endl;
+            exit(0);
+        }
 
+        //spill registers
+        std::vector<std::string> toSpill = Register::getUsed();
+
+        inst->_stream << "\taddi $sp, $sp, -" << (toSpill.size()*4 + 8) << " #spilling registers" << std::endl;
+        inst->_stream << "\tsw $fp, 0($sp) # saving frame pointer" << std::endl;
+        inst->_stream << "\tsw $ra, 4($sp) # saving return address" << std::endl;
+
+        for(int i = 0; i < toSpill.size();i++)
+        {
+            inst->_stream << "\tsw " << toSpill[i] << ", " << (i*4 + 8) << "($sp)" << std::endl;
+        }
+
+        std::cout << "calling func" << std::endl;
+        //args
+        //TODO make this work for custom types/arrays
+        if(args != nullptr)
+        {
+            int argSize = 0;
+            for (auto s : (*args))
+            {
+                argSize += s->GetType().size;
+            }
+            inst->_stream << "\taddi $sp, $sp, -" << argSize << " #args" << std::endl;
+            int sizeCt = 0;
+            for(int i = 0; i < (*args).size();i++)
+            {
+                inst->_stream << "\tsw " << (*args)[i]->GetRegister()->name << ", " << sizeCt << "($sp)" << std::endl;
+                sizeCt += (*args)[0]->GetType().size;
+            }
+        }
+        inst->_stream << "\tmove $fp, $sp" << std::endl;
+        inst->_stream << "\tjal " << name << " #function call" << std::endl;
+
+        //restore registers
+        //TODO do something about return value
+        inst->_stream << "\tlw $fp, 0($sp) # saving frame pointer" << std::endl;
+        inst->_stream << "\tlw $ra, 4($sp) # saving return address" << std::endl;
+        for(int i = 0; i < toSpill.size();i++)
+        {
+            inst->_stream << "\tlw " << toSpill[i] << ", " << (i*4 + 8) << "($sp)" << std::endl;
+        }
+        inst->_stream << "\taddi $sp, $sp, " << (toSpill.size()*4 + 8) << " #restored registers" << std::endl;
+
+
+        //TODO return expr
+        return nullptr;
     }
 
     void AddFunction(std::shared_ptr<Func> f)
@@ -765,6 +855,11 @@ namespace FC
             if(!f->isForwardDeclared)
             {
                 inst->_outFile << f->name << ": #proc/func" << std::endl;
+                //load arguments
+                //TODO local vars/const
+                inst->WriteToFileNow(); //write func body
+                inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
+
             }
         }
     }

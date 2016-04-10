@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp" line="221" />
+    <bookmark url="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp" line="238" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" assignedExecutableTargets="true" buildAllGenerated="true">
     <generated>
@@ -39,8 +39,8 @@
       <file leaf-file-name="parser.ypp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/parser.ypp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-48">
-              <caret line="328" column="95" selection-start-line="328" selection-start-column="95" selection-end-line="328" selection-end-column="95" />
+            <state relative-caret-position="271">
+              <caret line="167" column="25" selection-start-line="167" selection-start-column="16" selection-end-line="167" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -58,22 +58,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Register.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CodeGen/Register.cpp">
+      <file leaf-file-name="Register.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+            <state relative-caret-position="414">
+              <caret line="26" column="19" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Register.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
+      <file leaf-file-name="Register.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CodeGen/Register.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="540">
+              <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
+              <folding>
+                <element signature="e#38#61#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -81,8 +83,8 @@
       <file leaf-file-name="CodeGenerator.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="95" column="26" selection-start-line="95" selection-start-column="26" selection-end-line="95" selection-end-column="26" />
+            <state relative-caret-position="504">
+              <caret line="133" column="20" selection-start-line="133" selection-start-column="20" selection-end-line="133" selection-end-column="20" />
               <folding>
                 <element signature="e#155#172#0" expanded="true" />
               </folding>
@@ -93,13 +95,27 @@
       <file leaf-file-name="CodeGenerator.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="738" column="31" selection-start-line="738" selection-start-column="31" selection-end-line="738" selection-end-column="31" />
+            <state relative-caret-position="-990">
+              <caret line="119" column="25" selection-start-line="119" selection-start-column="25" selection-end-line="119" selection-end-column="25" />
               <folding>
                 <element signature="e#120#148#0" expanded="true" />
-                <element signature="e#21821#22186#0" expanded="false" />
-                <element signature="e#22192#22955#0" expanded="false" />
-                <element signature="e#22961#23676#0" expanded="false" />
+                <element signature="e#3507#3655#0" expanded="false" />
+                <element signature="e#3661#3810#0" expanded="false" />
+                <element signature="e#3816#5381#0" expanded="false" />
+                <element signature="e#5387#5897#0" expanded="false" />
+                <element signature="e#5903#6393#0" expanded="false" />
+                <element signature="e#22461#22826#0" expanded="false" />
+                <element signature="e#22832#23597#0" expanded="false" />
+                <element signature="e#23603#24320#0" expanded="false" />
+                <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+                <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -141,10 +157,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/CodeGen/Expr/OrExpr.hpp" />
-        <option value="$PROJECT_DIR$/CodeGen/Register.cpp" />
         <option value="$PROJECT_DIR$/CodeGen/Expr/IntExpr.hpp" />
         <option value="$PROJECT_DIR$/scanner.hpp" />
-        <option value="$PROJECT_DIR$/CodeGen/Register.hpp" />
         <option value="$PROJECT_DIR$/CodeGen/Expr/Expr.hpp" />
         <option value="$PROJECT_DIR$/CodeGen/LVal.hpp" />
         <option value="$PROJECT_DIR$/driver.cpp" />
@@ -154,8 +168,10 @@
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/CodeGen/Type.hpp" />
         <option value="$PROJECT_DIR$/CodeGen/Func.hpp" />
-        <option value="$PROJECT_DIR$/CodeGen/CodeGenerator.hpp" />
         <option value="$PROJECT_DIR$/parser.ypp" />
+        <option value="$PROJECT_DIR$/CodeGen/Register.hpp" />
+        <option value="$PROJECT_DIR$/CodeGen/Register.cpp" />
+        <option value="$PROJECT_DIR$/CodeGen/CodeGenerator.hpp" />
         <option value="$PROJECT_DIR$/CodeGen/CodeGenerator.cpp" />
       </list>
     </option>
@@ -203,6 +219,30 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="HW3" />
               <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HW3" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HW5" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HW3" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HW5" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CodeGen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -419,7 +459,7 @@
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.072052404" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14246725" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.011458334" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -496,9 +536,23 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
-            <element signature="e#21821#22186#0" expanded="false" />
-            <element signature="e#22192#22955#0" expanded="false" />
-            <element signature="e#22961#23676#0" expanded="false" />
+            <element signature="e#3507#3655#0" expanded="false" />
+            <element signature="e#3661#3810#0" expanded="false" />
+            <element signature="e#3816#5381#0" expanded="false" />
+            <element signature="e#5387#5897#0" expanded="false" />
+            <element signature="e#5903#6393#0" expanded="false" />
+            <element signature="e#22461#22826#0" expanded="false" />
+            <element signature="e#22832#23597#0" expanded="false" />
+            <element signature="e#23603#24320#0" expanded="false" />
+            <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -571,9 +625,23 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
-            <element signature="e#21821#22186#0" expanded="false" />
-            <element signature="e#22192#22955#0" expanded="false" />
-            <element signature="e#22961#23676#0" expanded="false" />
+            <element signature="e#3507#3655#0" expanded="false" />
+            <element signature="e#3661#3810#0" expanded="false" />
+            <element signature="e#3816#5381#0" expanded="false" />
+            <element signature="e#5387#5897#0" expanded="false" />
+            <element signature="e#5903#6393#0" expanded="false" />
+            <element signature="e#22461#22826#0" expanded="false" />
+            <element signature="e#22832#23597#0" expanded="false" />
+            <element signature="e#23603#24320#0" expanded="false" />
+            <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -651,9 +719,23 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
-            <element signature="e#21821#22186#0" expanded="false" />
-            <element signature="e#22192#22955#0" expanded="false" />
-            <element signature="e#22961#23676#0" expanded="false" />
+            <element signature="e#3507#3655#0" expanded="false" />
+            <element signature="e#3661#3810#0" expanded="false" />
+            <element signature="e#3816#5381#0" expanded="false" />
+            <element signature="e#5387#5897#0" expanded="false" />
+            <element signature="e#5903#6393#0" expanded="false" />
+            <element signature="e#22461#22826#0" expanded="false" />
+            <element signature="e#22832#23597#0" expanded="false" />
+            <element signature="e#23603#24320#0" expanded="false" />
+            <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -686,9 +768,23 @@
           <caret line="39" column="45" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
-            <element signature="e#21821#22186#0" expanded="false" />
-            <element signature="e#22192#22955#0" expanded="false" />
-            <element signature="e#22961#23676#0" expanded="false" />
+            <element signature="e#3507#3655#0" expanded="false" />
+            <element signature="e#3661#3810#0" expanded="false" />
+            <element signature="e#3816#5381#0" expanded="false" />
+            <element signature="e#5387#5897#0" expanded="false" />
+            <element signature="e#5903#6393#0" expanded="false" />
+            <element signature="e#22461#22826#0" expanded="false" />
+            <element signature="e#22832#23597#0" expanded="false" />
+            <element signature="e#23603#24320#0" expanded="false" />
+            <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -729,9 +825,23 @@
           <caret line="1" column="12" selection-start-line="1" selection-start-column="12" selection-end-line="1" selection-end-column="12" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
-            <element signature="e#21821#22186#0" expanded="false" />
-            <element signature="e#22192#22955#0" expanded="false" />
-            <element signature="e#22961#23676#0" expanded="false" />
+            <element signature="e#3507#3655#0" expanded="false" />
+            <element signature="e#3661#3810#0" expanded="false" />
+            <element signature="e#3816#5381#0" expanded="false" />
+            <element signature="e#5387#5897#0" expanded="false" />
+            <element signature="e#5903#6393#0" expanded="false" />
+            <element signature="e#22461#22826#0" expanded="false" />
+            <element signature="e#22832#23597#0" expanded="false" />
+            <element signature="e#23603#24320#0" expanded="false" />
+            <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -846,22 +956,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CodeGen/Register.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/Func.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="666">
@@ -872,33 +966,65 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.hpp">
+    <entry file="file://$PROJECT_DIR$/CodeGen/Register.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="95" column="26" selection-start-line="95" selection-start-column="26" selection-end-line="95" selection-end-column="26" />
+        <state relative-caret-position="414">
+          <caret line="26" column="19" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CodeGen/Register.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="30" column="35" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
           <folding>
-            <element signature="e#155#172#0" expanded="true" />
+            <element signature="e#38#61#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/parser.ypp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-48">
-          <caret line="328" column="95" selection-start-line="328" selection-start-column="95" selection-end-line="328" selection-end-column="95" />
+        <state relative-caret-position="271">
+          <caret line="167" column="25" selection-start-line="167" selection-start-column="16" selection-end-line="167" selection-end-column="25" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="133" column="20" selection-start-line="133" selection-start-column="20" selection-end-line="133" selection-end-column="20" />
+          <folding>
+            <element signature="e#155#172#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="738" column="31" selection-start-line="738" selection-start-column="31" selection-end-line="738" selection-end-column="31" />
+        <state relative-caret-position="-990">
+          <caret line="119" column="25" selection-start-line="119" selection-start-column="25" selection-end-line="119" selection-end-column="25" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
-            <element signature="e#21821#22186#0" expanded="false" />
-            <element signature="e#22192#22955#0" expanded="false" />
-            <element signature="e#22961#23676#0" expanded="false" />
+            <element signature="e#3507#3655#0" expanded="false" />
+            <element signature="e#3661#3810#0" expanded="false" />
+            <element signature="e#3816#5381#0" expanded="false" />
+            <element signature="e#5387#5897#0" expanded="false" />
+            <element signature="e#5903#6393#0" expanded="false" />
+            <element signature="e#22461#22826#0" expanded="false" />
+            <element signature="e#22832#23597#0" expanded="false" />
+            <element signature="e#23603#24320#0" expanded="false" />
+            <marker date="1460255083834" expanded="false" signature="19944:20145" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20172:20434" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20462:20624" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20674:20875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="20922:21174" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21207:21568" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21620:21875" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="21901:22262" placeholder="{...}" />
+            <marker date="1460255083834" expanded="false" signature="22285:22455" placeholder="{...}" />
           </folding>
         </state>
       </provider>

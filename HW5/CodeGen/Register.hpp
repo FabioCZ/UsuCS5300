@@ -17,9 +17,12 @@ namespace FC
     class Register
     {
         static std::vector<std::string> reg_pool;
+        static std::vector<std::string> all_registers;
+
     public:
 
         static std::shared_ptr<Register> Allocate();
+        static std::vector<std::string> getUsed();
 
         ~Register()
         {
