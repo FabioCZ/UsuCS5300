@@ -3,6 +3,7 @@
 //
 #include "Register.hpp"
 #include <algorithm>
+#include <iostream>
 
 namespace FC
 {
@@ -17,6 +18,19 @@ namespace FC
         if (reg_pool.size() == 0) throw std::runtime_error("ran out of registers");
         auto n = reg_pool.back();
         reg_pool.pop_back();
+        return std::make_shared<Register>(n);
+    }
+
+    std::shared_ptr<Register> Register::AllocateCustom(std::string n)
+    {
+        if (reg_pool.size() == 0) throw std::runtime_error("ran out of registers");
+        auto r = std::find(reg_pool.end(), reg_pool.begin(), n);
+        if(r == reg_pool.end())
+        {
+            std::cout << "Internal compiler error: allocating custom register" << std::endl;
+            exit(0);
+        }
+        reg_pool.erase(r);
         return std::make_shared<Register>(n);
     }
 

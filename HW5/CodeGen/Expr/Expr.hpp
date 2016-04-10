@@ -78,6 +78,7 @@ namespace FC
         }
 
         std::shared_ptr<FC::Register> GetRegister();
+        std::shared_ptr<FC::Register> GetCustomRegister(std::string name);
 
     private:
         int _val = -1;

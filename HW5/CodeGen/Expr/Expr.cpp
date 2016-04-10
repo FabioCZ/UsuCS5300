@@ -28,4 +28,25 @@ namespace FC
         this->_val = INT32_MIN; //reset value, as we shouldn't need it
         return _reg;
     }
+
+    std::shared_ptr<FC::Register> Expr::GetCustomRegister(std::string name)
+    {
+        if (_exprType == Reg)
+        {
+            return _reg;
+        }
+        if (_exprType == Str)
+        {
+            std::cout << "Internal compiler error, li string" << std::cout;
+            exit(1);
+        }
+        std::shared_ptr<Code> inst = Code::Inst();
+        _reg = Register::AllocateCustom(name);
+        _exprType = Reg;
+        inst->_stream << "\tli " << _reg->name << ", " << _val << " #loading expr to register" << std::endl;
+        this->_val = INT32_MIN; //reset value, as we shouldn't need it
+        return _reg;
+    }
+
+
 }

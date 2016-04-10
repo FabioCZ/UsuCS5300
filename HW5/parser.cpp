@@ -806,7 +806,7 @@ namespace yy {
 
   case 17:
 #line 189 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Func>  > () = std::make_shared<FC::Func>(nullptr, yystack_[1].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (), yystack_[3].value.as< std::string > ());}
+    {FC::AddLocalParams(yystack_[1].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (),FC::VoidType()); yylhs.value.as< std::shared_ptr<FC::Func>  > () = std::make_shared<FC::Func>(nullptr, yystack_[1].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (), yystack_[3].value.as< std::string > ());}
 #line 811 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
@@ -830,7 +830,7 @@ namespace yy {
 
   case 21:
 #line 196 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Func>  > () = std::make_shared<FC::Func>(std::make_shared<FC::Type>(yystack_[0].value.as< FC::Type > ()), yystack_[3].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (), yystack_[5].value.as< std::string > ());}
+    {FC::AddLocalParams(yystack_[3].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (),yystack_[0].value.as< FC::Type > ()); yylhs.value.as< std::shared_ptr<FC::Func>  > () = std::make_shared<FC::Func>(std::make_shared<FC::Type>(yystack_[0].value.as< FC::Type > ()), yystack_[3].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (), yystack_[5].value.as< std::string > ());}
 #line 835 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
@@ -847,620 +847,626 @@ namespace yy {
     break;
 
   case 24:
-#line 201 "parser.ypp" // lalr1.cc:847
-    {yystack_[2].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ()->insert(yystack_[0].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ()->end(),yystack_[0].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ()->begin(),yystack_[0].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ()->end()); yylhs.value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > () =yystack_[2].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ();}
-#line 853 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
-    break;
-
-  case 25:
 #line 202 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > () = yystack_[0].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ();}
+    {
+        //$1->insert($3->end(),$3->begin(),$3->end());
+        for(auto s : (*yystack_[0].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ()))
+        {
+            yystack_[2].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ()->push_back(s);
+        }
+        yylhs.value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > () =yystack_[2].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ();}
 #line 859 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
+  case 25:
+#line 209 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > () = yystack_[0].value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ();}
+#line 865 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
+    break;
+
   case 26:
-#line 205 "parser.ypp" // lalr1.cc:847
+#line 212 "parser.ypp" // lalr1.cc:847
     {   //TODO VAR/REF
-                auto a = std::shared_ptr<std::vector<std::pair<std::string,FC::Type> >>();
+                auto a = std::make_shared<std::vector<std::pair<std::string,FC::Type> >>();
                 for(int i = 0; i < yystack_[2].value.as< std::shared_ptr<std::vector<std::string> >  > ()->size();i++)
                 {
                     a->push_back(std::pair<std::string,FC::Type>((*yystack_[2].value.as< std::shared_ptr<std::vector<std::string> >  > ())[i],yystack_[0].value.as< FC::Type > ()));
                 }
                 yylhs.value.as< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > () = a;
             }
-#line 872 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
-    break;
-
-  case 27:
-#line 214 "parser.ypp" // lalr1.cc:847
-    {yystack_[2].value.as< std::shared_ptr<std::vector<std::string> >  > ()->push_back(yystack_[0].value.as< std::string > ()); yylhs.value.as< std::shared_ptr<std::vector<std::string> >  > () = yystack_[2].value.as< std::shared_ptr<std::vector<std::string> >  > ();}
 #line 878 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 28:
-#line 215 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<std::vector<std::string> >  > () = std::make_shared<std::vector<std::string> >(1,yystack_[0].value.as< std::string > ());}
+  case 27:
+#line 221 "parser.ypp" // lalr1.cc:847
+    {yystack_[2].value.as< std::shared_ptr<std::vector<std::string> >  > ()->push_back(yystack_[0].value.as< std::string > ()); yylhs.value.as< std::shared_ptr<std::vector<std::string> >  > () = yystack_[2].value.as< std::shared_ptr<std::vector<std::string> >  > ();}
 #line 884 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 29:
-#line 217 "parser.ypp" // lalr1.cc:847
-    {}
+  case 28:
+#line 222 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<std::vector<std::string> >  > () = std::make_shared<std::vector<std::string> >(1,yystack_[0].value.as< std::string > ());}
 #line 890 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 30:
-#line 218 "parser.ypp" // lalr1.cc:847
+  case 29:
+#line 224 "parser.ypp" // lalr1.cc:847
     {}
 #line 896 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 31:
-#line 219 "parser.ypp" // lalr1.cc:847
-    {}
+  case 30:
+#line 225 "parser.ypp" // lalr1.cc:847
+    {std::cout << "Unfortunately, passing by reference is not supported, passing by value instead" << std::endl;}
 #line 902 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 32:
-#line 221 "parser.ypp" // lalr1.cc:847
+  case 31:
+#line 226 "parser.ypp" // lalr1.cc:847
     {}
 #line 908 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 33:
-#line 223 "parser.ypp" // lalr1.cc:847
+  case 32:
+#line 228 "parser.ypp" // lalr1.cc:847
     {}
 #line 914 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 34:
-#line 225 "parser.ypp" // lalr1.cc:847
+  case 33:
+#line 230 "parser.ypp" // lalr1.cc:847
     {}
 #line 920 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 35:
-#line 226 "parser.ypp" // lalr1.cc:847
+  case 34:
+#line 232 "parser.ypp" // lalr1.cc:847
     {}
 #line 926 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 40:
-#line 234 "parser.ypp" // lalr1.cc:847
+  case 35:
+#line 233 "parser.ypp" // lalr1.cc:847
     {}
 #line 932 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 41:
-#line 236 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< FC::Type > () = yystack_[0].value.as< FC::Type > ();}
+  case 40:
+#line 241 "parser.ypp" // lalr1.cc:847
+    {}
 #line 938 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 42:
-#line 237 "parser.ypp" // lalr1.cc:847
-    {}
+  case 41:
+#line 243 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< FC::Type > () = yystack_[0].value.as< FC::Type > ();}
 #line 944 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 43:
-#line 238 "parser.ypp" // lalr1.cc:847
+  case 42:
+#line 244 "parser.ypp" // lalr1.cc:847
     {}
 #line 950 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 44:
-#line 240 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< FC::Type > () = FC::SimpleTypeLookup(yystack_[0].value.as< std::string > ());}
+  case 43:
+#line 245 "parser.ypp" // lalr1.cc:847
+    {}
 #line 956 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 45:
-#line 242 "parser.ypp" // lalr1.cc:847
-    {}
+  case 44:
+#line 247 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< FC::Type > () = FC::SimpleTypeLookup(yystack_[0].value.as< std::string > ());}
 #line 962 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 46:
-#line 244 "parser.ypp" // lalr1.cc:847
+  case 45:
+#line 249 "parser.ypp" // lalr1.cc:847
     {}
 #line 968 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 47:
-#line 245 "parser.ypp" // lalr1.cc:847
+  case 46:
+#line 251 "parser.ypp" // lalr1.cc:847
     {}
 #line 974 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 48:
-#line 247 "parser.ypp" // lalr1.cc:847
+  case 47:
+#line 252 "parser.ypp" // lalr1.cc:847
     {}
 #line 980 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 49:
-#line 249 "parser.ypp" // lalr1.cc:847
-    {FC::AddIdent(yystack_[0].value.as< std::string > ());}
+  case 48:
+#line 254 "parser.ypp" // lalr1.cc:847
+    {}
 #line 986 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 50:
-#line 250 "parser.ypp" // lalr1.cc:847
+  case 49:
+#line 256 "parser.ypp" // lalr1.cc:847
     {FC::AddIdent(yystack_[0].value.as< std::string > ());}
 #line 992 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 51:
-#line 252 "parser.ypp" // lalr1.cc:847
-    {}
+  case 50:
+#line 257 "parser.ypp" // lalr1.cc:847
+    {FC::AddIdent(yystack_[0].value.as< std::string > ());}
 #line 998 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 56:
-#line 260 "parser.ypp" // lalr1.cc:847
-    {AddVariables(yystack_[1].value.as< FC::Type > ());}
+  case 51:
+#line 259 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1004 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 57:
-#line 262 "parser.ypp" // lalr1.cc:847
-    {}
+  case 56:
+#line 267 "parser.ypp" // lalr1.cc:847
+    {AddVariables(yystack_[1].value.as< FC::Type > ());}
 #line 1010 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 58:
-#line 263 "parser.ypp" // lalr1.cc:847
+  case 57:
+#line 269 "parser.ypp" // lalr1.cc:847
     {}
 #line 1016 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 59:
-#line 264 "parser.ypp" // lalr1.cc:847
+  case 58:
+#line 270 "parser.ypp" // lalr1.cc:847
     {}
 #line 1022 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 60:
-#line 265 "parser.ypp" // lalr1.cc:847
+  case 59:
+#line 271 "parser.ypp" // lalr1.cc:847
     {}
 #line 1028 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 61:
-#line 266 "parser.ypp" // lalr1.cc:847
+  case 60:
+#line 272 "parser.ypp" // lalr1.cc:847
     {}
 #line 1034 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 62:
-#line 267 "parser.ypp" // lalr1.cc:847
+  case 61:
+#line 273 "parser.ypp" // lalr1.cc:847
     {}
 #line 1040 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 63:
-#line 268 "parser.ypp" // lalr1.cc:847
+  case 62:
+#line 274 "parser.ypp" // lalr1.cc:847
     {}
 #line 1046 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 64:
-#line 269 "parser.ypp" // lalr1.cc:847
+  case 63:
+#line 275 "parser.ypp" // lalr1.cc:847
     {}
 #line 1052 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 65:
-#line 270 "parser.ypp" // lalr1.cc:847
+  case 64:
+#line 276 "parser.ypp" // lalr1.cc:847
     {}
 #line 1058 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 66:
-#line 271 "parser.ypp" // lalr1.cc:847
+  case 65:
+#line 277 "parser.ypp" // lalr1.cc:847
     {}
 #line 1064 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 67:
-#line 272 "parser.ypp" // lalr1.cc:847
+  case 66:
+#line 278 "parser.ypp" // lalr1.cc:847
     {}
 #line 1070 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 68:
-#line 274 "parser.ypp" // lalr1.cc:847
-    {FC::Assignment(yystack_[2].value.as< std::shared_ptr<FC::LVal>  > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 67:
+#line 279 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1076 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 69:
-#line 276 "parser.ypp" // lalr1.cc:847
-    {FC::IfEnd();}
+  case 68:
+#line 281 "parser.ypp" // lalr1.cc:847
+    {FC::Assignment(yystack_[2].value.as< std::shared_ptr<FC::LVal>  > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1082 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 70:
-#line 278 "parser.ypp" // lalr1.cc:847
-    {FC::IfHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 69:
+#line 283 "parser.ypp" // lalr1.cc:847
+    {FC::IfEnd();}
 #line 1088 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 71:
-#line 280 "parser.ypp" // lalr1.cc:847
-    {}
+  case 70:
+#line 285 "parser.ypp" // lalr1.cc:847
+    {FC::IfHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1094 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 72:
-#line 282 "parser.ypp" // lalr1.cc:847
+  case 71:
+#line 287 "parser.ypp" // lalr1.cc:847
     {}
 #line 1100 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 73:
-#line 283 "parser.ypp" // lalr1.cc:847
+  case 72:
+#line 289 "parser.ypp" // lalr1.cc:847
     {}
 #line 1106 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 74:
-#line 285 "parser.ypp" // lalr1.cc:847
-    {FC::ElseIfHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 73:
+#line 290 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1112 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 75:
-#line 286 "parser.ypp" // lalr1.cc:847
-    {}
+  case 74:
+#line 292 "parser.ypp" // lalr1.cc:847
+    {FC::ElseIfHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1118 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 76:
-#line 288 "parser.ypp" // lalr1.cc:847
-    {FC::ElseIfSuperHead();}
+  case 75:
+#line 293 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1124 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 77:
-#line 290 "parser.ypp" // lalr1.cc:847
-    {}
+  case 76:
+#line 295 "parser.ypp" // lalr1.cc:847
+    {FC::ElseIfSuperHead();}
 #line 1130 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 78:
-#line 291 "parser.ypp" // lalr1.cc:847
-    {FC::ElseHead();}
+  case 77:
+#line 297 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1136 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 79:
-#line 293 "parser.ypp" // lalr1.cc:847
+  case 78:
+#line 298 "parser.ypp" // lalr1.cc:847
     {FC::ElseHead();}
 #line 1142 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 80:
-#line 295 "parser.ypp" // lalr1.cc:847
-    {FC::WhileEnd();}
+  case 79:
+#line 300 "parser.ypp" // lalr1.cc:847
+    {FC::ElseHead();}
 #line 1148 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 81:
-#line 297 "parser.ypp" // lalr1.cc:847
-    {FC::WhileHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 80:
+#line 302 "parser.ypp" // lalr1.cc:847
+    {FC::WhileEnd();}
 #line 1154 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 82:
-#line 299 "parser.ypp" // lalr1.cc:847
-    {FC::WhileSuperHead();}
+  case 81:
+#line 304 "parser.ypp" // lalr1.cc:847
+    {FC::WhileHead(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1160 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 83:
-#line 301 "parser.ypp" // lalr1.cc:847
-    {}
+  case 82:
+#line 306 "parser.ypp" // lalr1.cc:847
+    {FC::WhileSuperHead();}
 #line 1166 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 84:
-#line 303 "parser.ypp" // lalr1.cc:847
-    {FC::RepeatEnd(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 83:
+#line 308 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1172 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 85:
-#line 305 "parser.ypp" // lalr1.cc:847
-    {FC::RepeatHead();}
+  case 84:
+#line 310 "parser.ypp" // lalr1.cc:847
+    {FC::RepeatEnd(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1178 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 86:
-#line 307 "parser.ypp" // lalr1.cc:847
-    {FC::ForEnd();}
+  case 85:
+#line 312 "parser.ypp" // lalr1.cc:847
+    {FC::RepeatHead();}
 #line 1184 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 87:
-#line 309 "parser.ypp" // lalr1.cc:847
-    {FC::ForHead(yystack_[2].value.as< std::string > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 86:
+#line 314 "parser.ypp" // lalr1.cc:847
+    {FC::ForEnd();}
 #line 1190 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 88:
-#line 311 "parser.ypp" // lalr1.cc:847
-    {FC::ToHead(true,yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 87:
+#line 316 "parser.ypp" // lalr1.cc:847
+    {FC::ForHead(yystack_[2].value.as< std::string > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1196 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 89:
-#line 312 "parser.ypp" // lalr1.cc:847
-    {FC::ToHead(false,yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 88:
+#line 318 "parser.ypp" // lalr1.cc:847
+    {FC::ToHead(true,yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1202 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 90:
-#line 314 "parser.ypp" // lalr1.cc:847
-    {FC::Stop();}
+  case 89:
+#line 319 "parser.ypp" // lalr1.cc:847
+    {FC::ToHead(false,yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1208 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 91:
-#line 316 "parser.ypp" // lalr1.cc:847
-    {}
+  case 90:
+#line 321 "parser.ypp" // lalr1.cc:847
+    {FC::Stop();}
 #line 1214 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 92:
-#line 317 "parser.ypp" // lalr1.cc:847
-    {}
+  case 91:
+#line 323 "parser.ypp" // lalr1.cc:847
+    {FC::AddReturn(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1220 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 93:
-#line 319 "parser.ypp" // lalr1.cc:847
-    {}
+  case 92:
+#line 324 "parser.ypp" // lalr1.cc:847
+    {FC::AddReturn(nullptr);}
 #line 1226 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 94:
-#line 321 "parser.ypp" // lalr1.cc:847
-    {FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
+  case 93:
+#line 326 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1232 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 95:
-#line 322 "parser.ypp" // lalr1.cc:847
-    {std::cout << "dafuq" << std::endl;FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
+  case 94:
+#line 328 "parser.ypp" // lalr1.cc:847
+    {FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
 #line 1238 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 96:
-#line 324 "parser.ypp" // lalr1.cc:847
-    {}
+  case 95:
+#line 329 "parser.ypp" // lalr1.cc:847
+    {std::cout << "dafuq" << std::endl;FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
 #line 1244 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 97:
-#line 326 "parser.ypp" // lalr1.cc:847
-    {FC::WriteExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 96:
+#line 331 "parser.ypp" // lalr1.cc:847
+    {}
 #line 1250 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 98:
-#line 327 "parser.ypp" // lalr1.cc:847
+  case 97:
+#line 333 "parser.ypp" // lalr1.cc:847
     {FC::WriteExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1256 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 99:
-#line 329 "parser.ypp" // lalr1.cc:847
-    {FC::CallFunction(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ());}
+  case 98:
+#line 334 "parser.ypp" // lalr1.cc:847
+    {FC::WriteExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1262 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 100:
-#line 331 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = yystack_[0].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ();}
+  case 99:
+#line 336 "parser.ypp" // lalr1.cc:847
+    {FC::CallFunction(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ());}
 #line 1268 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 101:
-#line 332 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = nullptr;}
+  case 100:
+#line 338 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = yystack_[0].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ();}
 #line 1274 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 102:
-#line 334 "parser.ypp" // lalr1.cc:847
-    {yystack_[2].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ()->push_back(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = yystack_[2].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ();}
+  case 101:
+#line 339 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = nullptr;}
 #line 1280 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 103:
-#line 335 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = std::make_shared<std::vector<std::shared_ptr<FC::Expr> > >(1,yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 102:
+#line 341 "parser.ypp" // lalr1.cc:847
+    {yystack_[2].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ()->push_back(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = yystack_[2].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ();}
 #line 1286 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 104:
-#line 337 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcOrExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 103:
+#line 342 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > () = std::make_shared<std::vector<std::shared_ptr<FC::Expr> > >(1,yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1292 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 105:
-#line 338 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcAndExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 104:
+#line 344 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcOrExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1298 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 106:
-#line 339 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 105:
+#line 345 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcAndExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1304 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 107:
-#line 340 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcNotEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 106:
+#line 346 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1310 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 108:
-#line 341 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcLessEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 107:
+#line 347 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcNotEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1316 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 109:
-#line 342 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcGreaterEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 108:
+#line 348 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcLessEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1322 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 110:
-#line 343 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcLessThanExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 109:
+#line 349 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcGreaterEqualExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1328 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 111:
-#line 344 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcGreaterThanExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 110:
+#line 350 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcLessThanExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1334 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 112:
-#line 345 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcPlusExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 111:
+#line 351 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcGreaterThanExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1340 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 113:
-#line 346 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcMinusExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 112:
+#line 352 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcPlusExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1346 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 114:
-#line 347 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcDivideExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 113:
+#line 353 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcMinusExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1352 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 115:
-#line 348 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcMultiplyExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 114:
+#line 354 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcDivideExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1358 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 116:
-#line 349 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcModExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 115:
+#line 355 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcMultiplyExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1364 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 117:
-#line 350 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcNotExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 116:
+#line 356 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcModExpr(yystack_[2].value.as< std::shared_ptr<FC::Expr> > (),yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1370 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 118:
-#line 351 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcUnaryMinusExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 117:
+#line 357 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcNotExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1376 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 119:
-#line 352 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = yystack_[1].value.as< std::shared_ptr<FC::Expr> > ();}
+  case 118:
+#line 358 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = ProcUnaryMinusExpr(yystack_[0].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1382 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 120:
-#line 353 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ToChar(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 119:
+#line 359 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = yystack_[1].value.as< std::shared_ptr<FC::Expr> > ();}
 #line 1388 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 121:
-#line 354 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ToInt(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 120:
+#line 360 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ToChar(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1394 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 122:
-#line 355 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcDecrement(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 121:
+#line 361 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ToInt(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1400 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 123:
-#line 356 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcIncrement(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
+  case 122:
+#line 362 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcDecrement(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1406 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 124:
-#line 357 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::LValToExpr(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ()); }
+  case 123:
+#line 363 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcIncrement(yystack_[1].value.as< std::shared_ptr<FC::Expr> > ());}
 #line 1412 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 125:
-#line 358 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcIntExpr(yystack_[0].value.as< int > ());}
+  case 124:
+#line 364 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::LValToExpr(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ()); }
 #line 1418 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 126:
-#line 359 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcStringExpr(yystack_[0].value.as< std::string > ());}
+  case 125:
+#line 365 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcIntExpr(yystack_[0].value.as< int > ());}
 #line 1424 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 127:
-#line 360 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcCharExpr(yystack_[0].value.as< char > ());}
+  case 126:
+#line 366 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcStringExpr(yystack_[0].value.as< std::string > ());}
 #line 1430 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 128:
-#line 361 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = yystack_[0].value.as< std::shared_ptr<FC::Expr> > ();}
+  case 127:
+#line 367 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::ProcCharExpr(yystack_[0].value.as< char > ());}
 #line 1436 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 129:
-#line 363 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::CallFunction(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ());}
+  case 128:
+#line 368 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = yystack_[0].value.as< std::shared_ptr<FC::Expr> > ();}
 #line 1442 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 130:
-#line 365 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = nullptr;}
+  case 129:
+#line 370 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::Expr> > () = FC::CallFunction(yystack_[3].value.as< std::string > (),yystack_[1].value.as< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ());}
 #line 1448 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 131:
-#line 366 "parser.ypp" // lalr1.cc:847
+  case 130:
+#line 372 "parser.ypp" // lalr1.cc:847
     {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = nullptr;}
 #line 1454 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
-  case 132:
-#line 367 "parser.ypp" // lalr1.cc:847
-    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = FC::GetLValForIdent(yystack_[0].value.as< std::string > ());}
+  case 131:
+#line 373 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = nullptr;}
 #line 1460 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
     break;
 
+  case 132:
+#line 374 "parser.ypp" // lalr1.cc:847
+    {yylhs.value.as< std::shared_ptr<FC::LVal>  > () = FC::GetLValForIdent(yystack_[0].value.as< std::string > ());}
+#line 1466 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
+    break;
 
-#line 1464 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
+
+#line 1470 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:847
             default:
               break;
             }
@@ -2019,18 +2025,18 @@ namespace yy {
   {
        0,   164,   164,   166,   168,   170,   172,   173,   175,   176,
      178,   180,   181,   182,   184,   186,   187,   189,   191,   193,
-     194,   196,   198,   199,   201,   202,   204,   214,   215,   217,
-     218,   219,   221,   223,   225,   226,   228,   229,   231,   232,
-     234,   236,   237,   238,   240,   242,   244,   245,   247,   249,
-     250,   252,   254,   255,   257,   258,   260,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   274,   276,
-     278,   280,   282,   283,   285,   286,   288,   290,   291,   293,
-     295,   297,   299,   301,   303,   305,   307,   309,   311,   312,
-     314,   316,   317,   319,   321,   322,   324,   326,   327,   329,
-     331,   332,   334,   335,   337,   338,   339,   340,   341,   342,
-     343,   344,   345,   346,   347,   348,   349,   350,   351,   352,
-     353,   354,   355,   356,   357,   358,   359,   360,   361,   363,
-     365,   366,   367
+     194,   196,   198,   199,   201,   209,   211,   221,   222,   224,
+     225,   226,   228,   230,   232,   233,   235,   236,   238,   239,
+     241,   243,   244,   245,   247,   249,   251,   252,   254,   256,
+     257,   259,   261,   262,   264,   265,   267,   269,   270,   271,
+     272,   273,   274,   275,   276,   277,   278,   279,   281,   283,
+     285,   287,   289,   290,   292,   293,   295,   297,   298,   300,
+     302,   304,   306,   308,   310,   312,   314,   316,   318,   319,
+     321,   323,   324,   326,   328,   329,   331,   333,   334,   336,
+     338,   339,   341,   342,   344,   345,   346,   347,   348,   349,
+     350,   351,   352,   353,   354,   355,   356,   357,   358,   359,
+     360,   361,   362,   363,   364,   365,   366,   367,   368,   370,
+     372,   373,   374
   };
 
   // Print the state stack on the debug stream.
@@ -2065,8 +2071,8 @@ namespace yy {
 
 
 } // yy
-#line 2069 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:1155
-#line 369 "parser.ypp" // lalr1.cc:1156
+#line 2075 "/home/fabio/Desktop/UsuCS5300/HW5/parser.cpp" // lalr1.cc:1155
+#line 376 "parser.ypp" // lalr1.cc:1156
 
 void
 yy::Parser::error (const location_type& l,

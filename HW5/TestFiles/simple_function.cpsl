@@ -1,9 +1,16 @@
-function simpleFunction() : integer;
+function simpleFunction(a: integer; b: char) : integer;
+CONST
+x = 12;
 BEGIN
+	if(x < 15) then
+	write("in if");
+	return;
+	end;
+	write(x,'\n');
   write("Entered Function. Returning 5.\n");
   return 5;
 END;
 
 BEGIN
-  write(simpleFunction(),'\n');
+  write(simpleFunction(1,'e'),'\n');
 END.

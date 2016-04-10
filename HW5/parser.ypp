@@ -186,24 +186,31 @@ ProcedureDecl : PSignature SemicolonTok PBody SemicolonTok {$1->isForwardDeclare
 PBody : Body {$$ = false;}
     | ForwardTok { $$ = true;}
     
-PSignature : ProcedureTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok {$$ = std::make_shared<FC::Func>(nullptr, $4, $2);};
+PSignature : ProcedureTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok {FC::AddLocalParams($4,FC::VoidType()); $$ = std::make_shared<FC::Func>(nullptr, $4, $2);};
 
 FunctionDecl : FSignature SemicolonTok FBody SemicolonTok {$1->isForwardDeclared = $3;FC::AddFunction($1);};
 
 FBody : Body {$$ = false;}
     | ForwardTok {$$ = true;};
 
-FSignature : FunctionTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok ColonTok Type {$$ = std::make_shared<FC::Func>(std::make_shared<FC::Type>($7), $4, $2);};
+FSignature : FunctionTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok ColonTok Type {FC::AddLocalParams($4,$7); $$ = std::make_shared<FC::Func>(std::make_shared<FC::Type>($7), $4, $2);};
 
 OptFormalParameters : FormalParameters {$$ = $1;}
     | {$$ = nullptr;};
     
-FormalParameters : FormalParameters SemicolonTok FormalParameter {$1->insert($3->end(),$3->begin(),$3->end()); $$ =$1;}
+FormalParameters : FormalParameters SemicolonTok FormalParameter
+    {
+        //$1->insert($3->end(),$3->begin(),$3->end());
+        for(auto s : (*$3))
+        {
+            $1->push_back(s);
+        }
+        $$ =$1;}
     | FormalParameter {$$ = $1;};
     
 FormalParameter : OptVar ParamIdentList ColonTok Type
             {   //TODO VAR/REF
-                auto a = std::shared_ptr<std::vector<std::pair<std::string,FC::Type> >>();
+                auto a = std::make_shared<std::vector<std::pair<std::string,FC::Type> >>();
                 for(int i = 0; i < $2->size();i++)
                 {
                     a->push_back(std::pair<std::string,FC::Type>((*$2)[i],$4));
@@ -215,7 +222,7 @@ ParamIdentList : ParamIdentList CommaTok IdentifierTok {$1->push_back($3); $$ = 
     | IdentifierTok {$$ = std::make_shared<std::vector<std::string> >(1,$1);}
 
 OptVar : VarTok {}
-    | RefTok {}
+    | RefTok {std::cout << "Unfortunately, passing by reference is not supported, passing by value instead" << std::endl;}
     | {};
     
 Body : OptConstDecls OptTypeDecls OptVarDecls Block {};
@@ -313,8 +320,8 @@ ToHead : ToTok Expression {FC::ToHead(true,$2);}
     
 StopStatement : StopTok {FC::Stop();};
 
-ReturnStatement : ReturnTok Expression {}
-    | ReturnTok {};
+ReturnStatement : ReturnTok Expression {FC::AddReturn($2);}
+    | ReturnTok {FC::AddReturn(nullptr);};
     
 ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
 

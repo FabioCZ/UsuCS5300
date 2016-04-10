@@ -21,6 +21,7 @@ namespace FC
 
     public:
 
+        static std::shared_ptr<Register> AllocateCustom(std::string);
         static std::shared_ptr<Register> Allocate();
         static std::vector<std::string> getUsed();
 

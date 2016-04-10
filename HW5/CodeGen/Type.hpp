@@ -24,7 +24,7 @@ namespace FC
         VoidType()
         {
             this->size = 0;
-            this->name = "void";
+            this->name = "_void";
         }
     };
 

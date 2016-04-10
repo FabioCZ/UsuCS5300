@@ -86,9 +86,9 @@ namespace FC
     {
 
         auto inst = Code::Inst();
-        auto lvalRes = inst->LValues.find(id);
         if(inst->InMain)
         {
+            auto lvalRes = inst->LValues.find(id);
             if (lvalRes != inst->LValues.end())
             {
                 std::cout << "Constant " << id << "has already been defined" << std::endl;
@@ -117,7 +117,36 @@ namespace FC
         }
         else    //CONST in func body
         {
-            inst->_stream << "adding const in function!";
+            auto l = inst->LocalLValues.find(id);
+            if(l != inst->LocalLValues.end())
+            {
+                l = inst->LValues.find(id);
+                if (l != inst->LValues.end())
+                {
+                    std::cout << "Constant " << id << "has already been defined" << std::endl;
+                    exit(1);
+                }
+            }
+
+            LVal lv;
+            lv.Type = e->GetType();
+            lv.name = id;
+            if (e->GetType().name == "string")
+            {
+                //std::cout << "adding const " << id << std::endl;
+                lv.LValType = Data;
+                lv.DataLabel = id;
+                inst->ConstData[id] = e;
+            }
+            else
+            {
+                lv.LValType = Global;
+                lv.GlobalPointerOffset = inst->AllocateGlobalPointer(4);
+                std::string reg_name = e->GetRegister()->name;
+                //local constants sit on the global pointer. oh well.
+                inst->_stream << "\tsw " << reg_name << ", " << lv.GlobalPointerOffset << "($gp) #Storing " << lv.name << std::endl;
+            }
+            inst->LocalLValues[id] = std::make_shared<LVal>(lv);
         }
 
     }
@@ -138,13 +167,33 @@ namespace FC
     {
         auto id = lv->name;
         auto inst = Code::Inst();
-        auto lvalRes = inst->LValues.find(id);
-        if(lvalRes == inst->LValues.end())
+        std::shared_ptr<LVal> lval = nullptr;
+        if(!inst->InMain)
+        {
+            auto lvalRes = inst->LocalLValues.find(id);
+            if(lvalRes != inst->LocalLValues.end())
+            {
+                lval = lvalRes->second;
+            }
+        }
+        if(lval == nullptr)
+        {
+            auto lvalRes = inst->LValues.find(id);
+            if(lvalRes != inst->LValues.end())
+            {
+                lval = lvalRes->second;
+            }
+        }
+        if(lval == nullptr && lv->name != "_return2")
         {
             std::cout << "Internal Compiler error: Can't find lval '" << id << "'" <<  std::endl;
             exit(1);
         }
-        auto lval = lvalRes->second;
+
+        if(lv->name == "_return2")  //This is so bad I don't even know where to begin
+        {
+            lval = lv;
+        }
 
         if(lval->LValType == Const)
         {
@@ -156,6 +205,21 @@ namespace FC
             FC::Expr e(FC::Register::Allocate(), lval->Type);
             inst->_stream << "\tlw " << e.GetRegister()->name << ", " << lval->StackPointerOffset << "($sp)" << std::endl;
             return std::make_shared<Expr>(e);
+        }
+        else if(lval->LValType == Frame)
+        {
+            if(lval->name == "_return2")
+            {
+                FC::Expr e(FC::Register::AllocateCustom("$t0"), lval->Type);
+                inst->_stream << "\tlw " << e.GetCustomRegister("$t0")->name << ", " << lval->FramePointerOffset << "($fp)" << std::endl;
+                return std::make_shared<Expr>(e);
+            }
+            else
+            {
+                FC::Expr e(FC::Register::Allocate(), lval->Type);
+                inst->_stream << "\tlw " << e.GetRegister()->name << ", " << lval->FramePointerOffset << "($fp)" << std::endl;
+                return std::make_shared<Expr>(e);
+            }
         }
         else if(lval->LValType == Global)
         {
@@ -218,7 +282,7 @@ namespace FC
         }
         else // temp ident list in function
         {
-
+            inst->LocalTempIdentList.push_back(id);
         }
     }
 
@@ -252,6 +316,27 @@ namespace FC
         else    //vars in function
         {
             inst->_stream << "# adding vars in function!" << std::endl;
+            if (inst->LocalTempIdentList.size() == 0)
+            {
+                std::cout << "Internal error when initializing variables" << std::endl;
+                exit(1);
+            }
+            for (auto a : inst->LocalTempIdentList)
+            {
+                if (inst->LocalLValues.find(a) != inst->LocalLValues.end())
+                {
+                    std::cout << "Syntax error: identifier " << a << " has already been defined" << std::endl;
+                    exit(1);
+                }
+                LVal lv;
+                lv.name = a;
+                lv.LValType = Stack;
+                lv.Type = type;
+                lv.StackPointerOffset = inst->AllocateStackPointer(type.size); //TODO figure out if this will work
+                inst->LocalLValues[a] = std::make_shared<LVal>(lv);
+            }
+
+            inst->LocalTempIdentList.clear();
         }
     }
 
@@ -324,8 +409,24 @@ namespace FC
             exit(1);
         }
 
-        std::string mem = lv->LValType == Stack ?
-                          (std::to_string(lv->StackPointerOffset) + "($sp)") : (std::to_string(lv->GlobalPointerOffset) + "($gp)");
+        std::string mem = "";
+        if(lv->LValType == Stack)
+        {
+            mem = std::to_string(lv->StackPointerOffset) + "($sp)";
+        }
+        else if(lv->LValType == Global)
+        {
+            mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
+        }
+        else if(lv->LValType == Frame)
+        {
+            mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+        }
+        else
+        {
+            std::cout << "Internal assignment statement error" << std::endl;
+            exit(0);
+        }
 
         std::string reg_name = e->GetRegister()->name;
         inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
@@ -335,13 +436,31 @@ namespace FC
     std::shared_ptr<LVal> GetLValForIdent(std::string id)
     {
         auto inst = Code::Inst();
-        auto lvalRes = inst->LValues.find(id);
-        if(lvalRes == inst->LValues.end())
+        std::shared_ptr<LVal> lval = nullptr;
+        if(!inst->InMain)
         {
-            std::cout << "Internal Compiler error: Can't find lval " << id << std::endl;
-            exit(1);
+
+            auto l = inst->LocalLValues.find(id);
+            if(l != inst->LocalLValues.end())
+            {
+                lval = l->second;
+            }
         }
-        return lvalRes->second;
+
+        if(lval == nullptr)
+        {
+            auto l = inst->LValues.find(id);
+            if(l != inst->LValues.end())
+            {
+                lval = l->second;
+            }
+        }
+        if(lval == nullptr)
+        {
+            std::cout << "Error:The Lvalue " << id << " has not been defined" << std::endl;
+            exit(0);
+        }
+        return lval;
     }
 
 
@@ -796,7 +915,7 @@ namespace FC
             inst->_stream << "\tsw " << toSpill[i] << ", " << (i*4 + 8) << "($sp)" << std::endl;
         }
 
-        std::cout << "calling func" << std::endl;
+        //std::cout << "calling func" << std::endl;
         //args
         //TODO make this work for custom types/arrays
         if(args != nullptr)
@@ -817,19 +936,54 @@ namespace FC
         inst->_stream << "\tmove $fp, $sp" << std::endl;
         inst->_stream << "\tjal " << name << " #function call" << std::endl;
 
+        //get return value
+        LVal r;
+        r.name = "_return2";
+        r.LValType = Frame;
+        r.FramePointerOffset = -4;
+        r.Type = (*func->second->returnType);
+        auto expr = LValToExpr(std::make_shared<LVal>(r));
+
         //restore registers
-        //TODO do something about return value
-        inst->_stream << "\tlw $fp, 0($sp) # saving frame pointer" << std::endl;
-        inst->_stream << "\tlw $ra, 4($sp) # saving return address" << std::endl;
+        inst->_stream << "\tlw $fp, 0($sp) # restoring frame pointer" << std::endl;
+        inst->_stream << "\tlw $ra, 4($sp) # restoring return address" << std::endl;
         for(int i = 0; i < toSpill.size();i++)
         {
             inst->_stream << "\tlw " << toSpill[i] << ", " << (i*4 + 8) << "($sp)" << std::endl;
         }
         inst->_stream << "\taddi $sp, $sp, " << (toSpill.size()*4 + 8) << " #restored registers" << std::endl;
 
+        if(func->second->returnType->name == "_void")
+        {
+            return nullptr;
+        }
+        return expr;
+    }
 
-        //TODO return expr
-        return nullptr;
+    void AddLocalParams(std::shared_ptr<std::vector<std::pair<std::string, Type>>> params, Type returnType)
+    {
+        auto inst = Code::Inst();
+        //inst->_stream << "#adding params to local symbol table" << std::endl;
+        if(returnType.name != "_void")
+        {
+            LVal rl;
+            rl.name = "_return";
+            rl.LValType = Frame;
+            rl.Type = returnType;
+            rl.FramePointerOffset = returnType.size * -1;
+            inst->LocalLValues["_return"] = std::make_shared<LVal>(rl);
+        }
+        if(params == nullptr) return;
+        for(int i = 0; i < (*params).size();i++)
+        {
+            LVal lv;
+            lv.name = (*params)[i].first;
+            lv.LValType = Frame;
+            lv.Type = (*params)[i].second;
+            //lv.StackPointerOffset = inst->AllocateStackPointer(s.second.size); //TODO figure out if this will work
+            lv.FramePointerOffset = (i*(*params)[i].second.size);
+            inst->LocalLValues[(*params)[i].first] = std::make_shared<LVal>(lv);
+        }
     }
 
     void AddFunction(std::shared_ptr<Func> f)
@@ -840,13 +994,53 @@ namespace FC
         {
             if (res->second->isForwardDeclared && !f->isForwardDeclared) // == forward decl implementation
             {
+
+                if((res->second->params == nullptr && f->params != nullptr) ||
+                        (res->second->params != nullptr && f->params == nullptr))
+                {
+                    std::cout << "Forwarded declaration params do not match implementation params for: " << f->name << std::endl;
+                    exit(0);
+                }
+
+                if(res->second->params != nullptr && f->params != nullptr)
+                {
+                    if ((*res->second->params).size() != (*f->params).size())
+                    {
+                        std::cout << "Forwarded declaration params do not match implementation params for: " <<
+                        f->name << std::endl;
+                        exit(0);
+                    }
+
+                    for (int i = 0; i < (*res->second->params).size(); i++)
+                    {
+                        auto forw = (*res->second->params)[i];
+                        auto impl = (*f->params)[i];
+                        if (forw.first != impl.first || forw.second.name != impl.second.name ||
+                            forw.second.size != impl.second.size)
+                        {
+                            std::cout << "Forwarded declaration params do not match implementation params for: " <<
+                            f->name << std::endl;
+                            exit(0);
+                        }
+                    }
+                }
                 inst->Functions.erase(f->name);
                 //TODO check params and return type
                 inst->Functions.emplace(f->name, f);
+                if(!f->isForwardDeclared)
+                {
+                    inst->_outFile << f->name << ": #proc/func" << std::endl;
+
+                    inst->WriteToFileNow(); //write func body
+                    inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
+                    inst->LocalLValues.clear(); //drop local symbol table
+
+                }
             }
             else
             {
                 std::cout << "Proc/Func " << f->name << " error: multiple declaration/definition" << std::endl;
+                exit(0);
             }
         }
         else
@@ -855,12 +1049,11 @@ namespace FC
             if(!f->isForwardDeclared)
             {
                 inst->_outFile << f->name << ": #proc/func" << std::endl;
-                //load arguments
-                //TODO local vars/const
+
                 inst->WriteToFileNow(); //write func body
                 inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
-
             }
+            inst->LocalLValues.clear(); //drop local symbol table
         }
     }
 
@@ -875,6 +1068,21 @@ namespace FC
                 exit(0);
             }
         }
+    }
+
+    void AddReturn(std::shared_ptr<Expr> e)
+    {
+        auto inst = Code::Inst();
+        if(inst->InMain)
+        {
+            std::cout << "Return statement cannot be in the main body" << std::endl;
+            exit(0);
+        }
+        if(e != nullptr)
+        {
+            Assignment(GetLValForIdent("_return"),e);   //assign expression to return value
+        }
+        inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
     }
 
 

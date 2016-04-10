@@ -92,9 +92,11 @@ namespace FC
     const std::shared_ptr<Expr> ToInt(std::shared_ptr<Expr> e);
 
     //Function stuff
+    void AddLocalParams(std::shared_ptr<std::vector<std::pair<std::string,Type>>> params, Type returnType);
     void AddFunction(std::shared_ptr<Func> f);
     void CheckForwardDecls();
     const std::shared_ptr<Expr> CallFunction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Expr>>> args);
+    void AddReturn(std::shared_ptr<Expr> e);
 
     class Code
     {
@@ -129,8 +131,12 @@ namespace FC
         std::vector<std::shared_ptr<Expr>> Expressions;
         std::unordered_map<std::string, std::shared_ptr<Expr>> ConstData;
         std::unordered_map<std::string,std::shared_ptr<FC::LVal> > LValues;
+        std::unordered_map<std::string,std::shared_ptr<FC::LVal> > LocalLValues;
+
         std::unordered_map<std::string, std::shared_ptr<Func> > Functions;
         std::vector<std::string> TempIdentList;
+        std::vector<std::string> LocalTempIdentList;
+
         bool InMain;
         std::string GetNextStringDataLabel()
         {

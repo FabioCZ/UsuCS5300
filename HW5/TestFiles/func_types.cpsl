@@ -1,4 +1,4 @@
-function retb() : boolean; forward;
+function retb() : integer; forward;
 
 function i(a : integer) : integer;
 BEGIN
@@ -19,9 +19,9 @@ BEGIN
   end
 END;
 
-function retb() : boolean;
+function retb() : integer;
 BEGIN
-   return true;
+   return 68;
 END;
 
 BEGIN

@@ -17,7 +17,8 @@ namespace FC
         Stack = 1,
         Global = 2,
         Data = 3,
-        Const = 4
+        Const = 4,
+        Frame = 5
     };
 
     struct LVal
@@ -26,6 +27,7 @@ namespace FC
         FC::LValType LValType;
         int StackPointerOffset;
         int GlobalPointerOffset;
+        int FramePointerOffset;
         std::string DataLabel;
         int ConstValue;
         std::string name;
