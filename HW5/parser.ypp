@@ -321,7 +321,7 @@ ToHead : ToTok Expression {FC::ToHead(true,$2);}
 StopStatement : StopTok {FC::Stop();};
 
 ReturnStatement : ReturnTok Expression {FC::AddReturn($2);}
-    | ReturnTok {std::cout << "EMpty return" ; FC::AddReturn(nullptr);};
+    | ReturnTok {FC::AddReturn(nullptr);};
     
 ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
 

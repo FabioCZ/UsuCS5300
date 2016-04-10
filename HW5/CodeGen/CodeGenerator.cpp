@@ -937,13 +937,16 @@ namespace FC
         inst->_stream << "\tjal " << name << " #function call" << std::endl;
 
         //get return value
-        LVal r;
-        r.name = "_return2";
-        r.LValType = Frame;
-        r.FramePointerOffset = -4;
-        r.Type = (*func->second->returnType);
-        auto expr = LValToExpr(std::make_shared<LVal>(r));
-
+        std::shared_ptr<Expr> expr;
+        if(func->second->returnType != nullptr && func->second->returnType->name != "_void")
+        {
+            LVal r;
+            r.name = "_return2";
+            r.LValType = Frame;
+            r.FramePointerOffset = -4;
+            r.Type = (*func->second->returnType);
+            expr = LValToExpr(std::make_shared<LVal>(r));
+        }
         //restore registers
         inst->_stream << "\tlw $fp, 0($sp) # restoring frame pointer" << std::endl;
         inst->_stream << "\tlw $ra, 4($sp) # restoring return address" << std::endl;
@@ -953,6 +956,10 @@ namespace FC
         }
         inst->_stream << "\taddi $sp, $sp, " << (toSpill.size()*4 + 8) << " #restored registers" << std::endl;
 
+        if(func->second->returnType == nullptr)
+        {
+            return nullptr;
+        }
         if(func->second->returnType->name == "_void")
         {
             return nullptr;
@@ -1077,6 +1084,20 @@ namespace FC
         {
             std::cout << "Return statement cannot be in the main body" << std::endl;
             exit(0);
+        }
+        if(e == nullptr)    //Procedure
+        {
+            if(inst->LocalLValues.find("_return") == inst->LocalLValues.end())
+            {
+                inst->_stream << "\tjr $ra #jump out of function" << std::endl;
+                return;
+            }
+            else
+            {
+                std::cout << "Return statement expression doesn't match proc/func declared return type:" << std::endl;
+                exit(0);
+            }
+
         }
         if(e->GetType().name != inst->LocalLValues["_return"]->Type.name)
         {

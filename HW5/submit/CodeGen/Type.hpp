@@ -6,6 +6,7 @@
 
 #ifndef CPSL_TYPE_HPP
 #define CPSL_TYPE_HPP
+#include<string>
 namespace FC
 {
     class Type
@@ -15,6 +16,16 @@ namespace FC
         std::string name;
         ~Type() = default;
 
+    };
+
+    class VoidType : public Type
+    {
+    public:
+        VoidType()
+        {
+            this->size = 0;
+            this->name = "_void";
+        }
     };
 
     class IntType : public Type

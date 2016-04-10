@@ -35,6 +35,8 @@ set(CODEGEN_SRCS
         CodeGen/Register.cpp
         CodeGen/LVal.hpp
         CodeGen/LVal.cpp
+        CodeGen/Func.hpp
+        CodeGen/Func.cpp
         CodeGen/Type.hpp
         ${BISON_CpslParser_OUTPUTS}
         ${FLEX_CpslScanner_OUTPUTS}

@@ -16,7 +16,9 @@
 %code requires
 {
 #include <string>
+#include <vector>
 #include <iostream>
+#include <utility>
 #include "CodeGen/CodeGenerator.hpp"
 #include "CodeGen/Expr/Expr.hpp"
 class Driver;
@@ -103,7 +105,7 @@ class Driver;
 %left PercentTok
 
 %token <char> CharTok
-%type <int> Arguments
+%type <std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > > > Arguments
 %type <int> ArrayType
 %type <int> Assignment
 %type <int> Block
@@ -112,23 +114,26 @@ class Driver;
 %type <int> ElseIfHead
 %type <int> ElseIfList
 %type <std::shared_ptr<FC::Expr>> Expression
-%type <int> FSignature
+%type <bool> FBody
+%type <std::shared_ptr<FC::Func> > FSignature
 %type <int> FieldDecl
 %type <int> FieldDecls
 %type <int> ForHead
 %type <int> ForStatement
-%type <int> FormalParameter
-%type <int> FormalParameters
-%type <int> FunctionCall
+%type <std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > > FormalParameter
+%type <std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > > FormalParameters
+%type <std::shared_ptr<FC::Expr>> FunctionCall
 %token <int> IntTok
 %type <int> IdentList
 %type <int> OptVar
 %type <int> IfHead
 %type <int> IfStatement
 %type <std::shared_ptr<FC::LVal> > LVal
-%type <int> OptArguments
-%type <int> OptFormalParameters
-%type <int> PSignature
+%type <std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > > > OptArguments
+%type <std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > >  OptFormalParameters
+%type <std::shared_ptr<FC::Func> > PSignature
+%type <std::shared_ptr<std::vector<std::string> > > ParamIdentList
+%type <bool> PBody
 %type <int> ProcedureCall
 %type <int> ReadArgs
 %type <int> ReadStatement
@@ -149,8 +154,6 @@ class Driver;
 %type <int> WriteStatement
 %token <std::string> IdentifierTok
 %token <std::string> StringTok
-
-
 %%
 
 /** PARSE TREE **/
@@ -158,9 +161,13 @@ class Driver;
 /* Program Structure */
 %start Application;
 
-Application : ProgramHead Block DotTok {FC::AddMain();};
+Application : ProgramHead MainBlock DotTok {FC::AddMain();};
 
-ProgramHead : OptConstDecls OptTypeDecls OptVarDecls PFDecls;
+MainBlock : MainHead Block;
+
+MainHead : {FC::MainBlock();FC::WriteStatement();}
+
+ProgramHead : OptConstDecls OptTypeDecls OptVarDecls PFDecls { FC::CheckForwardDecls();};
 
 OptConstDecls : ConstTok ConstDecls 
     | ;
@@ -174,31 +181,53 @@ PFDecls : PFDecls ProcedureDecl
     | PFDecls FunctionDecl
     |;
     
-ProcedureDecl : PSignature SemicolonTok ForwardTok SemicolonTok {}
-    | PSignature SemicolonTok Body SemicolonTok {}
-    
-PSignature : ProcedureTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok {};
+ProcedureDecl : PSignature SemicolonTok PBody SemicolonTok {$1->isForwardDeclared = $3;FC::AddFunction($1);}
 
-FunctionDecl : FSignature SemicolonTok ForwardTok SemicolonTok {}
-    | FSignature SemicolonTok Body SemicolonTok {} ;
+PBody : Body {$$ = false;}
+    | ForwardTok { $$ = true;}
     
-FSignature : FunctionTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok ColonTok Type {} ;
+PSignature : ProcedureTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok {FC::AddLocalParams($4,FC::VoidType()); $$ = std::make_shared<FC::Func>(nullptr, $4, $2);};
 
-OptFormalParameters : FormalParameters {}
-    | {};
+FunctionDecl : FSignature SemicolonTok FBody SemicolonTok {$1->isForwardDeclared = $3;FC::AddFunction($1);};
+
+FBody : Body {$$ = false;}
+    | ForwardTok {$$ = true;};
+
+FSignature : FunctionTok IdentifierTok OpenParenTok OptFormalParameters CloseParenTok ColonTok Type {FC::AddLocalParams($4,$7); $$ = std::make_shared<FC::Func>(std::make_shared<FC::Type>($7), $4, $2);};
+
+OptFormalParameters : FormalParameters {$$ = $1;}
+    | {$$ = nullptr;};
     
-FormalParameters : FormalParameters SemicolonTok FormalParameter {}
-    | FormalParameter {};
+FormalParameters : FormalParameters SemicolonTok FormalParameter
+    {
+        //$1->insert($3->end(),$3->begin(),$3->end());
+        for(auto s : (*$3))
+        {
+            $1->push_back(s);
+        }
+        $$ =$1;}
+    | FormalParameter {$$ = $1;};
     
-FormalParameter : OptVar IdentList ColonTok Type {};
+FormalParameter : OptVar ParamIdentList ColonTok Type
+            {   //TODO VAR/REF
+                auto a = std::make_shared<std::vector<std::pair<std::string,FC::Type> >>();
+                for(int i = 0; i < $2->size();i++)
+                {
+                    a->push_back(std::pair<std::string,FC::Type>((*$2)[i],$4));
+                }
+                $$ = a;
+            };
+
+ParamIdentList : ParamIdentList CommaTok IdentifierTok {$1->push_back($3); $$ = $1;}
+    | IdentifierTok {$$ = std::make_shared<std::vector<std::string> >(1,$1);}
 
 OptVar : VarTok {}
-    | RefTok {}
+    | RefTok {std::cout << "Unfortunately, passing by reference is not supported, passing by value instead" << std::endl;}
     | {};
     
 Body : OptConstDecls OptTypeDecls OptVarDecls Block {};
 
-Block : BeginTok StatementList EndTok {FC::WriteStatement();};
+Block : BeginTok StatementList EndTok {};
 
 StatementList : StatementList SemicolonTok Statement {}
     | Statement{} ;
@@ -291,8 +320,8 @@ ToHead : ToTok Expression {FC::ToHead(true,$2);}
     
 StopStatement : StopTok {FC::Stop();};
 
-ReturnStatement : ReturnTok Expression {}
-    | ReturnTok {};
+ReturnStatement : ReturnTok Expression {FC::AddReturn($2);}
+    | ReturnTok {FC::AddReturn(nullptr);};
     
 ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
 
@@ -304,13 +333,13 @@ WriteStatement : WriteTok OpenParenTok WriteArgs CloseParenTok {};
 WriteArgs : WriteArgs CommaTok Expression {FC::WriteExpr($3);}
     | Expression {FC::WriteExpr($1);};
     
-ProcedureCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
+ProcedureCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {FC::CallFunction($1,$3);};
 
-OptArguments : Arguments  {}
-    | {};
+OptArguments : Arguments  {$$ = $1;}
+    | {$$ = nullptr;};
     
-Arguments : Arguments CommaTok Expression {}
-    | Expression {};
+Arguments : Arguments CommaTok Expression {$1->push_back($3);$$ = $1;}
+    | Expression {$$ = std::make_shared<std::vector<std::shared_ptr<FC::Expr> > >(1,$1);};
 
 Expression : Expression OrTok Expression {$$ = ProcOrExpr($1,$3);}
     | Expression AndTok Expression {$$ = ProcAndExpr($1,$3);}
@@ -336,9 +365,9 @@ Expression : Expression OrTok Expression {$$ = ProcOrExpr($1,$3);}
     | IntTok {$$ = FC::ProcIntExpr($1);}
     | StringTok {$$ = FC::ProcStringExpr($1);}
     | CharTok {$$ = FC::ProcCharExpr($1);}
-    | FunctionCall {/*todo*/};
+    | FunctionCall {$$ = $1;};
     
-FunctionCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {};
+FunctionCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {$$ = FC::CallFunction($1,$3);};
 
 LVal : LVal DotTok IdentifierTok {$$ = nullptr;}
     | LVal OpenBrktTok Expression CloseBrktTok {$$ = nullptr;}

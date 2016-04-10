@@ -11,6 +11,13 @@ BEGIN
   return 5;
 END;
 
+procedure test();
 BEGIN
+write("in test\n");
+return;
+END;
+
+BEGIN
+	test();
   write(simpleFunction(1,'e'),'\n');
 END.

@@ -36,11 +36,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="parser.ypp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="parser.ypp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/parser.ypp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3510">
-              <caret line="195" column="125" selection-start-line="195" selection-start-column="123" selection-end-line="195" selection-end-column="125" />
+            <state relative-caret-position="327">
+              <caret line="323" column="17" selection-start-line="323" selection-start-column="17" selection-end-line="323" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -50,7 +50,7 @@
         <entry file="file://$PROJECT_DIR$/CodeGen/Func.hpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="324">
-              <caret line="18" column="46" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="110" />
+              <caret line="18" column="45" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="45" />
               <folding>
                 <element signature="e#87#105#0" expanded="true" />
               </folding>
@@ -83,7 +83,7 @@
       <file leaf-file-name="CodeGenerator.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1602">
+            <state relative-caret-position="36">
               <caret line="89" column="69" selection-start-line="89" selection-start-column="69" selection-end-line="89" selection-end-column="69" />
               <folding>
                 <element signature="e#155#172#0" expanded="true" />
@@ -92,11 +92,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CodeGenerator.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CodeGenerator.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="901">
-              <caret line="1090" column="21" selection-start-line="1090" selection-start-column="21" selection-end-line="1090" selection-end-column="21" />
+            <state relative-caret-position="613">
+              <caret line="1104" column="90" selection-start-line="1104" selection-start-column="89" selection-end-line="1104" selection-end-column="90" />
               <folding>
                 <element signature="e#120#148#0" expanded="true" />
                 <element signature="e#4652#4800#0" expanded="false" />
@@ -210,8 +210,8 @@
         <option value="$PROJECT_DIR$/CodeGen/Register.hpp" />
         <option value="$PROJECT_DIR$/CodeGen/Expr/Expr.cpp" />
         <option value="$PROJECT_DIR$/CodeGen/Register.cpp" />
-        <option value="$PROJECT_DIR$/parser.ypp" />
         <option value="$PROJECT_DIR$/CodeGen/CodeGenerator.cpp" />
+        <option value="$PROJECT_DIR$/parser.ypp" />
       </list>
     </option>
   </component>
@@ -1156,24 +1156,16 @@
     <entry file="file://$PROJECT_DIR$/CodeGen/Func.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
-          <caret line="18" column="46" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="110" />
+          <caret line="18" column="45" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="45" />
           <folding>
             <element signature="e#87#105#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parser.ypp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3510">
-          <caret line="195" column="125" selection-start-line="195" selection-start-column="123" selection-end-line="195" selection-end-column="125" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1602">
+        <state relative-caret-position="36">
           <caret line="89" column="69" selection-start-line="89" selection-start-column="69" selection-end-line="89" selection-end-column="69" />
           <folding>
             <element signature="e#155#172#0" expanded="true" />
@@ -1183,8 +1175,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CodeGen/CodeGenerator.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="901">
-          <caret line="1090" column="21" selection-start-line="1090" selection-start-column="21" selection-end-line="1090" selection-end-column="21" />
+        <state relative-caret-position="613">
+          <caret line="1104" column="90" selection-start-line="1104" selection-start-column="89" selection-end-line="1104" selection-end-column="90" />
           <folding>
             <element signature="e#120#148#0" expanded="true" />
             <element signature="e#4652#4800#0" expanded="false" />
@@ -1223,6 +1215,14 @@
             <element signature="e#26865#27630#0" expanded="false" />
             <element signature="e#27636#28353#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parser.ypp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="327">
+          <caret line="323" column="17" selection-start-line="323" selection-start-column="17" selection-end-line="323" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>

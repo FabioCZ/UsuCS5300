@@ -1,5 +1,5 @@
 Readme:
-HW3 CS5300 
+HW5 CS5300 - Functions 
 by Fabio Gottlicher A01647928
 
 Project structure based largely on: https://www.gnu.org/software/bison/manual/bison.html#A-Complete-C_002b_002b-Example

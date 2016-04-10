@@ -33,7 +33,23 @@ ElseLabelEnd_1:
 	sw $s6, -4($fp) #Storing _return
 	jr $ra #jump out of function
 	jr $ra #jump out of function
+test: #proc/func
+	jr $ra #jump out of function
+	la $s6, stringVal2
+	li $v0, 4
+	move $a0, $s6
+	syscall #print
+	jr $ra #jump out of function
+	jr $ra #jump out of function
 main_impl:
+	addi $sp, $sp, -8 #spilling registers
+	sw $fp, 0($sp) # saving frame pointer
+	sw $ra, 4($sp) # saving return address
+	move $fp, $sp
+	jal test #function call
+	lw $fp, 0($sp) # restoring frame pointer
+	lw $ra, 4($sp) # restoring return address
+	addi $sp, $sp, 8 #restored registers
 	addi $sp, $sp, -8 #spilling registers
 	sw $fp, 0($sp) # saving frame pointer
 	sw $ra, 4($sp) # saving return address
@@ -59,5 +75,6 @@ main_impl:
 	syscall
 #Finished writing maing, now writing data sector
 .data:
+	stringVal2: .asciiz "in test\n"
 	stringVal1: .asciiz "Entered Function. Returning 5.\n"
 	stringVal0: .asciiz "in if"
