@@ -1,0 +1,15 @@
+const
+	NUMS_LENGTH = 12;
+	Test = "assadfg";
+type
+ rt = record
+        a : integer;
+        b : char;
+ end;
+var 
+	x : integer;
+	y : rt;
+begin
+	write(Test,NUMS_LENGTH);
+	x := 10;
+end.

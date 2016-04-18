@@ -1,0 +1,15 @@
+procedure simpleProcedure(a,b:integer);
+BEGIN
+	write(a+b);
+	$write("Simple Procedure Test\n",a);
+END;
+
+$procedure simpleProcedureArgument(a:integer);
+$BEGIN
+$	write("Argument Should Be 10:",a);
+$END;
+
+BEGIN
+	simpleProcedure(1+2,4);
+$	simpleProcedureArgument(10);
+END.

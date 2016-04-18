@@ -1,0 +1,2 @@
+/home/fabio/Desktop/UsuCS5300/HW6/CMakeFiles/cpsl_common.dir
+/home/fabio/Desktop/UsuCS5300/HW6/CMakeFiles/f_cpsl.dir

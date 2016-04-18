@@ -1,0 +1,29 @@
+VAR
+i : integer;
+function simpleFunction(a: integer; b: char) : integer;
+CONST
+x = 12;
+VAR
+y : integer;
+BEGIN
+	if(x < 15) then
+	write(b);
+	write("in if");
+	return 6;
+	end;
+	write(x,'\n');
+  write("Entered Function. Returning 5.\n");
+  return 5;
+END;
+
+procedure test();
+BEGIN
+return;
+write("in test\n");
+return;
+END;
+
+BEGIN
+	test();
+  write(simpleFunction(1,'e'),'\n');
+END.
