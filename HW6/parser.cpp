@@ -1263,7 +1263,7 @@ namespace yy {
 
   case 96:
 #line 341 "parser.ypp" // lalr1.cc:847
-    {std::cout << "dafuq" << std::endl;FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
+    {FC::ReadToLVal(yystack_[0].value.as< std::shared_ptr<FC::LVal>  > ());}
 #line 1268 "/home/fabio/Desktop/UsuCS5300/HW6/parser.cpp" // lalr1.cc:847
     break;
 

@@ -34,7 +34,8 @@ namespace FC
         int ConstValue;
         std::string name;
         std::shared_ptr<Expr> arrExpr;
-        bool isArray = false;
+        bool isArrayMember = false;
+        int arrLowStart = INT32_MIN;
     };
 
 }

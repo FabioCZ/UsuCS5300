@@ -194,25 +194,47 @@ namespace FC
             lval = lv;
         }
 
-        //Special handling if we have an array
-        if(lval->isArray)
+        if(lval->Type.isArray || lval->Type.isRecord) // array (not member) or Record (not field)
         {
+            auto e = std::make_shared<FC::Expr>(Register::Allocate(),lv->Type);    //save base address as expression
+            if (lval->LValType == Frame)
+            {
+                inst->_stream << "\taddi " << e->GetRegister()->name << ", $fp, " << lval->FramePointerOffset << std::endl;
+            }
+            else if (lval->LValType == Stack)
+            {
+                inst->_stream << "\taddi " << e->GetRegister()->name << ", $sp, " << lval->StackPointerOffset << std::endl;
+            }
+            else if (lval->LValType == Global)
+            {
+                inst->_stream << "\taddi " << e->GetRegister()->name << ", $gp, " << lval->GlobalPointerOffset << std::endl;
+            }
+            return e;
+        }
 
+        //Special handling if we have an array member
+        if(lval->isArrayMember)
+        {
             auto e = std::make_shared<FC::Expr>(FC::Register::Allocate(),lval->Type);
             auto address = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+            auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
             inst->_stream << "\tli " << address->GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
-            inst->_stream << "\tmul " << address->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
-            inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->FramePointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+            inst->_stream << "\tli " << helper->GetRegister()->name << ", " << lval->arrLowStart << " #array starting index" << std::endl;
+            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << " #calculate index" << std::endl;
+            inst->_stream << "\tmul " << address->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
             if(lval->LValType == Frame)
             {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->FramePointerOffset << " #offset from pointer (f/s/g)" << std::endl;
                 inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $fp #adding fp offset and fp" << std::endl;
             }
             else if(lval->LValType == Stack)
             {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->StackPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
                 inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $sp #adding sp offset and sp" << std::endl;
             }
             else if(lval->LValType == Global)
             {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->GlobalPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
                 inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $gp #adding gp offset and gp" << std::endl;
             }
             inst->_stream << "\tlw " << e->GetRegister()->name << ", 0("<< address->GetRegister()->name << ")" << " #loading array elem into register" << std::endl;
@@ -432,24 +454,29 @@ namespace FC
         std::string mem = "";
         std::string reg_name = e->GetRegister()->name;
 
-        if(lv->isArray)
+        if(lv->isArrayMember)
         {
             auto lval = lv;
             auto address = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+            auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
             inst->_stream << "\tli " << address->GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
-            inst->_stream << "\tmul " << address->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
-            inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->FramePointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+            inst->_stream << "\tli " << helper->GetRegister()->name << ", " << lval->arrLowStart << " #array starting index" << std::endl;
+            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << " #calculate index" << std::endl;
+            inst->_stream << "\tmul " << address->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
             if (lv->LValType == Stack)
             {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->StackPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
                 inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $sp" << std::endl;
             }
             else if (lv->LValType == Global)
             {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->GlobalPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
                 inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $gp" << std::endl;
 
             }
             else if (lv->LValType == Frame)
             {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->FramePointerOffset << " #offset from pointer (f/s/g)" << std::endl;
                 inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $fp" << std::endl;
             }
             else
@@ -458,28 +485,61 @@ namespace FC
                 exit(0);
             }
             mem = std::string("0(") + address->GetRegister()->name + ")";
+            inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
+
         }
         else
         {
-            if (lv->LValType == Stack)
+            //std::cout << "assignemnt for type: " << e->GetType().name << " into: " << lv->name << std::endl;
+            if(e->GetType().isArray || e->GetType().isRecord)
             {
-                mem = std::to_string(lv->StackPointerOffset) + "($sp)";
-            }
-            else if (lv->LValType == Global)
-            {
-                mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
-            }
-            else if (lv->LValType == Frame)
-            {
-                mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+                auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+                for(int i = 0; i < lv->Type.size;i+=4)
+                {
+                    if (lv->LValType == Stack)
+                    {
+                        mem = std::to_string(lv->StackPointerOffset + i) + "($sp)";
+                    }
+                    else if (lv->LValType == Global)
+                    {
+                        mem = std::to_string(lv->GlobalPointerOffset + i) + "($gp)";
+                    }
+                    else if (lv->LValType == Frame)
+                    {
+                        mem = std::to_string(lv->FramePointerOffset + i) + "($fp)";
+                    }
+                    else
+                    {
+                        std::cout << "Internal assignment statement error" << std::endl;
+                        exit(0);
+                    }
+                    inst->_stream << "\tlw " << helper->GetRegister()->name << ", "<< i <<  "(" << e->GetRegister()->name << ") #memberwise clone" << std::endl;
+                    inst->_stream << "\tsw " << helper->GetRegister()->name << ", " << mem << std::endl;
+                }
             }
             else
             {
-                std::cout << "Internal assignment statement error" << std::endl;
-                exit(0);
+
+                if (lv->LValType == Stack)
+                {
+                    mem = std::to_string(lv->StackPointerOffset) + "($sp)";
+                }
+                else if (lv->LValType == Global)
+                {
+                    mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
+                }
+                else if (lv->LValType == Frame)
+                {
+                    mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+                }
+                else
+                {
+                    std::cout << "Internal assignment statement error" << std::endl;
+                    exit(0);
+                }
+                inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
             }
         }
-        inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
     }
 
     std::shared_ptr<LVal> GetLValForIdent(std::string id)
@@ -1001,8 +1061,16 @@ namespace FC
             int sizeCt = 0;
             for(int i = 0; i < (*args).size();i++)
             {
-                inst->_stream << "\tsw " << (*args)[i]->GetRegister()->name << ", " << sizeCt << "($sp)" << std::endl;
-                sizeCt += (*args)[0]->GetType().size;
+                if((*args)[i]->GetType().isRecord || (*args)[i]->GetType().isArray) //memberwise clone if array
+                {
+                    
+                }
+                else
+                {
+                    inst->_stream << "\tsw " << (*args)[i]->GetRegister()->name << ", " << sizeCt << "($sp)" <<
+                    std::endl;
+                    sizeCt += (*args)[i]->GetType().size;
+                }
             }
         }
         inst->_stream << "\tmove $fp, $sp" << std::endl;
@@ -1059,7 +1127,6 @@ namespace FC
             lv.name = (*params)[i].first;
             lv.LValType = Frame;
             lv.Type = (*params)[i].second;
-            //lv.StackPointerOffset = inst->AllocateStackPointer(s.second.size); //TODO figure out if this will work
             lv.FramePointerOffset = (i*(*params)[i].second.size);
             inst->LocalLValues[(*params)[i].first] = std::make_shared<LVal>(lv);
         }
@@ -1104,7 +1171,6 @@ namespace FC
                     }
                 }
                 inst->Functions.erase(f->name);
-                //TODO check params and return type
                 inst->Functions.emplace(f->name, f);
                 if(!f->isForwardDeclared)
                 {
@@ -1113,7 +1179,6 @@ namespace FC
                     inst->WriteToFileNow(); //write func body
                     inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
                     inst->LocalLValues.clear(); //drop local symbol table
-
                 }
             }
             else
@@ -1283,9 +1348,10 @@ namespace FC
         LVal toRet;
         toRet.name = lval->name;
         toRet.Type = *lval->Type.arrType;
-        toRet.isArray = true;
+        toRet.isArrayMember = true;
         toRet.LValType = lval->LValType;
         toRet.arrExpr = index;
+        toRet.arrLowStart = lval->Type.arrLowerStart;
         toRet.FramePointerOffset = lval->FramePointerOffset;
         toRet.GlobalPointerOffset = lval->GlobalPointerOffset;
         toRet.StackPointerOffset = lval->StackPointerOffset;

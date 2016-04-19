@@ -1,28 +1,28 @@
 const
 	NUMS_LENGTH = 12;
-	Test = "assadfg";
 type
- rt = record
-        a : integer;
-        b : char;
- end;
- b = record
-	g : rt;
-end;
- ctype = array[0:NUMS_LENGTH] of integer;
+$ rt = record
+$        a : integer;
+$        b : char;
+$end;
+ ctype = array[2:NUMS_LENGTH] of integer;
 var 
-	x : integer;
-	y : rt;
-	z : b;
 	t : ctype;
+	u : ctype;
+
+procedure simpleProcedure(a:ctype);$ : ctype;
+type
+	at = array[1:5] of integer;
+var 
+	g : at;
+BEGIN
+	$a[2] :=4;
+	write(a[2]);
+	$return a;
+END;
+
 begin
-	$write(Test,NUMS_LENGTH);
 	t[2] := 6;
-	$y.a := 5;
-	$y.b := 'd';
-	$x := 6;
-	$z.g.a := 9;
-	$write(y.a, " char: ",y.b," six: ",x, " nine: ",z.g.a,'\n');
-	read(x);
-	write("array access: ",t[x]);
+	simpleProcedure(t);
+	$write(u[2]);
 end.

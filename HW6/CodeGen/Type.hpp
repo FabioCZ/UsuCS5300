@@ -19,6 +19,7 @@ namespace FC
     public:
         std::vector<std::tuple<std::string,Type,int>> fields;
         std::shared_ptr<Type> arrType;
+        int arrLowerStart = INT32_MIN;
 
         int size = -2;
         std::string name;
@@ -134,6 +135,18 @@ namespace FC
         }
     };
 
+//    class AddrType : public Type
+//    {
+//        AddrType(Type type)
+//        {
+//            this->isArray = true;
+//            this->isRecord = true;
+//            this->name = "_addr";
+//            this->size = 4;
+//
+//        }
+//    };
+
     class ArrayType : public Type
     {
     public:
@@ -142,12 +155,13 @@ namespace FC
         {
             this->isArray = true;
             this->isRecord = false;
+            this->arrLowerStart = low;
             if(high < low)
             {
                 std::cout<< "The high bound for an array cannot be smaller than its low bound" << std::endl;
                 exit(1);
             }
-            this->size = high - low +1;
+            this->size = (high - low +1) * type.size;
             this->name = "array_proto";
             this->arrType = std::make_shared<Type>(type);
 
