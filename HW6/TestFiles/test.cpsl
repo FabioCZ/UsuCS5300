@@ -17,11 +17,12 @@ var
 	t : ctype;
 begin
 	$write(Test,NUMS_LENGTH);
-	t[2] := 1;
+	t[2] := 6;
 	$y.a := 5;
 	$y.b := 'd';
 	$x := 6;
 	$z.g.a := 9;
 	$write(y.a, " char: ",y.b," six: ",x, " nine: ",z.g.a,'\n');
-	write("array access: ",t[2]);
+	read(x);
+	write("array access: ",t[x]);
 end.

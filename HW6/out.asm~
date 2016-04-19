@@ -6,8 +6,8 @@ main_impl:
 	mul $s5, $s4, $s5
 	addi $s6, $s5, 20
 	add $s7, $s6, $gp
-	#li $s7, 1 #loading expr to register
-	sw $s7, 0($s7) #Storing t
+	li $s6, 6 #loading expr to register
+	sw $s6, 0($s7) #Storing t
 	la $s4, stringVal0
 	li $v0, 4
 	move $a0, $s4

@@ -338,7 +338,7 @@ ReturnStatement : ReturnTok Expression {FC::AddReturn($2);}
 ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
 
 ReadArgs : ReadArgs CommaTok LVal {FC::ReadToLVal($3);}
-    | LVal {std::cout << "dafuq" << std::endl;FC::ReadToLVal($1);};
+    | LVal {FC::ReadToLVal($1);};
     
 WriteStatement : WriteTok OpenParenTok WriteArgs CloseParenTok {};
 

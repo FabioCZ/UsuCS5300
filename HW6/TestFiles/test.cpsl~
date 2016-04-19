@@ -9,7 +9,7 @@ type
  b = record
 	g : rt;
 end;
- ctype = array[2:NUMS_LENGTH] of integer;
+ ctype = array[0:NUMS_LENGTH] of integer;
 var 
 	x : integer;
 	y : rt;
@@ -17,7 +17,7 @@ var
 	t : ctype;
 begin
 	$write(Test,NUMS_LENGTH);
-	t[2] := 1;
+	t[2] := 6;
 	$y.a := 5;
 	$y.b := 'd';
 	$x := 6;
