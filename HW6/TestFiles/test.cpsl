@@ -6,10 +6,22 @@ type
         a : integer;
         b : char;
  end;
+ b = record
+	g : rt;
+end;
+ ctype = array[0:NUMS_LENGTH] of integer;
 var 
 	x : integer;
 	y : rt;
+	z : b;
+	t : ctype;
 begin
-	write(Test,NUMS_LENGTH);
-	x := 10;
+	$write(Test,NUMS_LENGTH);
+	t[2] := 1;
+	$y.a := 5;
+	$y.b := 'd';
+	$x := 6;
+	$z.g.a := 9;
+	$write(y.a, " char: ",y.b," six: ",x, " nine: ",z.g.a,'\n');
+	write("array access: ",t[2]);
 end.

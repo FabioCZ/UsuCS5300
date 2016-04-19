@@ -120,6 +120,11 @@ namespace FC
                 lv.DataLabel = id;
                 inst->ConstData[id] = e;
             }
+            else if(e->GetExprType() == Int)
+            {
+                lv.LValType = Const;
+                lv.ConstValue = e->GetVal();
+            }
             else
             {
                 lv.LValType = Global;
@@ -182,32 +187,51 @@ namespace FC
     {
         auto id = lv->name;
         auto inst = Code::Inst();
-        std::shared_ptr<LVal> lval = nullptr;
-        if(!inst->InMain)
-        {
-            auto lvalRes = inst->LocalLValues.find(id);
-            if(lvalRes != inst->LocalLValues.end())
-            {
-                lval = lvalRes->second;
-            }
-        }
-        if(lval == nullptr)
-        {
-            auto lvalRes = inst->LValues.find(id);
-            if(lvalRes != inst->LValues.end())
-            {
-                lval = lvalRes->second;
-            }
-        }
-        if(lval == nullptr && lv->name != "_return2")
-        {
-            std::cout << "Internal Compiler error: Can't find lval '" << id << "'" <<  std::endl;
-            exit(1);
-        }
+        std::shared_ptr<LVal> lval = lv;
 
         if(lv->name == "_return2")  //This is so bad I don't even know where to begin
         {
             lval = lv;
+        }
+
+        //Special handling if we have an array
+        if(lval->isArray)
+        {
+
+            FC::Expr e(FC::Register::Allocate(),lval->Type);
+            if(lval->LValType == Frame)
+            {
+                FC::Expr arrOffset(FC::Register::Allocate(),IntType());
+                FC::Expr arrTypeSize(FC::Register::Allocate(),IntType());
+                FC::Expr address(FC::Register::Allocate(),IntType());
+                inst->_stream << "\tli " << arrTypeSize.GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
+                inst->_stream << "\tmul " << arrTypeSize.GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << std::endl;
+                inst->_stream << "\taddi " << arrOffset.GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << ", " << lval->FramePointerOffset << std::endl;
+                inst->_stream << "\tadd " << address.GetRegister()->name << ", " << arrOffset.GetRegister()->name << ", $fp" << std::endl;
+                inst->_stream << "\tlw " << e.GetRegister()->name << ", 0("<< address.GetRegister()->name << ")" << " #loading array elem" << std::endl;
+            }
+            else if(lval->LValType == Stack)
+            {
+                FC::Expr arrOffset(FC::Register::Allocate(),IntType());
+                FC::Expr arrTypeSize(FC::Register::Allocate(),IntType());
+                FC::Expr address(FC::Register::Allocate(),IntType());
+                inst->_stream << "\tli " << arrTypeSize.GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
+                inst->_stream << "\tmul " << arrTypeSize.GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << std::endl;
+                inst->_stream << "\taddi " << arrOffset.GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << ", " <<  lval->StackPointerOffset << std::endl;
+                inst->_stream << "\tadd " << address.GetRegister()->name << ", " << arrOffset.GetRegister()->name << ", $sp" << std::endl;
+                inst->_stream << "\tlw " << e.GetRegister()->name << ", 0("<< address.GetRegister()->name << ")" << " #loading array elem" << std::endl;
+            }
+            else if(lval->LValType == Global)
+            {
+                FC::Expr arrOffset(FC::Register::Allocate(),IntType());
+                FC::Expr arrTypeSize(FC::Register::Allocate(),IntType());
+                FC::Expr address(FC::Register::Allocate(),IntType());
+                inst->_stream << "\tli " << arrTypeSize.GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
+                inst->_stream << "\tmul " << arrTypeSize.GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << std::endl;
+                inst->_stream << "\taddi " << arrOffset.GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << ", " <<  lval->GlobalPointerOffset << std::endl;
+                inst->_stream << "\tadd " << address.GetRegister()->name << ", " << arrOffset.GetRegister()->name << ", $gp" << std::endl;
+                inst->_stream << "\tlw " << e.GetRegister()->name << ", 0("<< address.GetRegister()->name << ")" << " #loading array elem" << std::endl;
+            }
         }
 
         if(lval->LValType == Const)
@@ -421,24 +445,64 @@ namespace FC
         }
 
         std::string mem = "";
-        if(lv->LValType == Stack)
+        if(lv->isArray)
         {
-            mem = std::to_string(lv->StackPointerOffset) + "($sp)";
-        }
-        else if(lv->LValType == Global)
-        {
-            mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
-        }
-        else if(lv->LValType == Frame)
-        {
-            mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+            FC::Expr address(FC::Register::Allocate(),IntType());
+            if (lv->LValType == Stack)
+            {
+                FC::Expr arrOffset(FC::Register::Allocate(),IntType());
+                FC::Expr arrTypeSize(FC::Register::Allocate(),IntType());
+                inst->_stream << "\tli " << arrTypeSize.GetRegister()->name << ", " << lv->Type.size << " #array type size"<< std::endl;
+                inst->_stream << "\tmul " << arrTypeSize.GetRegister()->name << ", " << lv->arrExpr->GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << std::endl;
+                inst->_stream << "\taddi " << arrOffset.GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << ", " << lv->StackPointerOffset << std::endl;
+                inst->_stream << "\tadd " << address.GetRegister()->name << ", " << arrOffset.GetRegister()->name << ", $sp" << std::endl;
+            }
+            else if (lv->LValType == Global)
+            {
+                FC::Expr arrOffset(FC::Register::Allocate(),IntType());
+                FC::Expr arrTypeSize(FC::Register::Allocate(),IntType());
+                inst->_stream << "\tli " << arrTypeSize.GetRegister()->name << ", " << lv->Type.size << " #array type size"<< std::endl;
+                inst->_stream << "\tmul " << arrTypeSize.GetRegister()->name << ", " << lv->arrExpr->GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << std::endl;
+                inst->_stream << "\taddi " << arrOffset.GetRegister()->name << ", " << arrTypeSize.GetRegister()->name  << ", " << lv->GlobalPointerOffset << std::endl;
+                inst->_stream << "\tadd " << address.GetRegister()->name << ", " << arrOffset.GetRegister()->name << ", $gp" << std::endl;
+
+            }
+            else if (lv->LValType == Frame)
+            {
+                FC::Expr arrOffset(FC::Register::Allocate(),IntType());
+                FC::Expr arrTypeSize(FC::Register::Allocate(),IntType());
+                inst->_stream << "\tli " << arrTypeSize.GetRegister()->name << ", " << lv->Type.size << " #array type size"<< std::endl;
+                inst->_stream << "\tmul " << arrTypeSize.GetRegister()->name << ", " << lv->arrExpr->GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << std::endl;
+                inst->_stream << "\taddi " << arrOffset.GetRegister()->name << ", " << arrTypeSize.GetRegister()->name << ", " <<   lv->FramePointerOffset << std::endl;
+                inst->_stream << "\tadd " << address.GetRegister()->name << ", " << arrOffset.GetRegister()->name << ", $fp" << std::endl;
+            }
+            else
+            {
+                std::cout << "Internal assignment statement error" << std::endl;
+                exit(0);
+            }
+            mem = std::string("0(") + address.GetRegister()->name + ")";
         }
         else
         {
-            std::cout << "Internal assignment statement error" << std::endl;
-            exit(0);
+            if (lv->LValType == Stack)
+            {
+                mem = std::to_string(lv->StackPointerOffset) + "($sp)";
+            }
+            else if (lv->LValType == Global)
+            {
+                mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
+            }
+            else if (lv->LValType == Frame)
+            {
+                mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+            }
+            else
+            {
+                std::cout << "Internal assignment statement error" << std::endl;
+                exit(0);
+            }
         }
-
         std::string reg_name = e->GetRegister()->name;
         inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
 
@@ -531,71 +595,86 @@ namespace FC
     const std::shared_ptr<Expr> ProcPlusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tadd " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() + r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tadd " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcMinusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tsub " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() - r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tsub " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcDivideExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tdiv " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() / r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tdiv " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcMultiplyExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tmul " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() * r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tmul " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcModExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\trem " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() + r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\trem " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcNotExpr(std::shared_ptr<Expr> r)
@@ -608,8 +687,16 @@ namespace FC
     const std::shared_ptr<Expr> ProcUnaryMinusExpr(std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        inst->_stream << "\tsub " << r->GetRegister()->name << ", $zero, " << r->GetRegister()->name << std::endl;
-        return r;
+        if(r->GetExprType() == Int ) //if expr is int const, we can precompile
+        {
+            auto res = r->GetVal() * -1;
+            return std::make_shared<Expr>(res,r->GetType());
+        }
+        else
+        {
+            inst->_stream << "\tsub " << r->GetRegister()->name << ", $zero, " << r->GetRegister()->name << std::endl;
+            return r;
+        }
     }
 
     void WriteExpr(std::shared_ptr<Expr> e)
@@ -1142,12 +1229,13 @@ namespace FC
             a.first = inst->LocalTempIdentList;
             inst->LocalTempIdentList.clear();
         }
+
         return a;
     }
 
-    Type GetRecordType(std::vector<std::pair<std::vector<std::string>, FC::Type>> fields)
+    Type GetRecordType(std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> fields)
     {
-        return RecordType(fields);
+        return RecordType(*fields);
     }
 
     void DeclareType(std::string name, Type type)
@@ -1156,16 +1244,17 @@ namespace FC
         auto inst = Code::Inst();
         if(inst->Types.find(name) != inst->Types.end())
         {
-            std::cout << "Warning: redefining type " << name << std::endl;
+            std::cout << "Warning: redefining type " << name << " (this is legal behavior)" << std::endl;
             inst->Types.erase(name);
         }
         type.name = name;
+
         inst->Types.emplace(name,type);
     }
 
     Type GetArrayType(std::shared_ptr<Expr> lower, std::shared_ptr<Expr> higher, Type type)
     {
-        if(lower->GetType().name != "integer" || lower->GetType().name != "higher"
+        if(lower->GetType().name != "integer" || higher->GetType().name != "integer"
            || lower->GetVal() == INT32_MIN ||higher->GetVal() == INT32_MIN)
         {
             std::cout << "Error: Array bounds must be compile time known integers" << std::endl;
@@ -1217,7 +1306,16 @@ namespace FC
             std::cout << "Cannot use the the bracket operator on a non-record type (Lval name: " << lval->name << " )" << std::endl;
             exit(0);
         }
-
+        LVal toRet;
+        toRet.name = lval->name;
+        toRet.Type = *lval->Type.arrType;
+        toRet.isArray = true;
+        toRet.LValType = lval->LValType;
+        toRet.arrExpr = index;
+        toRet.FramePointerOffset = lval->FramePointerOffset;
+        toRet.GlobalPointerOffset = lval->GlobalPointerOffset;
+        toRet.StackPointerOffset = lval->StackPointerOffset;
+        return std::make_shared<LVal>(toRet);
     }
 
 

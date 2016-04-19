@@ -17,10 +17,13 @@ namespace FC
     class Type
     {
     public:
+        std::vector<std::tuple<std::string,Type,int>> fields;
+        std::shared_ptr<Type> arrType;
+
         int size = -2;
         std::string name;
-        bool isRecord = false;
-        bool isArray = false;
+        bool isRecord;
+        bool isArray;
         ~Type() = default;
 
     };
@@ -32,6 +35,8 @@ namespace FC
         {
             this->size = 0;
             this->name = "_void";
+            this->isRecord = false;
+            this->isArray = false;
         }
     };
 
@@ -42,6 +47,8 @@ namespace FC
         {
             this->size = 4;
             this->name = "integer";
+            this->isRecord = false;
+            this->isArray = false;
         }
 
     };
@@ -53,6 +60,8 @@ namespace FC
         {
             this->size = 4;
             this->name = "char";
+            this->isRecord = false;
+            this->isArray = false;
         }
     };
 
@@ -63,6 +72,8 @@ namespace FC
         {
             this->size = 4;
             this->name = "boolean";
+            this->isRecord = false;
+            this->isArray = false;
         }
     };
 
@@ -73,19 +84,21 @@ namespace FC
         {
             this->size = -1;
             this->name = "string";
+            this->isRecord = false;
+            this->isArray = false;
         }
     };
 
     class RecordType : public Type
     {
     public:
-        std::vector<std::tuple<std::string,Type,int>> fields;
 
         RecordType(std::vector<std::pair<std::vector<std::string>, FC::Type>> fields)
         {
             this->size = 0;
             this->name = "record_proto";
             this->isRecord = true;
+            this->isArray = false;
             for(auto f : fields)
             {
                 auto thisType = f.second;
@@ -105,7 +118,7 @@ namespace FC
             {
                 return std::get<2>(*res);
             }
-            std::cout << "Error: " << name << "is not a field of the currently parsed record type" << std::endl;
+            std::cout << "Error: " << name << " is not a field of the currently parsed record type" << std::endl;
             exit(1);
         }
 
@@ -116,7 +129,7 @@ namespace FC
             {
                 return std::get<1>(*res);
             }
-            std::cout << "Error: " << name << "is not a field of the currently parsed record type" << std::endl;
+            std::cout << "Error: " << name << " is not a field of the currently parsed record type" << std::endl;
             exit(1);
         }
     };
@@ -124,11 +137,11 @@ namespace FC
     class ArrayType : public Type
     {
     public:
-        Type arrType;
 
         ArrayType(Type type, int low, int high)
         {
             this->isArray = true;
+            this->isRecord = false;
             if(high < low)
             {
                 std::cout<< "The high bound for an array cannot be smaller than its low bound" << std::endl;
@@ -136,6 +149,7 @@ namespace FC
             }
             this->size = high - low +1;
             this->name = "array_proto";
+            this->arrType = std::make_shared<Type>(type);
 
         }
     };

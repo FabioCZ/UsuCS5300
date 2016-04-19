@@ -18,7 +18,7 @@ main_impl:
 	addi $s7, $s6, 20
 	add $s5, $s7, $gp
 	lw $s4, 0($s5) #loading array elem
-	#lw $s4, 20($gp) #t
+	lw $s4, 20($gp) #t
 	li $v0, 1
 	move $a0, $s4
 	syscall #print

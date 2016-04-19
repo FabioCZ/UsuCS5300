@@ -101,7 +101,7 @@ namespace FC
 
     //CustomTypes
     std::pair<std::vector<std::string>,Type> GetRecordFields(Type type);
-    Type GetRecordType(std::vector<std::pair<std::vector<std::string>,FC::Type>> fields);
+    Type GetRecordType(std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> fields);
     void DeclareType(std::string name, Type type);
     Type GetArrayType(std::shared_ptr<Expr> lower, std::shared_ptr<Expr> higher, Type type);
     std::shared_ptr<LVal> GetRecordField(std::shared_ptr<LVal> lval, std::string fieldName);

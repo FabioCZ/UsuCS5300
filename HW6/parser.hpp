@@ -332,26 +332,27 @@ namespace yy {
       // ProcedureCall
       char dummy4[sizeof(int)];
 
-      // FieldDecl
-      char dummy5[sizeof(std::pair<std::vector<std::string>,FC::Type>)];
-
       // WhileHead
       // WhileSuperHead
       // Expression
       // FunctionCall
-      char dummy6[sizeof(std::shared_ptr<FC::Expr>)];
+      char dummy5[sizeof(std::shared_ptr<FC::Expr>)];
 
       // PSignature
       // FSignature
-      char dummy7[sizeof(std::shared_ptr<FC::Func> )];
+      char dummy6[sizeof(std::shared_ptr<FC::Func> )];
 
       // LVal
-      char dummy8[sizeof(std::shared_ptr<FC::LVal> )];
+      char dummy7[sizeof(std::shared_ptr<FC::LVal> )];
 
       // OptFormalParameters
       // FormalParameters
       // FormalParameter
-      char dummy9[sizeof(std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > )];
+      char dummy8[sizeof(std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > )];
+
+      // FieldDecls
+      // FieldDecl
+      char dummy9[sizeof(std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>>)];
 
       // OptArguments
       // Arguments
@@ -365,9 +366,6 @@ namespace yy {
       // StatementList
       // Statement
       char dummy12[sizeof(std::string)];
-
-      // FieldDecls
-      char dummy13[sizeof(std::vector<std::pair<std::vector<std::string>,FC::Type>>)];
 };
 
     /// Symbol semantic values.
@@ -493,8 +491,6 @@ namespace yy {
 
   basic_symbol (typename Base::kind_type t, const int v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const std::pair<std::vector<std::string>, FC::Type> v, const location_type& l);
-
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr> v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Func>  v, const location_type& l);
@@ -503,13 +499,13 @@ namespace yy {
 
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::pair<std::string, FC::Type> > >  v, const location_type& l);
 
+  basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::pair<std::vector<std::string>, FC::Type>>> v, const location_type& l);
+
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::string> >  v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l);
-
-  basic_symbol (typename Base::kind_type t, const std::vector<std::pair<std::vector<std::string>, FC::Type>> v, const location_type& l);
 
 
       /// Constructor for symbols with semantic value.
@@ -1013,7 +1009,7 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 459,     ///< Last index in yytable_.
+      yylast_ = 452,     ///< Last index in yytable_.
       yynnts_ = 68,  ///< Number of nonterminal symbols.
       yyempty_ = -2,
       yyfinal_ = 8, ///< Termination state number.
@@ -1145,10 +1141,6 @@ namespace yy {
         value.copy< int > (other.value);
         break;
 
-      case 94: // FieldDecl
-        value.copy< std::pair<std::vector<std::string>,FC::Type> > (other.value);
-        break;
-
       case 111: // WhileHead
       case 112: // WhileSuperHead
       case 128: // Expression
@@ -1171,6 +1163,11 @@ namespace yy {
         value.copy< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (other.value);
         break;
 
+      case 93: // FieldDecls
+      case 94: // FieldDecl
+        value.copy< std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> > (other.value);
+        break;
+
       case 126: // OptArguments
       case 127: // Arguments
         value.copy< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > (other.value);
@@ -1185,10 +1182,6 @@ namespace yy {
       case 86: // StatementList
       case 100: // Statement
         value.copy< std::string > (other.value);
-        break;
-
-      case 93: // FieldDecls
-        value.copy< std::vector<std::pair<std::vector<std::string>,FC::Type>> > (other.value);
         break;
 
       default:
@@ -1251,10 +1244,6 @@ namespace yy {
         value.copy< int > (v);
         break;
 
-      case 94: // FieldDecl
-        value.copy< std::pair<std::vector<std::string>,FC::Type> > (v);
-        break;
-
       case 111: // WhileHead
       case 112: // WhileSuperHead
       case 128: // Expression
@@ -1277,6 +1266,11 @@ namespace yy {
         value.copy< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (v);
         break;
 
+      case 93: // FieldDecls
+      case 94: // FieldDecl
+        value.copy< std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> > (v);
+        break;
+
       case 126: // OptArguments
       case 127: // Arguments
         value.copy< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > (v);
@@ -1291,10 +1285,6 @@ namespace yy {
       case 86: // StatementList
       case 100: // Statement
         value.copy< std::string > (v);
-        break;
-
-      case 93: // FieldDecls
-        value.copy< std::vector<std::pair<std::vector<std::string>,FC::Type>> > (v);
         break;
 
       default:
@@ -1341,13 +1331,6 @@ namespace yy {
   {}
 
   template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::pair<std::vector<std::string>, FC::Type> v, const location_type& l)
-    : Base (t)
-    , value (v)
-    , location (l)
-  {}
-
-  template <typename Base>
   Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<FC::Expr> v, const location_type& l)
     : Base (t)
     , value (v)
@@ -1376,6 +1359,13 @@ namespace yy {
   {}
 
   template <typename Base>
+  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::pair<std::vector<std::string>, FC::Type>>> v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
   Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  v, const location_type& l)
     : Base (t)
     , value (v)
@@ -1391,13 +1381,6 @@ namespace yy {
 
   template <typename Base>
   Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l)
-    : Base (t)
-    , value (v)
-    , location (l)
-  {}
-
-  template <typename Base>
-  Parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::vector<std::pair<std::vector<std::string>, FC::Type>> v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1462,10 +1445,6 @@ namespace yy {
         value.template destroy< int > ();
         break;
 
-      case 94: // FieldDecl
-        value.template destroy< std::pair<std::vector<std::string>,FC::Type> > ();
-        break;
-
       case 111: // WhileHead
       case 112: // WhileSuperHead
       case 128: // Expression
@@ -1488,6 +1467,11 @@ namespace yy {
         value.template destroy< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > ();
         break;
 
+      case 93: // FieldDecls
+      case 94: // FieldDecl
+        value.template destroy< std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> > ();
+        break;
+
       case 126: // OptArguments
       case 127: // Arguments
         value.template destroy< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > ();
@@ -1502,10 +1486,6 @@ namespace yy {
       case 86: // StatementList
       case 100: // Statement
         value.template destroy< std::string > ();
-        break;
-
-      case 93: // FieldDecls
-        value.template destroy< std::vector<std::pair<std::vector<std::string>,FC::Type>> > ();
         break;
 
       default:
@@ -1565,10 +1545,6 @@ namespace yy {
         value.move< int > (s.value);
         break;
 
-      case 94: // FieldDecl
-        value.move< std::pair<std::vector<std::string>,FC::Type> > (s.value);
-        break;
-
       case 111: // WhileHead
       case 112: // WhileSuperHead
       case 128: // Expression
@@ -1591,6 +1567,11 @@ namespace yy {
         value.move< std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > >  > (s.value);
         break;
 
+      case 93: // FieldDecls
+      case 94: // FieldDecl
+        value.move< std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> > (s.value);
+        break;
+
       case 126: // OptArguments
       case 127: // Arguments
         value.move< std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > >  > (s.value);
@@ -1605,10 +1586,6 @@ namespace yy {
       case 86: // StatementList
       case 100: // Statement
         value.move< std::string > (s.value);
-        break;
-
-      case 93: // FieldDecls
-        value.move< std::vector<std::pair<std::vector<std::string>,FC::Type>> > (s.value);
         break;
 
       default:
@@ -2039,7 +2016,7 @@ namespace yy {
 
 
 } // yy
-#line 2043 "/home/fabio/Desktop/UsuCS5300/HW6/parser.hpp" // lalr1.cc:372
+#line 2020 "/home/fabio/Desktop/UsuCS5300/HW6/parser.hpp" // lalr1.cc:372
 
 
 

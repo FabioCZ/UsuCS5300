@@ -116,8 +116,8 @@ class Driver;
 %type <std::shared_ptr<FC::Expr>> Expression
 %type <bool> FBody
 %type <std::shared_ptr<FC::Func> > FSignature
-%type <std::pair<std::vector<std::string>,FC::Type>> FieldDecl
-%type <std::vector<std::pair<std::vector<std::string>,FC::Type>>> FieldDecls
+%type <std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>>> FieldDecl
+%type <std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>>> FieldDecls
 %type <int> ForHead
 %type <int> ForStatement
 %type <std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > > FormalParameter
@@ -200,7 +200,6 @@ OptFormalParameters : FormalParameters {$$ = $1;}
     
 FormalParameters : FormalParameters SemicolonTok FormalParameter
     {
-        //$1->insert($3->end(),$3->begin(),$3->end());
         for(auto s : (*$3))
         {
             $1->push_back(s);
@@ -246,22 +245,30 @@ Type : SimpleType {$$ = $1;}
 
 SimpleType : IdentifierTok {$$ = FC::SimpleTypeLookup($1);};
 
-RecordType : RecordTok FieldDecls EndTok {FC::GetRecordType($2);};
+RecordType : RecordTok FieldDecls EndTok {$$ = FC::GetRecordType($2);};
 
-FieldDecls : FieldDecls FieldDecl {$1.push_back($2);$$=$1;}
-    | FieldDecl
+
+FieldDecls : FieldDecls FieldDecl
         {
-            auto a = std::vector<std::pair<std::vector<std::string>,FC::Type>>();
-            a.push_back($1);
-            $$ = a;
-        };
+            if($1 != nullptr && $1->size() > 0)
+            {
+                $2->insert($2->end(),$1->begin(),$1->end());
+            }
+            $$ = $2;
+        }
+    | {$$ = nullptr;}
     
-FieldDecl : IdentList ColonTok Type SemicolonTok {FC::GetRecordFields($3);};
+FieldDecl : IdentList ColonTok Type SemicolonTok
+{
+    auto a = std::make_shared<std::vector<std::pair<std::vector<std::string>,FC::Type>>>();
+    a->push_back(FC::GetRecordFields($3));
+    $$ = a;
+};
 
 IdentList : IdentList CommaTok IdentifierTok {FC::AddIdent($3);}
     | IdentifierTok {FC::AddIdent($1);};
     
-ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {GetArrayType($3,$5,$8);};
+ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {$$ = GetArrayType($3,$5,$8);};
 
 OptVarDecls : VarTok VarDecls
     |;

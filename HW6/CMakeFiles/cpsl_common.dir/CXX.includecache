@@ -37,6 +37,8 @@ iostream
 /home/fabio/Desktop/UsuCS5300/HW6/CodeGen/LVal.hpp
 string
 -
+CodeGen/Expr/Expr.hpp
+-
 Type.hpp
 /home/fabio/Desktop/UsuCS5300/HW6/CodeGen/Type.hpp
 
@@ -83,6 +85,16 @@ map
 -
 Func.hpp
 CodeGen/Func.hpp
+
+CodeGen/Expr/Expr.hpp
+../Register.hpp
+CodeGen/Register.hpp
+memory
+-
+../Type.hpp
+CodeGen/Type.hpp
+iostream
+-
 
 CodeGen/Func.hpp
 Type.hpp
