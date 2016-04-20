@@ -28,6 +28,7 @@ namespace FC
     };
     void AddMain();
     void MainBlock();
+    void FuncBlock();
     void AddConst(std::string id, std::shared_ptr<Expr> e);
 
     void AddIdent(std::string id);
@@ -98,6 +99,15 @@ namespace FC
     const std::shared_ptr<Expr> CallFunction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Expr>>> args);
     void AddReturn(std::shared_ptr<Expr> e);
 
+    //CustomTypes
+    std::pair<std::vector<std::string>,Type> GetRecordFields(Type type);
+    Type GetRecordType(std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> fields);
+    void DeclareType(std::string name, Type type);
+    Type GetArrayType(std::shared_ptr<Expr> lower, std::shared_ptr<Expr> higher, Type type);
+    std::shared_ptr<LVal> GetRecordField(std::shared_ptr<LVal> lval, std::string fieldName);
+    std::shared_ptr<LVal> GetArrayMember(std::shared_ptr<LVal> lval, std::shared_ptr<Expr> index);
+
+
     class Code
     {
         public:
@@ -129,6 +139,7 @@ namespace FC
 
         std::vector<std::shared_ptr<ForInfo>> ForInfos;
         std::vector<std::shared_ptr<Expr>> Expressions;
+        std::unordered_map<std::string, Type> Types;
         std::unordered_map<std::string, std::shared_ptr<Expr>> ConstData;
         std::unordered_map<std::string,std::shared_ptr<FC::LVal> > LValues;
         std::unordered_map<std::string,std::shared_ptr<FC::LVal> > LocalLValues;

@@ -23,8 +23,8 @@ namespace FC
         if (FC::Code::_code == nullptr)
         {
             FC::Code::_code = std::make_shared<Code>();
-            FC::Code::_code->InMain = false;
-            _code->_stream << ".global main" << std::endl << "j main_impl" << std::endl;
+            FC::Code::_code->InMain = true;
+            _code->_stream << ".global main" << std::endl;
 
             LVal t;
             t.LValType = Const;
@@ -53,6 +53,12 @@ namespace FC
             f1.Type = BoolType();
             f1.name = "FALSE";
             _code->LValues["FALSE"] = std::make_shared<LVal>(f1);
+
+            //Add predefined types
+            _code->Types.emplace("integer",IntType());
+            _code->Types.emplace("char",CharType());
+            _code->Types.emplace("boolean",BoolType());
+
             _code->WriteToFileNow();
         }
         return FC::Code::_code;
@@ -81,6 +87,15 @@ namespace FC
         inst->_stream << "main_impl:" << std::endl;
     }
 
+    void FuncBlock()
+    {
+        auto inst = Code::Inst();
+        inst->WriteToFileNow();
+        inst->_outFile << "j main_impl #jumping into main" << std::endl;
+        inst->InMain = false;
+    }
+
+
 
     void AddConst(std::string id,  std::shared_ptr<Expr> e)
     {
@@ -104,6 +119,11 @@ namespace FC
                 lv.LValType = Data;
                 lv.DataLabel = id;
                 inst->ConstData[id] = e;
+            }
+            else if(e->GetExprType() == Int)
+            {
+                lv.LValType = Const;
+                lv.ConstValue = e->GetVal();
             }
             else
             {
@@ -167,32 +187,58 @@ namespace FC
     {
         auto id = lv->name;
         auto inst = Code::Inst();
-        std::shared_ptr<LVal> lval = nullptr;
-        if(!inst->InMain)
-        {
-            auto lvalRes = inst->LocalLValues.find(id);
-            if(lvalRes != inst->LocalLValues.end())
-            {
-                lval = lvalRes->second;
-            }
-        }
-        if(lval == nullptr)
-        {
-            auto lvalRes = inst->LValues.find(id);
-            if(lvalRes != inst->LValues.end())
-            {
-                lval = lvalRes->second;
-            }
-        }
-        if(lval == nullptr && lv->name != "_return2")
-        {
-            std::cout << "Internal Compiler error: Can't find lval '" << id << "'" <<  std::endl;
-            exit(1);
-        }
+        std::shared_ptr<LVal> lval = lv;
 
         if(lv->name == "_return2")  //This is so bad I don't even know where to begin
         {
             lval = lv;
+        }
+
+        if(lval->Type.isArray || lval->Type.isRecord) // array (not member) or Record (not field)
+        {
+            auto e = std::make_shared<FC::Expr>(Register::Allocate(),lv->Type);    //save base address as expression
+            if (lval->LValType == Frame)
+            {
+                inst->_stream << "\taddi " << e->GetRegister()->name << ", $fp, " << lval->FramePointerOffset << std::endl;
+            }
+            else if (lval->LValType == Stack)
+            {
+                inst->_stream << "\taddi " << e->GetRegister()->name << ", $sp, " << lval->StackPointerOffset << std::endl;
+            }
+            else if (lval->LValType == Global)
+            {
+                inst->_stream << "\taddi " << e->GetRegister()->name << ", $gp, " << lval->GlobalPointerOffset << std::endl;
+            }
+            return e;
+        }
+
+        //Special handling if we have an array member
+        if(lval->isArrayMember)
+        {
+            auto e = std::make_shared<FC::Expr>(FC::Register::Allocate(),lval->Type);
+            auto address = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+            auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+            inst->_stream << "\tli " << address->GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
+            inst->_stream << "\tli " << helper->GetRegister()->name << ", " << lval->arrLowStart << " #array starting index" << std::endl;
+            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << helper->GetRegister()->name<< " #calculate index" << std::endl;
+            inst->_stream << "\tmul " << address->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
+            if(lval->LValType == Frame)
+            {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->FramePointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+                inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $fp #adding fp offset and fp" << std::endl;
+            }
+            else if(lval->LValType == Stack)
+            {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->StackPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+                inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $sp #adding sp offset and sp" << std::endl;
+            }
+            else if(lval->LValType == Global)
+            {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->GlobalPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+                inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $gp #adding gp offset and gp" << std::endl;
+            }
+            inst->_stream << "\tlw " << e->GetRegister()->name << ", 0("<< address->GetRegister()->name << ")" << " #loading array elem into register" << std::endl;
+            return e;
         }
 
         if(lval->LValType == Const)
@@ -256,21 +302,17 @@ namespace FC
 
     Type SimpleTypeLookup(std::string typeName)
     {
-        boost::algorithm::to_lower(typeName);
-        if(typeName == std::string("integer"))
+        boost::algorithm::to_lower(typeName);   //just in case
+
+        auto inst = Code::Inst();
+        //auto res = std::find(inst->Types.begin(),inst->Types.end(),typeName);
+        auto res = inst->Types.find(typeName);
+        if(res == inst->Types.end())
         {
-            return IntType();
+            std::cout << "Type: " << typeName << " is not a valid type" << std::endl;
+            exit(1);
         }
-        if(typeName == std::string("char"))
-        {
-            return CharType();
-        }
-        if(typeName == std::string("boolean"))
-        {
-            return BoolType();
-        }
-        std::cout << "Type: " << typeName << " is not a valid type" << std::endl;
-        exit(1);
+        return (*res).second;
     }
 
     void AddIdent(std::string id)
@@ -410,27 +452,94 @@ namespace FC
         }
 
         std::string mem = "";
-        if(lv->LValType == Stack)
+        std::string reg_name = e->GetRegister()->name;
+
+        if(lv->isArrayMember)
         {
-            mem = std::to_string(lv->StackPointerOffset) + "($sp)";
-        }
-        else if(lv->LValType == Global)
-        {
-            mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
-        }
-        else if(lv->LValType == Frame)
-        {
-            mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+            auto lval = lv;
+            auto address = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+            auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+            inst->_stream << "\tli " << address->GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
+            inst->_stream << "\tli " << helper->GetRegister()->name << ", " << lval->arrLowStart << " #array starting index" << std::endl;
+            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << helper->GetRegister()->name << " #calculate index" << std::endl;
+            inst->_stream << "\tmul " << address->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
+            if (lv->LValType == Stack)
+            {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->StackPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+                inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $sp" << std::endl;
+            }
+            else if (lv->LValType == Global)
+            {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->GlobalPointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+                inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $gp" << std::endl;
+
+            }
+            else if (lv->LValType == Frame)
+            {
+                inst->_stream << "\taddi " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", " << lval->FramePointerOffset << " #offset from pointer (f/s/g)" << std::endl;
+                inst->_stream << "\tadd " << address->GetRegister()->name << ", " << address->GetRegister()->name << ", $fp" << std::endl;
+            }
+            else
+            {
+                std::cout << "Internal assignment statement error" << std::endl;
+                exit(0);
+            }
+            mem = std::string("0(") + address->GetRegister()->name + ")";
+            inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
+
         }
         else
         {
-            std::cout << "Internal assignment statement error" << std::endl;
-            exit(0);
+            //std::cout << "assignemnt for type: " << e->GetType().name << " into: " << lv->name << std::endl;
+            if(e->GetType().isArray || e->GetType().isRecord)
+            {
+                auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+                for(int i = 0; i < lv->Type.size;i+=4)
+                {
+                    if (lv->LValType == Stack)
+                    {
+                        mem = std::to_string(lv->StackPointerOffset + i) + "($sp)";
+                    }
+                    else if (lv->LValType == Global)
+                    {
+                        mem = std::to_string(lv->GlobalPointerOffset + i) + "($gp)";
+                    }
+                    else if (lv->LValType == Frame)
+                    {
+                        mem = std::to_string(lv->FramePointerOffset + i) + "($fp)";
+                    }
+                    else
+                    {
+                        std::cout << "Internal assignment statement error" << std::endl;
+                        exit(0);
+                    }
+                    inst->_stream << "\tlw " << helper->GetRegister()->name << ", "<< i <<  "(" << e->GetRegister()->name << ") #memberwise clone" << std::endl;
+                    inst->_stream << "\tsw " << helper->GetRegister()->name << ", " << mem << std::endl;
+                }
+            }
+            else
+            {
+
+                if (lv->LValType == Stack)
+                {
+                    mem = std::to_string(lv->StackPointerOffset) + "($sp)";
+                }
+                else if (lv->LValType == Global)
+                {
+                    mem = std::to_string(lv->GlobalPointerOffset) + "($gp)";
+                }
+                else if (lv->LValType == Frame)
+                {
+                    mem = std::to_string(lv->FramePointerOffset) + "($fp)";
+                }
+                else
+                {
+                    std::cout << "Internal assignment statement error" << std::endl;
+                    exit(0);
+                }
+                inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
+            }
         }
-
-        std::string reg_name = e->GetRegister()->name;
-        inst->_stream << "\tsw " << reg_name << ", " << mem << " #Storing " << lv->name << std::endl;
-
     }
 
     std::shared_ptr<LVal> GetLValForIdent(std::string id)
@@ -520,71 +629,86 @@ namespace FC
     const std::shared_ptr<Expr> ProcPlusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tadd " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() + r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tadd " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcMinusExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tsub " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() - r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tsub " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcDivideExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tdiv " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() / r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tdiv " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcMultiplyExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\tmul " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() * r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\tmul " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcModExpr(std::shared_ptr<Expr> l, std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        auto res = Register::Allocate();
-        inst->_stream << "\trem " << res->name << ", " << l->GetRegister()->name << ", " << r->GetRegister()->name << std::endl;
-//        if(l->GetType().name != r->GetType().name)
-//        {
-//            std::cout << "Syntax Error: Expressions don't agree in type, l:" << l->GetType().name << ", r: " <<  r->GetType().name << std::endl;
-//
-//            exit(0);
-//        }
-        return std::make_shared<Expr>(res, l->GetType());
+        if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
+        {
+            auto res = l->GetVal() % r->GetVal();
+            return std::make_shared<Expr>(res,l->GetType());
+        }
+        else
+        {
+            auto res = Register::Allocate();
+            inst->_stream << "\trem " << res->name << ", " << l->GetRegister()->name << ", " <<
+            r->GetRegister()->name << std::endl;
+            return std::make_shared<Expr>(res, l->GetType());
+        }
     }
 
     const std::shared_ptr<Expr> ProcNotExpr(std::shared_ptr<Expr> r)
@@ -597,8 +721,16 @@ namespace FC
     const std::shared_ptr<Expr> ProcUnaryMinusExpr(std::shared_ptr<Expr> r)
     {
         auto inst = Code::Inst();
-        inst->_stream << "\tsub " << r->GetRegister()->name << ", $zero, " << r->GetRegister()->name << std::endl;
-        return r;
+        if(r->GetExprType() == Int ) //if expr is int const, we can precompile
+        {
+            auto res = r->GetVal() * -1;
+            return std::make_shared<Expr>(res,r->GetType());
+        }
+        else
+        {
+            inst->_stream << "\tsub " << r->GetRegister()->name << ", $zero, " << r->GetRegister()->name << std::endl;
+            return r;
+        }
     }
 
     void WriteExpr(std::shared_ptr<Expr> e)
@@ -836,9 +968,16 @@ namespace FC
         auto name = inst->ForInfos.back()->varName;
         auto e2 = std::const_pointer_cast<Expr>(LValToExpr(GetLValForIdent(name)))->GetRegister();
         auto e1 = e->GetRegister();
-        //inst->WriteToFileNow();
-        inst->_stream << "\tbeq " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() << std::endl;
-
+        if(isUp)
+        {
+            inst->_stream << "\tblt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
+            std::endl;
+        }
+        else
+        {
+            inst->_stream << "\tbgt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
+            std::endl;
+        }
     }
 
     void ForEnd()
@@ -929,8 +1068,23 @@ namespace FC
             int sizeCt = 0;
             for(int i = 0; i < (*args).size();i++)
             {
-                inst->_stream << "\tsw " << (*args)[i]->GetRegister()->name << ", " << sizeCt << "($sp)" << std::endl;
-                sizeCt += (*args)[0]->GetType().size;
+                if((*args)[i]->GetType().isRecord || (*args)[i]->GetType().isArray) //memberwise clone if array
+                {
+                    auto e = (*args)[i];
+                    auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+                    for(int j = 0; j < e->GetType().size;j+=4)
+                    {
+                        inst->_stream << "\tlw " << helper->GetRegister()->name << ", "<< j <<  "(" << e->GetRegister()->name << ") #memberwise clone" << std::endl;
+                        inst->_stream << "\tsw " << helper->GetRegister()->name << ", " << sizeCt << "($sp)" << std::endl;
+                        sizeCt += 4;
+                    }
+                }
+                else
+                {
+                    inst->_stream << "\tsw " << (*args)[i]->GetRegister()->name << ", " << sizeCt << "($sp)" <<
+                    std::endl;
+                    sizeCt += (*args)[i]->GetType().size;
+                }
             }
         }
         inst->_stream << "\tmove $fp, $sp" << std::endl;
@@ -943,7 +1097,7 @@ namespace FC
             LVal r;
             r.name = "_return2";
             r.LValType = Frame;
-            r.FramePointerOffset = -4;
+            r.FramePointerOffset = -1 * func->second->returnType->size;
             r.Type = (*func->second->returnType);
             expr = LValToExpr(std::make_shared<LVal>(r));
         }
@@ -981,14 +1135,15 @@ namespace FC
             inst->LocalLValues["_return"] = std::make_shared<LVal>(rl);
         }
         if(params == nullptr) return;
+        auto sizeCt = 0;
         for(int i = 0; i < (*params).size();i++)
         {
             LVal lv;
             lv.name = (*params)[i].first;
             lv.LValType = Frame;
             lv.Type = (*params)[i].second;
-            //lv.StackPointerOffset = inst->AllocateStackPointer(s.second.size); //TODO figure out if this will work
-            lv.FramePointerOffset = (i*(*params)[i].second.size);
+            lv.FramePointerOffset = sizeCt;
+            sizeCt += (*params)[i].second.size;
             inst->LocalLValues[(*params)[i].first] = std::make_shared<LVal>(lv);
         }
     }
@@ -1032,7 +1187,6 @@ namespace FC
                     }
                 }
                 inst->Functions.erase(f->name);
-                //TODO check params and return type
                 inst->Functions.emplace(f->name, f);
                 if(!f->isForwardDeclared)
                 {
@@ -1041,12 +1195,12 @@ namespace FC
                     inst->WriteToFileNow(); //write func body
                     inst->_outFile << "\tjr $ra #jump out of function" << std::endl;
                     inst->LocalLValues.clear(); //drop local symbol table
-
                 }
             }
             else
             {
                 std::cout << "Proc/Func " << f->name << " error: multiple declaration/definition" << std::endl;
+                std::cout << "Hint: this may be a problem with procedure/function overloading which is not supported" << std::endl;
                 exit(0);
             }
         }
@@ -1102,7 +1256,7 @@ namespace FC
         if(e->GetType().name != inst->LocalLValues["_return"]->Type.name)
         {
             std::cout << "Return statement expression doesn't match proc/func declared return type:" << std::endl;
-            std::cout << "declared: " << inst->LocalLValues["_return"]->name << " attempted to return: " << e->GetType().name << std::endl;
+            std::cout << "declared: " << inst->LocalLValues["_return"]->Type.name << " attempted to return: " << e->GetType().name << std::endl;
             exit(0);
         }
         if(e != nullptr)
@@ -1110,6 +1264,115 @@ namespace FC
             Assignment(GetLValForIdent("_return"),e);   //assign expression to return value
         }
         inst->_stream << "\tjr $ra #jump out of function" << std::endl;
+    }
+
+    //////////////////////////////////
+    //    Cusom Types
+    //////////////////////////////////
+    std::pair<std::vector<std::string>, Type> GetRecordFields(Type type)
+    {
+        auto inst = Code::Inst();
+        std::pair<std::vector<std::string>, Type> a;
+        a.second = type;
+        if(inst->InMain)
+        {
+            a.first = inst->TempIdentList;
+            inst->TempIdentList.clear();
+
+        }
+        else // temp ident list in function
+        {
+            a.first = inst->LocalTempIdentList;
+            inst->LocalTempIdentList.clear();
+        }
+
+        return a;
+    }
+
+    Type GetRecordType(std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>> fields)
+    {
+        return RecordType(*fields);
+    }
+
+    void DeclareType(std::string name, Type type)
+    {
+        boost::algorithm::to_lower(name);   //just in case
+        auto inst = Code::Inst();
+        if(inst->Types.find(name) != inst->Types.end())
+        {
+            std::cout << "Warning: redefining type " << name << " (this is legal behavior)" << std::endl;
+            inst->Types.erase(name);
+        }
+        type.name = name;
+
+        inst->Types.emplace(name,type);
+    }
+
+    Type GetArrayType(std::shared_ptr<Expr> lower, std::shared_ptr<Expr> higher, Type type)
+    {
+        if(lower->GetType().name != "integer" || higher->GetType().name != "integer"
+           || lower->GetVal() == INT32_MIN ||higher->GetVal() == INT32_MIN)
+        {
+            std::cout << "Error: Array bounds must be compile time known integers" << std::endl;
+            exit(1);
+        }
+        return ArrayType(type,lower->GetVal(),higher->GetVal());
+    }
+
+    std::shared_ptr<LVal> GetRecordField(std::shared_ptr<LVal> lval, std::string fieldName)
+    {
+        auto inst = Code::Inst();
+        if(!lval->Type.isRecord)
+        {
+            std::cout << "Cannot use the the dot operator on a non-record type (Lval name: " << lval->name << " )" << std::endl;
+            exit(0);
+        }
+
+        //This is a terrible way to cast, but I am not that good with polymorphism in C++ :-/
+        Type& typeRef = lval->Type;
+        auto res = (static_cast<RecordType&>(typeRef));
+        auto offset  = res.GetFieldOffset(fieldName);
+        LVal toRet;
+        toRet.name = lval->name + "." + fieldName;  //TODO maybe something with this?
+        toRet.Type = res.GetFieldType(fieldName);
+        if(lval->LValType == Frame)
+        {
+            toRet.LValType = Frame;
+            toRet.FramePointerOffset = lval->FramePointerOffset + offset;
+        }
+        else if (lval->LValType == Stack)
+        {
+            toRet.LValType = Stack;
+            toRet.StackPointerOffset = lval->StackPointerOffset + offset;
+        }
+        else if(lval->LValType == Global)
+        {
+            toRet.LValType = Global;
+            toRet.GlobalPointerOffset = lval->GlobalPointerOffset + offset;
+        }
+
+        return std::make_shared<LVal>(toRet);
+    }
+
+    std::shared_ptr<LVal> GetArrayMember(std::shared_ptr<LVal> lval, std::shared_ptr<Expr> index)
+    {
+        auto inst = Code::Inst();
+        if(!lval->Type.isArray)
+        {
+            std::cout << "Cannot use the the bracket operator on a non-record type (Lval name: " << lval->name << " )" << std::endl;
+            exit(0);
+        }
+        LVal toRet;
+        toRet.name = lval->name;
+        toRet.Type = *lval->Type.arrType;
+        toRet.isArrayMember = true;
+        toRet.LValType = lval->LValType;
+        toRet.arrExpr = index;
+        toRet.arrLowStart = lval->Type.arrLowerStart;
+        toRet.FramePointerOffset = lval->FramePointerOffset;
+        toRet.GlobalPointerOffset = lval->GlobalPointerOffset;
+        toRet.StackPointerOffset = lval->StackPointerOffset;
+        return std::make_shared<LVal>(toRet);
     }
 
 

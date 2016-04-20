@@ -1200,7 +1200,7 @@ namespace FC
             else
             {
                 std::cout << "Proc/Func " << f->name << " error: multiple declaration/definition" << std::endl;
-                std::cout << "Hint: this may be a problem with procedure/function overloading which is not supported" << std::endl;
+                std::cout << "Hint: this may be a problem with procedure/function overloading which is not supported" << std::endl;clear
                 exit(0);
             }
         }

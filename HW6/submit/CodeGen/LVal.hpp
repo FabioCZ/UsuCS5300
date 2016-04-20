@@ -8,7 +8,9 @@
 #ifndef CPSL_LVAL_HPP
 #define CPSL_LVAL_HPP
 #include <string>
+#include <CodeGen/Expr/Expr.hpp>
 #include "Type.hpp"
+
 
 namespace FC
 {
@@ -31,6 +33,9 @@ namespace FC
         std::string DataLabel;
         int ConstValue;
         std::string name;
+        std::shared_ptr<Expr> arrExpr;
+        bool isArrayMember = false;
+        int arrLowStart = INT32_MIN;
     };
 
 }

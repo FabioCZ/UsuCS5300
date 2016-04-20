@@ -6,10 +6,9 @@
 
 #include "Expr.hpp"
 #include "../CodeGenerator.hpp"
+
 namespace FC
 {
-
-
     std::shared_ptr<FC::Register> Expr::GetRegister()
     {
         if (_exprType == Reg)

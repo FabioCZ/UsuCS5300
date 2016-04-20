@@ -1,5 +1,5 @@
 Readme:
-HW5 CS5300 - Functions 
+HW6 CS5300 - Everything! 
 by Fabio Gottlicher A01647928
 
 Project structure based largely on: https://www.gnu.org/software/bison/manual/bison.html#A-Complete-C_002b_002b-Example
@@ -26,4 +26,8 @@ OPTIONS:
 -s                Scanner Tracing
 -o outFileName    (optional) Output file name (default is out.asm)
 
+
+Known Issues:
+- no pass by reference
+- functions overloads don't work (e.g. function names have to be unique no matter the parameters)
 Tested on Ubuntu 14.04 x64

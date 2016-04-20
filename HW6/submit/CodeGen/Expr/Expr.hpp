@@ -14,7 +14,6 @@
 
 namespace FC
 {
-
     enum ExprType
     {
         Reg,
@@ -25,7 +24,15 @@ namespace FC
     public:
 
         std::string GetStringVal() {return _stringVal;}
-        int GetVal() {return _val;}
+        int GetVal() {
+            if(this->_val == INT32_MIN)
+            {
+                std::cout << "The desired expression is not of integer type, and cannot be evaluated compile time" << std::endl;
+                std::cout << "Hint: you're probably seeing this because of a array declaration bound error." << std::endl;
+                exit(1);
+            }
+            return this->_val;
+        }
         ExprType GetExprType() { return _exprType;}
         Type GetType() {return _type;}
 
@@ -81,7 +88,7 @@ namespace FC
         std::shared_ptr<FC::Register> GetCustomRegister(std::string name);
 
     private:
-        int _val = -1;
+        int _val = INT32_MIN;
         std::string _stringVal = "ERROR! THIS VALUE IS NOT SET!";
         std::shared_ptr<FC::Register> _reg = nullptr;
         ExprType _exprType;

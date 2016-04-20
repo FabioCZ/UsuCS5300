@@ -106,7 +106,7 @@ class Driver;
 
 %token <char> CharTok
 %type <std::shared_ptr<std::vector<std::shared_ptr<FC::Expr> > > > Arguments
-%type <int> ArrayType
+%type <FC::Type> ArrayType
 %type <int> Assignment
 %type <int> Block
 %type <int> Body
@@ -116,8 +116,8 @@ class Driver;
 %type <std::shared_ptr<FC::Expr>> Expression
 %type <bool> FBody
 %type <std::shared_ptr<FC::Func> > FSignature
-%type <int> FieldDecl
-%type <int> FieldDecls
+%type <std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>>> FieldDecl
+%type <std::shared_ptr<std::vector<std::pair<std::vector<std::string>,FC::Type>>>> FieldDecls
 %type <int> ForHead
 %type <int> ForStatement
 %type <std::shared_ptr<std::vector<std::pair<std::string,FC::Type> > > > FormalParameter
@@ -137,7 +137,7 @@ class Driver;
 %type <int> ProcedureCall
 %type <int> ReadArgs
 %type <int> ReadStatement
-%type <int> RecordType
+%type <FC::Type> RecordType
 %type <int> RepeatStatement
 %type <int> ReturnStatement
 %type <FC::Type> SimpleType
@@ -167,7 +167,7 @@ MainBlock : MainHead Block;
 
 MainHead : {FC::MainBlock();FC::WriteStatement();}
 
-ProgramHead : OptConstDecls OptTypeDecls OptVarDecls PFDecls { FC::CheckForwardDecls();};
+ProgramHead : OptConstDecls OptTypeDecls OptVarDecls {FC::FuncBlock();} PFDecls { FC::CheckForwardDecls();};
 
 OptConstDecls : ConstTok ConstDecls 
     | ;
@@ -200,7 +200,6 @@ OptFormalParameters : FormalParameters {$$ = $1;}
     
 FormalParameters : FormalParameters SemicolonTok FormalParameter
     {
-        //$1->insert($3->end(),$3->begin(),$3->end());
         for(auto s : (*$3))
         {
             $1->push_back(s);
@@ -238,25 +237,38 @@ OptTypeDecls : TypeTok TypeDecls
 TypeDecls : TypeDecls TypeDecl
     | TypeDecl ;
     
-TypeDecl : IdentifierTok EqualsTok Type SemicolonTok {} ;
+TypeDecl : IdentifierTok EqualsTok Type SemicolonTok {FC::DeclareType($1,$3);} ;
 
 Type : SimpleType {$$ = $1;}
-    | RecordType {}
-    | ArrayType {} ;
+    | RecordType {$$ = $1;}
+    | ArrayType {$$ = $1;} ;
 
 SimpleType : IdentifierTok {$$ = FC::SimpleTypeLookup($1);};
 
-RecordType : RecordTok FieldDecls EndTok {};
+RecordType : RecordTok FieldDecls EndTok {$$ = FC::GetRecordType($2);};
 
-FieldDecls : FieldDecls FieldDecl {}
-    | {};
+
+FieldDecls : FieldDecls FieldDecl
+        {
+            if($1 != nullptr && $1->size() > 0)
+            {
+                $2->insert($2->end(),$1->begin(),$1->end());
+            }
+            $$ = $2;
+        }
+    | {$$ = nullptr;}
     
-FieldDecl : IdentList ColonTok Type SemicolonTok {};
+FieldDecl : IdentList ColonTok Type SemicolonTok
+{
+    auto a = std::make_shared<std::vector<std::pair<std::vector<std::string>,FC::Type>>>();
+    a->push_back(FC::GetRecordFields($3));
+    $$ = a;
+};
 
 IdentList : IdentList CommaTok IdentifierTok {FC::AddIdent($3);}
     | IdentifierTok {FC::AddIdent($1);};
     
-ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {};
+ArrayType : ArrayTok OpenBrktTok Expression ColonTok Expression CloseBrktTok OfTok Type {$$ = GetArrayType($3,$5,$8);};
 
 OptVarDecls : VarTok VarDecls
     |;
@@ -326,7 +338,7 @@ ReturnStatement : ReturnTok Expression {FC::AddReturn($2);}
 ReadStatement : ReadTok OpenParenTok ReadArgs CloseParenTok {}
 
 ReadArgs : ReadArgs CommaTok LVal {FC::ReadToLVal($3);}
-    | LVal {std::cout << "dafuq" << std::endl;FC::ReadToLVal($1);};
+    | LVal {FC::ReadToLVal($1);};
     
 WriteStatement : WriteTok OpenParenTok WriteArgs CloseParenTok {};
 
@@ -369,8 +381,8 @@ Expression : Expression OrTok Expression {$$ = ProcOrExpr($1,$3);}
     
 FunctionCall : IdentifierTok OpenParenTok OptArguments CloseParenTok {$$ = FC::CallFunction($1,$3);};
 
-LVal : LVal DotTok IdentifierTok {$$ = nullptr;}
-    | LVal OpenBrktTok Expression CloseBrktTok {$$ = nullptr;}
+LVal : LVal DotTok IdentifierTok {$$ = FC::GetRecordField($1,$3);}
+    | LVal OpenBrktTok Expression CloseBrktTok {$$ = FC::GetArrayMember($1,$3);}
     | IdentifierTok {$$ = FC::GetLValForIdent($1);};
 
 %%
