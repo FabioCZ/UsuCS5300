@@ -220,7 +220,7 @@ namespace FC
             auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
             inst->_stream << "\tli " << address->GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
             inst->_stream << "\tli " << helper->GetRegister()->name << ", " << lval->arrLowStart << " #array starting index" << std::endl;
-            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << " #calculate index" << std::endl;
+            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << helper->GetRegister()->name<< " #calculate index" << std::endl;
             inst->_stream << "\tmul " << address->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
             if(lval->LValType == Frame)
             {
@@ -461,7 +461,7 @@ namespace FC
             auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
             inst->_stream << "\tli " << address->GetRegister()->name << ", " << lval->Type.size << " #array type size"<< std::endl;
             inst->_stream << "\tli " << helper->GetRegister()->name << ", " << lval->arrLowStart << " #array starting index" << std::endl;
-            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << " #calculate index" << std::endl;
+            inst->_stream << "\tsub " << helper->GetRegister()->name << ", " << lval->arrExpr->GetRegister()->name << ", " << helper->GetRegister()->name << " #calculate index" << std::endl;
             inst->_stream << "\tmul " << address->GetRegister()->name << ", " << helper->GetRegister()->name << ", " << address->GetRegister()->name << " #offset from base of array" << std::endl;
             if (lv->LValType == Stack)
             {
@@ -950,6 +950,7 @@ namespace FC
         auto inst = Code::Inst();
         AddIdent(s);
         AddVariables(IntType());
+        ProcIncrement(e);   //this makes for loops inclusive
         Assignment(GetLValForIdent(s),e);
         inst->WriteToFileNow();
         auto f = std::make_shared<ForInfo>(s,true);
@@ -968,9 +969,16 @@ namespace FC
         auto name = inst->ForInfos.back()->varName;
         auto e2 = std::const_pointer_cast<Expr>(LValToExpr(GetLValForIdent(name)))->GetRegister();
         auto e1 = e->GetRegister();
-        //inst->WriteToFileNow();
-        inst->_stream << "\tbeq " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() << std::endl;
-
+        if(isUp)
+        {
+            inst->_stream << "\tbgt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
+            std::endl;
+        }
+        else
+        {
+            inst->_stream << "\tblt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
+            std::endl;
+        }
     }
 
     void ForEnd()
@@ -1063,7 +1071,14 @@ namespace FC
             {
                 if((*args)[i]->GetType().isRecord || (*args)[i]->GetType().isArray) //memberwise clone if array
                 {
-                    
+                    auto e = (*args)[i];
+                    auto helper = std::make_shared<FC::Expr>(FC::Register::Allocate(),IntType());
+                    for(int j = 0; j < e->GetType().size;j+=4)
+                    {
+                        inst->_stream << "\tlw " << helper->GetRegister()->name << ", "<< j <<  "(" << e->GetRegister()->name << ") #memberwise clone" << std::endl;
+                        inst->_stream << "\tsw " << helper->GetRegister()->name << ", " << sizeCt << "($sp)" << std::endl;
+                        sizeCt += 4;
+                    }
                 }
                 else
                 {
@@ -1083,7 +1098,7 @@ namespace FC
             LVal r;
             r.name = "_return2";
             r.LValType = Frame;
-            r.FramePointerOffset = -4;
+            r.FramePointerOffset = -1 * func->second->returnType->size;
             r.Type = (*func->second->returnType);
             expr = LValToExpr(std::make_shared<LVal>(r));
         }
@@ -1121,13 +1136,15 @@ namespace FC
             inst->LocalLValues["_return"] = std::make_shared<LVal>(rl);
         }
         if(params == nullptr) return;
+        auto sizeCt = 0;
         for(int i = 0; i < (*params).size();i++)
         {
             LVal lv;
             lv.name = (*params)[i].first;
             lv.LValType = Frame;
             lv.Type = (*params)[i].second;
-            lv.FramePointerOffset = (i*(*params)[i].second.size);
+            lv.FramePointerOffset = sizeCt;
+            sizeCt += (*params)[i].second.size;
             inst->LocalLValues[(*params)[i].first] = std::make_shared<LVal>(lv);
         }
     }
@@ -1239,7 +1256,7 @@ namespace FC
         if(e->GetType().name != inst->LocalLValues["_return"]->Type.name)
         {
             std::cout << "Return statement expression doesn't match proc/func declared return type:" << std::endl;
-            std::cout << "declared: " << inst->LocalLValues["_return"]->name << " attempted to return: " << e->GetType().name << std::endl;
+            std::cout << "declared: " << inst->LocalLValues["_return"]->Type.name << " attempted to return: " << e->GetType().name << std::endl;
             exit(0);
         }
         if(e != nullptr)

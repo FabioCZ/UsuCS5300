@@ -1,28 +1,27 @@
 const
 	NUMS_LENGTH = 12;
 type
-$ rt = record
-$        a : integer;
-$        b : char;
-$end;
- ctype = array[2:NUMS_LENGTH] of integer;
+ctype = array[2:NUMS_LENGTH] of integer;
+rt = record
+        a : integer;
+        b : char;
+end;
 var 
 	t : ctype;
-	u : ctype;
+	u : rt;
 
-procedure simpleProcedure(a:ctype);$ : ctype;
+function simpleProcedure(a:rt) : ctype;
 type
 	at = array[1:5] of integer;
 var 
 	g : at;
+	r : ctype;
 BEGIN
-	$a[2] :=4;
-	write(a[2]);
-	$return a;
+	r[2] :=4;
+	return r;
 END;
 
 begin
-	t[2] := 6;
-	simpleProcedure(t);
-	$write(u[2]);
+	t := simpleProcedure(u);
+	write(t[2]);
 end.
