@@ -7,7 +7,7 @@ type
 
 VAR 
     myArray : rt_array;
-    n : integer;
+    $n : integer;
     s : integer;
 
 function getRt(a : integer; b : char) : rt;
@@ -26,6 +26,6 @@ for n:=1 to s do
     write(myArray[n].a,' ',myArray[n].b,'\n');
 end;
 
-myArray[n] := getRt(1,'a');
-write(myArray[n].a,"->",myArray[n].b);
+$myArray[n] := getRt(1,'a');
+$write(myArray[n].a,"->",myArray[n].b);
 end.

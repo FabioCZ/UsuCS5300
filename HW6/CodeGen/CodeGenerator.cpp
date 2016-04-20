@@ -699,7 +699,7 @@ namespace FC
         auto inst = Code::Inst();
         if(l->GetExprType() == Int && r->GetExprType() == Int) //if both are int const, we can precompile
         {
-            auto res = l->GetVal() + r->GetVal();
+            auto res = l->GetVal() % r->GetVal();
             return std::make_shared<Expr>(res,l->GetType());
         }
         else
@@ -950,7 +950,6 @@ namespace FC
         auto inst = Code::Inst();
         AddIdent(s);
         AddVariables(IntType());
-        ProcIncrement(e);   //this makes for loops inclusive
         Assignment(GetLValForIdent(s),e);
         inst->WriteToFileNow();
         auto f = std::make_shared<ForInfo>(s,true);
@@ -971,12 +970,12 @@ namespace FC
         auto e1 = e->GetRegister();
         if(isUp)
         {
-            inst->_stream << "\tbgt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
+            inst->_stream << "\tblt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
             std::endl;
         }
         else
         {
-            inst->_stream << "\tblt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
+            inst->_stream << "\tbgt " << e1->name << ", " << e2->name << ", ForEnd" << inst->getCurrLabelNumber() <<
             std::endl;
         }
     }
@@ -1201,6 +1200,7 @@ namespace FC
             else
             {
                 std::cout << "Proc/Func " << f->name << " error: multiple declaration/definition" << std::endl;
+                std::cout << "Hint: this may be a problem with procedure/function overloading which is not supported" << std::endl;
                 exit(0);
             }
         }

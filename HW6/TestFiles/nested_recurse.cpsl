@@ -38,7 +38,7 @@ END;
 
 FUNCTION recurse(c : ctype; i : integer) : ctype; forward;
 FUNCTION recurse(c : ctype; i : integer) : ctype;
-var a : integer;
+$var a : integer;
 BEGIN
     if i=0 then
         return c;

@@ -10,8 +10,8 @@ type
     matrix = array[1:5] of ntype;
 
 VAR table : atype;
-    i : integer;
-    j : integer;
+    $i : integer;
+    $j : integer;
     mat : matrix;
 
 procedure printname(n : ntype);
@@ -35,7 +35,7 @@ BEGIN
 END;
 
 procedure sortage();
-var i,j : integer;
+var $i,j : integer;
     x,y,z : matrix;
 BEGIN
     for i:=1 to ALEN do
@@ -48,7 +48,7 @@ BEGIN
 END;
 
 procedure rsortage();
-var i,j : integer;
+var $i,j : integer;
     t : rtype;
 BEGIN
     for i:=1 to ALEN do
@@ -64,7 +64,7 @@ BEGIN
 END;
 
 procedure printtable();
-var i : integer;
+$var i : integer;
 BEGIN
     for i:=1 to ALEN do
         printrec(table[i]);

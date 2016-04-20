@@ -1,27 +1,4 @@
-const
-	NUMS_LENGTH = 12;
-type
-ctype = array[2:NUMS_LENGTH] of integer;
-rt = record
-        a : integer;
-        b : char;
-end;
-var 
-	t : ctype;
-	u : rt;
-
-function simpleProcedure(a:rt) : ctype;
-type
-	at = array[1:5] of integer;
-var 
-	g : at;
-	r : ctype;
-BEGIN
-	r[2] :=4;
-	return r;
-END;
 
 begin
-	t := simpleProcedure(u);
-	write(t[2]);
+	write(2%2);
 end.
